@@ -1,0 +1,13 @@
+application: domaingrasp 
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /bootstrap
+  static_dir: static/bootstrap 
+
+- url: /.*
+  script: index.app
+

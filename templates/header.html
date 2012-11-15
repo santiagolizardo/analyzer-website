@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+	% if title:
+	<title>${title}</title>
+	% endif
+	% for styleSheet in styleSheets:
+	<link href="${styleSheet}" rel="stylesheet" type="text/css" />
+	% endfor
+	% for javaScript in javaScripts:
+	<script type="text/javascript" src="${javaScript}"></script>
+	% endfor
+</head>
+<body>
+
