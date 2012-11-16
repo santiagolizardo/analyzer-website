@@ -1,0 +1,32 @@
+<%include file="header.html"/>
+
+<script type="text/javascript">
+var clientId = '${clientId}';
+var domainUrl = '${domain}';
+</script>
+
+<h1>${domain}</h1>
+<p>Generated on ${generatedOnDate}</p>
+
+<div class="row">
+
+	<div class="span3">...</div>
+	<div class="report-sidebar" style="position: fixed;">
+	<ul class="nav nav-list report-sidenav">
+	% for sbOption in sbOptions:
+	<li><a href="#${sbOption['id']}"><i class="icon-chevron-right"></i> ${sbOption['label']}</a></li>
+	% endfor
+	</ul>
+	</div>
+
+	<div class="span9">
+	% for sbOption in sbOptions:
+	<div id="${sbOption['id']}">
+	<%include file="/sections/${sbOption['id']}.html"/>
+	</div>
+	% endfor
+	</div>
+
+</div>
+
+<%include file="footer.html"/>

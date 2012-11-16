@@ -4,9 +4,20 @@ runtime: python27
 api_version: 1
 threadsafe: true
 
+builtins:
+- deferred: on
+- appstats: on
+
+inbound_services:
+- channel_presence
+
 handlers:
 - url: /bootstrap
-  static_dir: static/bootstrap 
+  static_dir: static/bootstrap
+- url: /styles
+  static_dir: static/styles
+- url: /scripts
+  static_dir: static/scripts
 
 - url: /.*
   script: index.app

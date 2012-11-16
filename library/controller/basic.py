@@ -7,6 +7,8 @@ from mako.lookup import TemplateLookup
 class BasicController( webapp2.RequestHandler ):
 
 	def renderTemplate( self, name, values = {} ):
+		values['uriFor'] = webapp2.uri_for
+
 		templateDirs = [ os.path.abspath( 'templates' ) ]
 		templateFinder = TemplateLookup( directories = templateDirs, input_encoding = 'utf-8', output_encoding = 'utf-8', encoding_errors = 'ignore', disable_unicode = False )
 		templ = templateFinder.get_template( name );

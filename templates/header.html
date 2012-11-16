@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-	% if title:
-	<title>${title}</title>
+	% if pageTitle:
+	<title>${pageTitle}</title>
 	% endif
 	% for styleSheet in styleSheets:
 	<link href="${styleSheet}" rel="stylesheet" type="text/css" />
@@ -11,5 +11,7 @@
 	<script type="text/javascript" src="${javaScript}"></script>
 	% endfor
 </head>
-<body>
+<body data-spy="scroll" data-target=".report-sidebar">
+
+<div class="container">
 

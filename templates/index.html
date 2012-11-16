@@ -5,4 +5,10 @@
 	<input type="text" name="domain" />
 </form>
 
+<ul class="nav nav-pills">
+% for recentDomain in recentDomains:
+	<li><a href="${uriFor( 'viewDomain', domainUrl = recentDomain.url, _full = True )}">${recentDomain.url}</a>
+% endfor
+</ul>
+
 <%include file="footer.html"/>
