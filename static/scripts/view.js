@@ -19,6 +19,13 @@ var messageHandlers = {
 	{
 		document.getElementById( 'sitemapXml' ).innerHTML = body;
 	},
+	screenshot: function( body )
+	{
+		if( null !== body )
+		{
+			document.getElementById( 'screenshot' ).src = body;
+		}
+	},
 };
 
 $( document ).ready( function()

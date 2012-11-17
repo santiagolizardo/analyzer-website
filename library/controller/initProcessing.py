@@ -9,6 +9,7 @@ from google.appengine.ext import deferred
 
 from library.task.twitter import checkTwitterAccount
 from library.task.robots import checkForRobotsTxt, checkForSitemapXml
+from library.task.screenshot import grabScreenshot
 
 class InitProcessingController( webapp2.RequestHandler ):
 
@@ -30,8 +31,9 @@ class InitProcessingController( webapp2.RequestHandler ):
 		baseDomain = apiData['domain']
 		
 		taskqueue.add( url = '/task/fetch-domain', params = taskParams )
-		#
+		
 		deferred.defer( checkTwitterAccount, baseDomain, channelId )
 		deferred.defer( checkForRobotsTxt, fullUrl, channelId )
 		deferred.defer( checkForSitemapXml, fullUrl, channelId )
+		deferred.defer( grabScreenshot, fullUrl, channelId )
 

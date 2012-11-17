@@ -1,5 +1,5 @@
 
-import webapp2, json
+import json
 
 from google.appengine.api import urlfetch
 from google.appengine.api.channel import send_message

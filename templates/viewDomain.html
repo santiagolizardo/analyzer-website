@@ -8,6 +8,8 @@ var domainUrl = '${domain}';
 <h1>${domain}</h1>
 <p>Generated on ${generatedOnDate}</p>
 
+<img id="screenshot" src="" />
+
 <div class="row">
 
 	<div class="span3">...</div>
@@ -17,6 +19,8 @@ var domainUrl = '${domain}';
 	<li><a href="#${sbOption['id']}"><i class="icon-chevron-right"></i> ${sbOption['label']}</a></li>
 	% endfor
 	</ul>
+
+	<%include file="/googleAdsense.html"/>
 	</div>
 
 	<div class="span9">
