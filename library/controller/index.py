@@ -7,6 +7,7 @@ from google.appengine.ext import db
 class IndexController( PageController ):
 
 	def get( self ):
+		self.addJavaScript( '//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js' )		
 		self.addJavaScript( '/bootstrap/js/bootstrap.min.js' )
 		self.addStyleSheet( '/bootstrap/css/bootstrap.min.css' )
 

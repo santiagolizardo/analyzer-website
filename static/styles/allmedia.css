@@ -1,10 +1,22 @@
 
 body
 {
-	background-color: #F7F7F7;
 }
 
 div.container
 {
-	background-color: white;
 }
+
+div.ScreenshotMonitor
+{
+	width: 320px;
+	height: 256px;
+	background: url('/images/monitor.png') no-repeat;
+	text-align: center;
+}
+	div.ScreenshotMonitor > img
+	{
+		padding-top: 13px;
+		width: 224px;
+		max-height: 181px;
+	}

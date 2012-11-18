@@ -10,6 +10,7 @@ from google.appengine.ext import deferred
 from library.task.twitter import checkTwitterAccount
 from library.task.robots import checkForRobotsTxt, checkForSitemapXml
 from library.task.screenshot import grabScreenshot
+from library.task.w3c import runW3cValidation
 
 class InitProcessingController( webapp2.RequestHandler ):
 
@@ -19,7 +20,6 @@ class InitProcessingController( webapp2.RequestHandler ):
 
 		fullUrl = 'http://' + domainUrl
 
-		logging.info( '>>>> Enqueueing task' )
 		taskParams = {
 			'url': domainUrl,
 			'channelId': channelId,
@@ -32,8 +32,11 @@ class InitProcessingController( webapp2.RequestHandler ):
 		
 		taskqueue.add( url = '/task/fetch-domain', params = taskParams )
 		
-		deferred.defer( checkTwitterAccount, baseDomain, channelId )
+		# Sorted by required time per task 
+		deferred.defer( grabScreenshot, fullUrl, channelId )
+		deferred.defer( runW3cValidation, fullUrl, channelId )
 		deferred.defer( checkForRobotsTxt, fullUrl, channelId )
 		deferred.defer( checkForSitemapXml, fullUrl, channelId )
-		deferred.defer( grabScreenshot, fullUrl, channelId )
+		deferred.defer( checkTwitterAccount, baseDomain, channelId )
+		
 

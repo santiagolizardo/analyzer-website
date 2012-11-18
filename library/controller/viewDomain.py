@@ -21,16 +21,15 @@ class ViewDomainController( PageController ):
 			{ 'id': 'priority-actions', 'label': 'Priority actions' },
 			{ 'id': 'visitors', 'label': 'Visitors' },
 			{ 'id': 'social-monitoring', 'label': 'Social monitoring' },
+			{ 'id': 'content-optimization', 'label': 'Content optimization' },
+			{ 'id': 'usability', 'label': 'Usability' },
 			{ 'id': 'mobile', 'label': 'Mobile' },
 			{ 'id': 'seo-basics', 'label': 'SEO basics' },
-			{ 'id': 'seo-content', 'label': 'SEO content' },
-			{ 'id': 'seo-links', 'label': 'SEO links' },
 			{ 'id': 'seo-keywords', 'label': 'SEO keywords' },
 			{ 'id': 'seo-authority', 'label': 'SEO authority' },
 			{ 'id': 'seo-backlinks', 'label': 'SEO backlinks' },
-			{ 'id': 'seo-usability', 'label': 'Usability' },
-			{ 'id': 'seo-security', 'label': 'Security' },
-			{ 'id': 'seo-technologies', 'label': 'Technologies' },
+			{ 'id': 'security', 'label': 'Security' },
+			{ 'id': 'technologies', 'label': 'Technologies' },
 		)
 
 		channelId = self.request.cookies.get( 'channelId' )

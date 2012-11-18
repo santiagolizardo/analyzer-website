@@ -8,12 +8,18 @@ var domainUrl = '${domain}';
 <h1>${domain}</h1>
 <p>Generated on ${generatedOnDate}</p>
 
-<img id="screenshot" src="" />
+<div class="progress progress-striped active">
+  <div class="bar" style="width: 40%;"></div>
+</div>
 
 <div class="row">
 
 	<div class="span3">...</div>
+	
 	<div class="report-sidebar" style="position: fixed;">
+
+	<%include file="/googleAdsense.html"/>
+
 	<ul class="nav nav-list report-sidenav">
 	% for sbOption in sbOptions:
 	<li><a href="#${sbOption['id']}"><i class="icon-chevron-right"></i> ${sbOption['label']}</a></li>

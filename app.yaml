@@ -18,6 +18,12 @@ handlers:
   static_dir: static/styles
 - url: /scripts
   static_dir: static/scripts
+- url: /images
+  static_dir: static/images
+
+- url: /(.+\.ico)
+  static_files: static/\1
+  upload: static/(.+\.ico)
 
 - url: /.*
   script: index.app

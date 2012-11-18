@@ -1,13 +1,19 @@
 <%include file="header.html"/>
 
+<h3>Free social, SEO and technical metrics about any site</h3>
+
 <form action="/analyze" method="post">
 	<legend>Start analyzing your domain here:</legend>
-	<input type="text" name="domain" />
+	<div class="input-prepend input-append">
+		<span class="add-on">http://</span>
+		<input type="text" name="domain" class="input-xlarge" required="required" autofocus="autofocus" />
+		<button type="submit" class="btn">Get your free report!</button>
+	</div>
 </form>
 
 <ul class="nav nav-pills">
 % for recentDomain in recentDomains:
-	<li><a href="${uriFor( 'viewDomain', domainUrl = recentDomain.url, _full = True )}">${recentDomain.url}</a>
+	<li><a href="${uriFor( 'staticReport', domainUrl = recentDomain.url  )}">${recentDomain.url}</a>
 % endfor
 </ul>
 

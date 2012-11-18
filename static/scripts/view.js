@@ -6,6 +6,10 @@ var messageHandlers = {
 		document.getElementById( 'pageDescription' ).innerHTML = body.pageDescription;
 		document.getElementById( 'googleAnalytics' ).innerHTML = body.googleAnalytics ? 'Yes' : 'No';
 		document.getElementById( 'docType' ).innerHTML = body.docType;
+		document.getElementById( 'images' ).innerHTML = body.images;
+		document.getElementById( 'headings' ).innerHTML = body.headings;
+		document.getElementById( 'softwareStack' ).innerHTML = body.softwareStack;
+		document.getElementById( 'pageSize' ).innerHTML = body.pageSize;
 	},
 	twitterAccount: function( body )
 	{
@@ -25,6 +29,10 @@ var messageHandlers = {
 		{
 			document.getElementById( 'screenshot' ).src = body;
 		}
+	},
+	w3cValidation: function( body )
+	{
+		document.getElementById( 'w3cValidity' ).innerHTML = body;
 	},
 };
 
@@ -51,7 +59,7 @@ $( document ).ready( function()
 			},
 			onerror: function( data )
 			{
-				alert( data );
+				console.error( data );
 			}
 		};
 		var socket = channel.open( handlers );
