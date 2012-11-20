@@ -36,6 +36,23 @@ var messageHandlers = {
 	},
 };
 
+var reportCompletionPercentage = 0;
+var numSubreports = 6;
+
+function increaseProgressBar()
+{
+	reportCompletionPercentage += Math.ceil( 100 / numSubreports );
+
+	var progressBar = document.getElementById( 'mainProgressBar' );
+	var innerBar = progressBar.getElementsByTagName( 'div' )[0];
+	innerBar.style.width = reportCompletionPercentage + '%';
+
+	if( reportCompletionPercentage >= 100 )
+	{
+		$( progressBar ).fadeOut( 'normal', function() { $( this ).remove(); } );
+	}
+}
+
 $( document ).ready( function()
 	{
 		var channel = new goog.appengine.Channel( clientId );
@@ -55,6 +72,7 @@ $( document ).ready( function()
 				if( messageHandlers.hasOwnProperty( response.type ) )
 				{
 					messageHandlers[ response.type ]( response.body );
+					increaseProgressBar();
 				}
 			},
 			onerror: function( data )

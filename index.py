@@ -7,21 +7,18 @@ from library.controller.index import IndexController
 from library.controller.analizeDomain import AnalyzeDomainController
 from library.controller.viewDomain import ViewDomainController
 
-from library.task.fetchDomain import FetchDomainTaskController
-
 debugActive = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' ) 
 
 routes = [
 	( '/', IndexController ),
 	( '/analyze', AnalyzeDomainController ),
 	( '/initProcessing', 'library.controller.initProcessing.InitProcessingController' ),
-	( '/task/fetch-domain', FetchDomainTaskController ),
 	routes.DomainRoute( 'live-report.domaingrasp.<:dev|com>',
 		[
 			webapp2.Route( '/<domainUrl>', handler = ViewDomainController, name = 'liveReport' ),
 		]
 	),
-	routes.DomainRoute( 'report',
+	routes.DomainRoute( 'report.domaingrasp.<:dev|com>',
 		[
 			webapp2.Route( '/<domainUrl>', handler = ViewDomainController, name = 'staticReport' ),
 		]
