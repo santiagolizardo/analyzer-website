@@ -9,16 +9,20 @@ from library.model.responseBody import ResponseBody
 
 from google.appengine.api.channel import send_message
 
-import time, re
+import time, re, sys
 
 from bs4 import BeautifulSoup, element
 
-def analyzeHtml( url, channelId ):
-	logging.info( 'Analyzing domain: ' + url )
+from library.task.base import BaseTask
 
-	response = {
-		'type': 'htmlBody',
-		'body': {
+class HtmlAnalyzerTask( BaseTask ):
+
+	def getName( self ): return 'htmlBody'
+
+	def start( self, baseUrl, url, channelId ):
+		logging.info( 'Analyzing domain: ' + url )
+
+		content = {
 			'pageTitle': 'N/A',
 			'pageDescription': 'N/A',
 			'googleAnalytics': 'N/A',
@@ -28,53 +32,48 @@ def analyzeHtml( url, channelId ):
 			'softwareStack': 'N/A',
 			'pageSize': 'N/A',
 		}
-	}
 
-	try:
-		httpResponse = urllib2.urlopen( 'http://' + url )
-		body = httpResponse.read().decode( 'utf8' )
+		try:
+			httpResponse = urllib2.urlopen( url )
+			body = httpResponse.read().decode( 'utf8' )
+			
+			respbody = ResponseBody( domain = url, length = len( body ), body = body )
+			respbody.put()
+
+			
+			bSoup = BeautifulSoup( body )
+
+			pageTitle = bSoup.title.string
+
+			pageDescription = None
+			metaDescriptions = bSoup.findAll( 'meta', attrs = { 'name': re.compile( '^description$', re.I ) } )
+			if len( metaDescriptions ) > 0:
+				pageDescription = metaDescriptions[0]['content']
+
+			content = {
+				'pageTitle': pageTitle,
+				'pageDescription': pageDescription,
+				'googleAnalytics': ( '/ga.js' in body ),
+				'docType': extractDocType( bSoup ),
+				'headings': extractHeadings( bSoup ),
+				'images': extractImages( bSoup ),
+				'softwareStack': extractSoftwareStack( httpResponse ),
+				'pageSize': extractPageSize( httpResponse ),
+			}
+
+			self.saveReport( baseUrl, content )
+
+		except:
+			e = sys.exc_info()[0]
+			logging.error( e )
+
+		self.sendMessage( response )
+
+		domain = Domain.gql( 'WHERE url = :url', url = url ).get()
+		if domain is None:
+			domain = Domain( url = baseUrl )
+			domain.put()
 		
-		respbody = ResponseBody( domain = url, length = len( body ), body = body )
-		respbody.put()
-
-		
-		bSoup = BeautifulSoup( body )
-
-		pageTitle = bSoup.title.string
-
-		pageDescription = None
-		metaDescriptions = bSoup.findAll( 'meta', attrs = { 'name': re.compile( '^description$', re.I ) } )
-		if len( metaDescriptions ) > 0:
-			pageDescription = metaDescriptions[0]['content']
-
-		responseBody = {
-			'pageTitle': pageTitle,
-			'pageDescription': pageDescription,
-			'googleAnalytics': ( '/ga.js' in body ),
-			'docType': extractDocType( bSoup ),
-			'headings': extractHeadings( bSoup ),
-			'images': extractImages( bSoup ),
-			'softwareStack': extractSoftwareStack( httpResponse ),
-			'pageSize': extractPageSize( httpResponse ),
-		}
-		
-		logging.info( responseBody['docType'] )
-
-		response = {
-			'type': 'htmlBody',
-			'body': responseBody, 
-		}	
-
-	except Exception, e:
-		logging.error( e )
-
-	send_message( channelId, json.dumps( response ) )
-
-	domain = Domain.gql( 'WHERE url = :url', url = url ).get()
-	if domain is None:
-		domain = Domain( url = url )
-		domain.put()
-	
 def extractDocType( bSoup ):
 	docType = None
 	for child in bSoup.contents:
@@ -112,7 +111,7 @@ def extractHeadings( bSoup ):
 		response[ heading.name ].append( heading.string )
 		
 	count = tuple( len( headingElements ) for headingKey, headingElements in response.items() )
-	logging.info(count)
+
 	html = """
 	<table>
 	<tr>

@@ -6,7 +6,7 @@ import uuid, logging
 
 from google.appengine.api.channel import create_channel
 
-class ViewDomainController( PageController ):
+class LiveReportController( PageController ):
 
 	def get( self, domainUrl ):
 		self.addJavaScript( '//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js' )
@@ -38,11 +38,10 @@ class ViewDomainController( PageController ):
 			self.response.set_cookie( 'channelId', channelId )
 		clientId = create_channel( channelId )
 
-		logging.info( 'channelId( %s ), clientId( %s )' % ( channelId, clientId ) )
-
 		from datetime import date
 
 		values = {
+			'appUrl': self.app.config.get( 'url' ),
 			'domain': domainUrl,
 			'domainLength': len( domainUrl.replace( '.com', '' ) ),
 			'clientId': clientId,
@@ -54,8 +53,7 @@ class ViewDomainController( PageController ):
 			'pageDescription': 'Check %(domainUrl)s metrics on SEO, social and other relevant aspects thanks to DomainGrasp'
 		}
 
-		logging.info( '>>>> Writing response' )
-		html = self.renderTemplate( 'viewDomain.html', values )
+		html = self.renderTemplate( 'liveReport.html', values )
 		self.writeResponse( html )
 
 

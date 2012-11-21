@@ -26,11 +26,10 @@ class InitProcessingController( webapp2.RequestHandler ):
 		baseDomain = apiData['domain']
 		
 		# Sorted by required time per task 
-		deferred.defer( analyzeHtml, fullUrl, channelId )
+		deferred.defer( analyzeHtml, domainUrl, fullUrl, channelId )
 		deferred.defer( grabScreenshot, fullUrl, channelId )
 		deferred.defer( runW3cValidation, fullUrl, channelId )
 		deferred.defer( checkForRobotsTxt, fullUrl, channelId )
 		deferred.defer( checkForSitemapXml, fullUrl, channelId )
 		deferred.defer( checkTwitterAccount, baseDomain, channelId )
 		
-

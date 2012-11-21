@@ -4,39 +4,39 @@ import webapp2, json
 from google.appengine.api import urlfetch
 from google.appengine.api.channel import send_message
 
-def checkForRobotsTxt( domain, channelId ):
-    url = domain + '/robots.txt'
-    result = urlfetch.fetch( url )
+from library.task.base import BaseTask
 
-    body = 'N/A'
-    if result.status_code == 200:
-        body = url
-    elif result.status_code == 404:
-        body = 'Missing' 
+class RobotsTxtCheckerTask( BaseTask ):
 
-    response = {
-        'type': 'robotsTxt',
-        'body': body,
-    }
+	def getName( self ): return 'robotsTxt'
 
-    send_message( channelId, json.dumps( response ) )
+	def start( self, domain, channelId ):
 
-def checkForSitemapXml( domain, channelId ):
-    url = domain + '/sitemap.xml'
-    result = urlfetch.fetch( url )
+		url = domain + '/robots.txt'
+		result = urlfetch.fetch( url )
 
-    body = 'N/A'
-    if result.status_code == 200:
-        body = url
-    elif result.status_code == 404:
-        body = 'Missing' 
+		content = 'N/A'
+		if result.status_code == 200:
+			content = url
+		elif result.status_code == 404:
+			content = 'Missing' 
 
-    response = {
-        'type': 'sitemapXml',
-        'body': body,
-    }
+		self.sendMessage( content )
 
-    send_message( channelId, json.dumps( response ) )
+class SitemapXmlCheckerTask( BaseTask ):
 
+	def getName( self ): return 'sitemapXml'
 
+	def start( self, domain, channelId ):
+
+		url = domain + '/sitemap.xml'
+		result = urlfetch.fetch( url )
+
+		content = 'N/A'
+		if result.status_code == 200:
+			content = url
+		elif result.status_code == 404:
+			content = 'Missing' 
+
+		self.sendMessage( content )
 

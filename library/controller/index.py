@@ -14,6 +14,7 @@ class IndexController( PageController ):
 		recentDomains = db.GqlQuery( 'SELECT * FROM Domain ORDER BY analysisDate DESC' ).fetch( 20 )
 
 		values = {
+			'appUrl': self.app.config.get( 'url' ),
 			'pageTitle': 'Analyze your domain free. Check social, SEO and technical factors to improve your business | DomainGrasp ',
 			'pageDescription': 'A free alternative to Woorank',
 			'javaScripts': self.javaScripts,
