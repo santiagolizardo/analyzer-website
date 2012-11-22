@@ -50,9 +50,14 @@ class StaticReportController( PageController ):
 
 		beauty = BeautifulSoup( html )
 
+		actions = []
+
 		taskReport = TaskReport.gql( "WHERE name = 'htmlBody' AND url = :1", domainUrl ).get()
 		if taskReport is not None:
-			data = json.loads( taskReport.content )
+			data = json.loads( taskReport.messageEncoded )
+			actions.extend( data['actions'] )
+			data = data['content']
+
 			beauty.find( id = 'pageTitle' ).replace_with( NavigableString( data['pageTitle'] ) )
 			beauty.find( id = 'pageDescription' ).replace_with( NavigableString( data['pageDescription'] if data['pageDescription'] else 'Unknown' ) )
 			beauty.find( id = 'docType' ).replace_with( NavigableString( data['docType'] ) )
@@ -65,29 +70,60 @@ class StaticReportController( PageController ):
 
 		taskReport = TaskReport.gql( "WHERE name = 'screenshot' AND url = :1", domainUrl ).get()
 		if taskReport is not None:
-			data = json.loads( taskReport.content )
+			data = json.loads( taskReport.messageEncoded )
+			actions.extend( data['actions'] )
+			data = data['content']
 			beauty.find( id = 'screenshot' )['src'] = data
 
 		taskReport = TaskReport.gql( "WHERE name = 'traffic' AND url = :1", domainUrl ).get()
 		if taskReport is not None:
-			data = json.loads( taskReport.content )
+			data = json.loads( taskReport.messageEncoded )
+			actions.extend( data['actions'] )
+			data = data['content']
 			beauty.find( id = 'worldRank' ).replace_with( NavigableString( data['worldRank'] ) )
 			beauty.find( id = 'loadTime' ).replace_with( NavigableString( data['loadTime'] ) )
 
 		taskReport = TaskReport.gql( "WHERE name = 'sitemapXml' AND url = :1", domainUrl ).get()
 		if taskReport is not None:
-			data = json.loads( taskReport.content )
+			data = json.loads( taskReport.messageEncoded )
+			actions.extend( data['actions'] )
+			data = data['content']
 			beauty.find( id = 'sitemapXml' ).replace_with( NavigableString( data ) )
 
 		taskReport = TaskReport.gql( "WHERE name = 'robotsTxt' AND url = :1", domainUrl ).get()
 		if taskReport is not None:
-			data = json.loads( taskReport.content )
+			data = json.loads( taskReport.messageEncoded )
+			actions.extend( data['actions'] )
+			data = data['content']
+
 			beauty.find( id = 'robotsTxt' ).replace_with( NavigableString( data ) )
 
 		taskReport = TaskReport.gql( "WHERE name = 'w3cValidation' AND url = :1", domainUrl ).get()
 		if taskReport is not None:
-			data = json.loads( taskReport.content )
+			data = json.loads( taskReport.messageEncoded )
+			actions.extend( data['actions'] )
+			data = data['content']
+
 			beauty.find( id = 'w3cValidity' ).replace_with( NavigableString( data ) )
+
+		statuses = {
+			'good': 0,
+			'regular': 0,
+			'bad': 0,
+		}
+		totalStatuses = 0
+
+		for action in actions:
+			statuses[ action['status'] ] = statuses[ action['status'] ] + 1
+			totalStatuses = totalStatuses + 1
+
+		beauty.find( id = 'goodStatuses' ).replace_with( NavigableString( str( statuses['good'] ) ) )
+		beauty.find( id = 'regularStatuses' ).replace_with( NavigableString( str( statuses['regular'] ) ) )
+		beauty.find( id = 'badStatuses' ).replace_with( NavigableString( str( statuses['bad'] ) ) )
+
+		beauty.find( 'div', 'bar bar-success' )['style'] = 'width: %d%%;' % ( ( statuses['good'] * 100 ) / totalStatuses )
+		beauty.find( 'div', 'bar bar-warning' )['style'] = 'width: %d%%;' % ( ( statuses['regular'] * 100 ) / totalStatuses )
+		beauty.find( 'div', 'bar bar-danger' )['style'] = 'width: %d%%;' % ( ( statuses['bad'] * 100 ) / totalStatuses )
 
 		self.writeResponse( beauty.encode( formatter = None ) )
 

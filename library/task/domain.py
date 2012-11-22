@@ -1,5 +1,5 @@
 
-import sys, json, logging
+import sys, json, logging, os
 
 from google.appengine.api import urlfetch
 
@@ -25,7 +25,11 @@ class DomainAnalyzerTask( BaseTask ):
 		apiKey = '2dc9a-aceb3-a310e-e73b3-54f1d'
 
 		url = 'http://api.domaintools.com/v1/%s/?format=json&api_username=%s&api_key=%s' % ( baseUrl, apiUsername, apiKey )
-		url = 'http://api.domaintools.com/v1/domaintools.com/whois/'
+
+		debugActive = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' ) 
+		if debugActive:
+			url = 'http://api.domaintools.com/v1/domaintools.com/whois/'
+
 		result = urlfetch.fetch( url )
 		if result.status_code == 200:
 			todayDate = datetime.today()
