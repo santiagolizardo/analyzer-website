@@ -13,6 +13,7 @@ class AlexaAnalyzerTask( BaseTask ):
 			'worldRank': 'N/A',
 			'countryRank': 'N/A',
 		}
+		actions = []
 
 		queryUrl = baseUrl.replace( 'http://', '' )
 
@@ -31,9 +32,10 @@ class AlexaAnalyzerTask( BaseTask ):
 				content['loadTime'] = temp + ' seconds'
 				if int( respXml.find( '//{%s}Percentile' % api.NS_PREFIXES['awis'] ).text ) < 50:
 					content['loadTime'] += ' (SLOW)'
+					actions.append({ 'status': 'regular', 'description': 'You have to speed up your site (e.g. serving smaller images, reducing the number of HTTP requests, compressing CSS and JavaScript files, etc...)' })
 				else:
+					actions.append({ 'status': 'good' })
 					content['loadTime'] += ' (FAST)'
 
-		self.saveReport( baseUrl, content )
-		self.sendMessage( content )
+		self.sendAndSaveReport( baseUrl, content, actions )
 

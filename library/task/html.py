@@ -33,6 +33,7 @@ class HtmlAnalyzerTask( BaseTask ):
 			'pageSize': 'N/A',
 			'serverIp': 'N/A',
 		}
+		actions = []
 
 		try:
 			httpReq = urllib2.Request( url )
@@ -65,13 +66,26 @@ class HtmlAnalyzerTask( BaseTask ):
 				'serverIp': '%s (%s)' % ( httpReq.get_host(), 'country not available' ),
 			}
 
-			self.saveReport( baseUrl, content )
+			if pageTitle is None:
+				actions.append({ 'status': 'bad', 'description': 'Your page title is missing. This is critical for SEO and should be fixed ASAP.' })
+			elif len( pageTitle ) > 70:
+				actions.append({ 'status': 'regular', 'description': 'Your page title is too long. Most of it will be left out from search results.' })
+			else:
+				actions.append({ 'status': 'good' })
+
+			if not content['googleAnalytics']:
+				actions.append({ 'status': 'regular', 'description': 'Add the Google Analytics script to your page to get valuable insights about your visitors' })
+
+			if content['pageSize'] < 20000:
+				actions.append({ 'status': 'good' })
+			else:
+				actions.append({ 'status': 'bad', 'description': 'The page size is too big and should be reduced' })
 
 		except:
 			e = sys.exc_info()[1]
 			logging.error( str( e ) )
 
-		self.sendMessage( content )
+		self.sendAndSaveReport( baseUrl, content, actions )
 
 def extractDocType( bSoup ):
 	docType = None

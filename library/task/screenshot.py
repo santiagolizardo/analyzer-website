@@ -13,6 +13,7 @@ class ScreenshotGrabberTask( BaseTask ):
 	def start( self, url ):
 
 		content = 'http://img5.wsimg.com/pc/img/1/86649_pc_header.png'
+		actions = []
 		
 		debugActive = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' ) 
 		if not debugActive:
@@ -27,6 +28,5 @@ class ScreenshotGrabberTask( BaseTask ):
 				logging.info( result.final_url )
 				content = result.final_url 
 
-		self.saveReport( url, content )
-		self.sendMessage( content )
+		self.sendAndSaveReport( url, content, actions )
 

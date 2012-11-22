@@ -16,13 +16,16 @@ class RobotsTxtCheckerTask( BaseTask ):
 		result = urlfetch.fetch( url )
 
 		content = 'N/A'
+		actions = []
+
 		if result.status_code == 200:
 			content = url
+			actions.append({ 'status': 'good' })
 		elif result.status_code == 404:
 			content = 'Missing' 
+			actions.append({ 'status': 'regular', 'description': 'Add a robots.txt file to your site' })
 
-		self.saveReport( domain, content )
-		self.sendMessage( content )
+		self.sendAndSaveReport( url, content, actions )
 
 class SitemapXmlCheckerTask( BaseTask ):
 
@@ -34,11 +37,14 @@ class SitemapXmlCheckerTask( BaseTask ):
 		result = urlfetch.fetch( url )
 
 		content = 'N/A'
+		actions = []
+
 		if result.status_code == 200:
 			content = url
+			actions.append({ 'status': 'good' })
 		elif result.status_code == 404:
 			content = 'Missing' 
+			actions.append({ 'status': 'regular', 'description': 'Add a sitemap.xml to your site' })
 
-		self.saveReport( domain, content )
-		self.sendMessage( content )
+		self.sendAndSaveReport( url, content, actions )
 

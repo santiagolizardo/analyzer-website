@@ -15,19 +15,21 @@ class BaseTask( object ):
 
 		raise Exception( 'Method not implemented' )
 
-	def saveReport( self, url, content ):
+	def sendAndSaveReport( self, url, content, actions = [] ):
 
-		niceUrl = url.replace( 'http://', '' )
-		jsonContent = json.dumps( content )
-		taskReport = TaskReport( name = self.getName(), url = niceUrl, content = jsonContent )
-		taskReport.put()
-
-	def sendMessage( self, content ):
-	
 		message = {
-			'type': self.getName(),
-			'body': content
+			'name': self.getName(),
+			'content': content,
+			'actions': actions
 		}
-		send_message( self.channelId, json.dumps( message ) )
+		messageEncoded = json.dumps( message )
 
+		# Send
+		send_message( self.channelId, messageEncoded )
+
+		# Save
+		niceUrl = url.replace( 'http://', '' )
+
+		taskReport = TaskReport( name = self.getName(), url = niceUrl, messageEncoded = messageEncoded )
+		taskReport.put()
 

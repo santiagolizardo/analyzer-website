@@ -5,6 +5,8 @@ from google.appengine.api import urlfetch
 
 from library.task.base import BaseTask
 
+from datetime import timedelta, datetime
+
 class DomainAnalyzerTask( BaseTask ):
 
 	def getName( self ): return 'domain'
@@ -16,6 +18,7 @@ class DomainAnalyzerTask( BaseTask ):
 			'registrationDate': 'N/A',
 			'expirationDate': 'N/A',
 		}
+		actions = []
 
 		baseUrl = fullUrl.replace( 'http://', '' ).replace( '/', '' )
 		apiUsername = 'devsantiago.lizardo'
@@ -25,12 +28,27 @@ class DomainAnalyzerTask( BaseTask ):
 		url = 'http://api.domaintools.com/v1/domaintools.com/whois/'
 		result = urlfetch.fetch( url )
 		if result.status_code == 200:
-			data = json.loads( result.content )
-			logging.info(data)
-			content['owner'] = data['response']['registrant']
-			content['registrationDate'] = data['response']['registration']['created']
-			content['expirationDate'] = data['response']['registration']['expires']
+			todayDate = datetime.today()
+			oneYear = timedelta( days = 365 )
 
-		self.saveReport( fullUrl, content )
-		self.sendMessage( content )
+			data = json.loads( result.content )
+			content['owner'] = data['response']['registrant']
+
+			regDate = data['response']['registration']['created']
+			content['registrationDate'] = regDate 
+			regDate = datetime.strptime( regDate, '%Y-%m-%d' )
+			if regDate < ( todayDate - oneYear ):
+				actions.append({ 'status': 'good' })
+			else:
+				actions.append({ 'status': 'regular', 'description': 'Your domain has been registered during the last year. The older the better. Wait some time to get a better positioning because of this' })
+
+			expDate = data['response']['registration']['expires']
+			content['expirationDate'] = expDate 
+			expDate = datetime.strptime( expDate, '%Y-%m-%d' )
+			if expDate > ( todayDate + oneYear ):
+				actions.append({ 'status': 'good' })
+			else:
+				actions.append({ 'status': 'regular', 'description': 'Register your domain longer than a year to prove Google and others you are serious about your business.' })
+
+		self.sendAndSaveReport( baseUrl, content, actions )
 
