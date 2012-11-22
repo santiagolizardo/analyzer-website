@@ -14,6 +14,8 @@ from bs4 import BeautifulSoup, element
 
 from library.task.base import BaseTask
 
+import library.geoip as geoip
+
 class HtmlAnalyzerTask( BaseTask ):
 
 	def getName( self ): return 'htmlBody'
@@ -29,12 +31,16 @@ class HtmlAnalyzerTask( BaseTask ):
 			'images': 'N/A',
 			'softwareStack': 'N/A',
 			'pageSize': 'N/A',
+			'serverIp': 'N/A',
 		}
 
 		try:
-			httpResponse = urllib2.urlopen( url )
-			body = httpResponse.read().decode( 'utf8' )
-			
+			httpReq = urllib2.Request( url )
+			httpResp = urllib2.urlopen( httpReq )
+			body = httpResp.read().decode( 'utf8' )
+
+			# logging.info( geoip.query( '74.117.156.228', True ) )
+
 			respbody = ResponseBody( domain = url, length = len( body ), body = body )
 			respbody.put()
 
@@ -54,18 +60,19 @@ class HtmlAnalyzerTask( BaseTask ):
 				'docType': extractDocType( bSoup ),
 				'headings': extractHeadings( bSoup ),
 				'images': extractImages( bSoup ),
-				'softwareStack': extractSoftwareStack( httpResponse ),
-				'pageSize': extractPageSize( httpResponse ),
+				'softwareStack': extractSoftwareStack( httpResp ),
+				'pageSize': extractPageSize( httpResp ),
+				'serverIp': '%s (%s)' % ( httpReq.get_host(), 'country not available' ),
 			}
 
 			self.saveReport( baseUrl, content )
 
 		except:
-			e = sys.exc_info()[0]
+			e = sys.exc_info()[1]
 			logging.error( str( e ) )
 
 		self.sendMessage( content )
-		
+
 def extractDocType( bSoup ):
 	docType = None
 	for child in bSoup.contents:
@@ -126,18 +133,18 @@ def extractHeadings( bSoup ):
 	
 	return html
 
-def extractSoftwareStack( httpResponse ):
+def extractSoftwareStack( httpResp ):
 	softwareStack = []
-	if 'Server' in httpResponse.headers:
-		if re.match( 'apache', httpResponse.headers['Server'], re.I ):
+	if 'Server' in httpResp.headers:
+		if re.match( 'apache', httpResp.headers['Server'], re.I ):
 			softwareStack.append( 'Apache Web (HTTP) server' )
 	return '<br />'.join( softwareStack )
 
-def extractPageSize( httpResponse ):
-	if 'Content-Length' in httpResponse.headers:
-		return httpResponse.headers['Content-Length']
-	elif 'content-length' in httpResponse.headers:
-		return httpResponse.headers['content-length']
+def extractPageSize( httpResp ):
+	if 'Content-Length' in httpResp.headers:
+		return httpResp.headers['Content-Length']
+	elif 'content-length' in httpResp.headers:
+		return httpResp.headers['content-length']
 	else:
-		return len( httpResponse.read() )
+		return len( httpResp.read() )
 	

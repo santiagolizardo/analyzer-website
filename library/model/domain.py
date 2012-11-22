@@ -7,3 +7,5 @@ class Domain( db.Model ):
 
 	def __str__( self ):
 		return '<Domain url=%s>' % self.url
+
+

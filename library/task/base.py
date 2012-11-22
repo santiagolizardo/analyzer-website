@@ -19,7 +19,6 @@ class BaseTask( object ):
 
 		niceUrl = url.replace( 'http://', '' )
 		jsonContent = json.dumps( content )
-		logging.info( jsonContent )
 		taskReport = TaskReport( name = self.getName(), url = niceUrl, content = jsonContent )
 		taskReport.put()
 

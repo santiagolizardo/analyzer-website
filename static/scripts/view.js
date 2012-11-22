@@ -10,6 +10,13 @@ var messageHandlers = {
 		document.getElementById( 'headings' ).innerHTML = body.headings;
 		document.getElementById( 'softwareStack' ).innerHTML = body.softwareStack;
 		document.getElementById( 'pageSize' ).innerHTML = body.pageSize;
+		document.getElementById( 'serverIp' ).innerHTML = body.serverIp;
+	},
+	traffic: function( body )
+	{
+		document.getElementById( 'worldRank' ).innerHTML = body.worldRank;
+		document.getElementById( 'countryRank' ).innerHTML = body.countryRank;
+		document.getElementById( 'loadTime' ).innerHTML = body.loadTime;
 	},
 	twitterAccount: function( body )
 	{

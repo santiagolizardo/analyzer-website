@@ -7,9 +7,16 @@ threadsafe: true
 builtins:
 - deferred: on
 - appstats: on
+- remote_api: on
 
 inbound_services:
 - channel_presence
+
+libraries:
+- name: lxml
+  version: latest
+- name: markupsafe
+  version: latest
 
 handlers:
 - url: /bootstrap

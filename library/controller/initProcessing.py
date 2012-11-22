@@ -13,6 +13,7 @@ from library.task.twitter import TwitterAccountCheckerTask
 from library.task.robots import RobotsTxtCheckerTask, SitemapXmlCheckerTask 
 from library.task.screenshot import ScreenshotGrabberTask 
 from library.task.w3c import W3cValidatorTask
+from library.task.alexa import AlexaAnalyzerTask
 
 class InitProcessingController( webapp2.RequestHandler ):
 
@@ -45,7 +46,10 @@ class InitProcessingController( webapp2.RequestHandler ):
 
 		twitterChecker = TwitterAccountCheckerTask( channelId )
 		deferred.defer( twitterChecker.start, baseDomain )
-		
+	
+		alexaAnalyzer = AlexaAnalyzerTask( channelId )
+		deferred.defer( alexaAnalyzer.start, fullUrl )
+	
 		domain = Domain.gql( 'WHERE url = :url', url = domainUrl ).get()
 		if domain is None:
 			domain = Domain( url = domainUrl )

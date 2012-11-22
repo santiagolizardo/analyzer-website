@@ -1,0 +1,3 @@
+[submodule "externals/awis"]
+	path = externals/awis
+	url = https://github.com/muhuk/python-awis.git

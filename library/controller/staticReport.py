@@ -49,10 +49,29 @@ class StaticReportController( PageController ):
 
 		beauty = BeautifulSoup( html )
 
+		taskReport = TaskReport.gql( "WHERE name = 'htmlBody' AND url = :1", domainUrl ).get()
+		if taskReport is not None:
+			data = json.loads( taskReport.content )
+			beauty.find( id = 'pageTitle' ).replace_with( NavigableString( data['pageTitle'] ) )
+			beauty.find( id = 'pageDescription' ).replace_with( NavigableString( data['pageDescription'] ) )
+			beauty.find( id = 'docType' ).replace_with( NavigableString( data['docType'] ) )
+			beauty.find( id = 'images' ).replace_with( NavigableString( data['images'] ) )
+			beauty.find( id = 'headings' ).replace_with( NavigableString( data['headings'] ) )
+			beauty.find( id = 'softwareStack' ).replace_with( NavigableString( data['softwareStack'] ) )
+			beauty.find( id = 'googleAnalytics' ).replace_with( NavigableString( 'Yes' if data['googleAnalytics'] else 'No' ) )
+			beauty.find( id = 'pageSize' ).replace_with( NavigableString( data['pageSize'] ) )
+			beauty.find( id = 'serverIp' ).replace_with( NavigableString( data['serverIp'] ) )
+
 		taskReport = TaskReport.gql( "WHERE name = 'screenshot' AND url = :1", domainUrl ).get()
 		if taskReport is not None:
 			data = json.loads( taskReport.content )
 			beauty.find( id = 'screenshot' )['src'] = data
+
+		taskReport = TaskReport.gql( "WHERE name = 'traffic' AND url = :1", domainUrl ).get()
+		if taskReport is not None:
+			data = json.loads( taskReport.content )
+			beauty.find( id = 'worldRank' ).replace_with( NavigableString( data['worldRank'] ) )
+			beauty.find( id = 'loadTime' ).replace_with( NavigableString( data['loadTime'] ) )
 
 		taskReport = TaskReport.gql( "WHERE name = 'sitemapXml' AND url = :1", domainUrl ).get()
 		if taskReport is not None:
