@@ -4,7 +4,6 @@ import logging
 import urllib2
 import json
 
-from library.model.domain import Domain
 from library.model.responseBody import ResponseBody
 
 from google.appengine.api.channel import send_message
@@ -19,9 +18,8 @@ class HtmlAnalyzerTask( BaseTask ):
 
 	def getName( self ): return 'htmlBody'
 
-	def start( self, baseUrl, url, channelId ):
-		logging.info( 'Analyzing domain: ' + url )
-
+	def start( self, baseUrl, url ):
+		
 		content = {
 			'pageTitle': 'N/A',
 			'pageDescription': 'N/A',
@@ -40,7 +38,6 @@ class HtmlAnalyzerTask( BaseTask ):
 			respbody = ResponseBody( domain = url, length = len( body ), body = body )
 			respbody.put()
 
-			
 			bSoup = BeautifulSoup( body )
 
 			pageTitle = bSoup.title.string
@@ -65,14 +62,9 @@ class HtmlAnalyzerTask( BaseTask ):
 
 		except:
 			e = sys.exc_info()[0]
-			logging.error( e )
+			logging.error( str( e ) )
 
-		self.sendMessage( response )
-
-		domain = Domain.gql( 'WHERE url = :url', url = url ).get()
-		if domain is None:
-			domain = Domain( url = baseUrl )
-			domain.put()
+		self.sendMessage( content )
 		
 def extractDocType( bSoup ):
 	docType = None

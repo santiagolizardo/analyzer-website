@@ -10,7 +10,7 @@ class RobotsTxtCheckerTask( BaseTask ):
 
 	def getName( self ): return 'robotsTxt'
 
-	def start( self, domain, channelId ):
+	def start( self, domain ):
 
 		url = domain + '/robots.txt'
 		result = urlfetch.fetch( url )
@@ -21,13 +21,14 @@ class RobotsTxtCheckerTask( BaseTask ):
 		elif result.status_code == 404:
 			content = 'Missing' 
 
+		self.saveReport( domain, content )
 		self.sendMessage( content )
 
 class SitemapXmlCheckerTask( BaseTask ):
 
 	def getName( self ): return 'sitemapXml'
 
-	def start( self, domain, channelId ):
+	def start( self, domain ):
 
 		url = domain + '/sitemap.xml'
 		result = urlfetch.fetch( url )
@@ -38,5 +39,6 @@ class SitemapXmlCheckerTask( BaseTask ):
 		elif result.status_code == 404:
 			content = 'Missing' 
 
+		self.saveReport( domain, content )
 		self.sendMessage( content )
 

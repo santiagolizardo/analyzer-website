@@ -6,11 +6,13 @@ from google.appengine.api.channel import create_channel
 
 from google.appengine.ext import deferred
 
-from library.task.html import analyzeHtml
-from library.task.twitter import checkTwitterAccount
-from library.task.robots import checkForRobotsTxt, checkForSitemapXml
-from library.task.screenshot import grabScreenshot
-from library.task.w3c import runW3cValidation
+from library.model.domain import Domain
+
+from library.task.html import HtmlAnalyzerTask 
+from library.task.twitter import TwitterAccountCheckerTask 
+from library.task.robots import RobotsTxtCheckerTask, SitemapXmlCheckerTask 
+from library.task.screenshot import ScreenshotGrabberTask 
+from library.task.w3c import W3cValidatorTask
 
 class InitProcessingController( webapp2.RequestHandler ):
 
@@ -26,10 +28,26 @@ class InitProcessingController( webapp2.RequestHandler ):
 		baseDomain = apiData['domain']
 		
 		# Sorted by required time per task 
-		deferred.defer( analyzeHtml, domainUrl, fullUrl, channelId )
-		deferred.defer( grabScreenshot, fullUrl, channelId )
-		deferred.defer( runW3cValidation, fullUrl, channelId )
-		deferred.defer( checkForRobotsTxt, fullUrl, channelId )
-		deferred.defer( checkForSitemapXml, fullUrl, channelId )
-		deferred.defer( checkTwitterAccount, baseDomain, channelId )
+		htmlAnalyzer = HtmlAnalyzerTask( channelId )
+		deferred.defer( htmlAnalyzer.start, domainUrl, fullUrl )
+
+		screenshotGrabber = ScreenshotGrabberTask( channelId )
+		deferred.defer( screenshotGrabber.start, fullUrl )
+
+		w3cValidator = W3cValidatorTask( channelId )
+		deferred.defer( w3cValidator.start, fullUrl )
+
+		robotsChecker = RobotsTxtCheckerTask( channelId )
+		deferred.defer( robotsChecker.start, fullUrl )
+
+		sitemapChecker = SitemapXmlCheckerTask( channelId )
+		deferred.defer( sitemapChecker.start, fullUrl )
+
+		twitterChecker = TwitterAccountCheckerTask( channelId )
+		deferred.defer( twitterChecker.start, baseDomain )
 		
+		domain = Domain.gql( 'WHERE url = :url', url = domainUrl ).get()
+		if domain is None:
+			domain = Domain( url = domainUrl )
+			domain.put()
+

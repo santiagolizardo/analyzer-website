@@ -1,12 +1,13 @@
 
-from google.appengine.ext import deferred
 from library.controller.page import PageController
 
-import uuid, logging
+import logging, json
 
 from datetime import date
 
-from google.appengine.api.channel import create_channel
+from library.model.report import TaskReport
+
+from bs4 import BeautifulSoup, NavigableString
 
 class StaticReportController( PageController ):
 
@@ -44,8 +45,30 @@ class StaticReportController( PageController ):
 			'pageDescription': 'Check %(domainUrl)s metrics on SEO, social and other relevant aspects thanks to DomainGrasp'
 		}
 
-
 		html = self.renderTemplate( 'staticReport.html', values )
-		self.writeResponse( html )
+
+		beauty = BeautifulSoup( html )
+
+		taskReport = TaskReport.gql( "WHERE name = 'screenshot' AND url = :1", domainUrl ).get()
+		if taskReport is not None:
+			data = json.loads( taskReport.content )
+			beauty.find( id = 'screenshot' )['src'] = data
+
+		taskReport = TaskReport.gql( "WHERE name = 'sitemapXml' AND url = :1", domainUrl ).get()
+		if taskReport is not None:
+			data = json.loads( taskReport.content )
+			beauty.find( id = 'sitemapXml' ).replace_with( NavigableString( data ) )
+
+		taskReport = TaskReport.gql( "WHERE name = 'robotsTxt' AND url = :1", domainUrl ).get()
+		if taskReport is not None:
+			data = json.loads( taskReport.content )
+			beauty.find( id = 'robotsTxt' ).replace_with( NavigableString( data ) )
+
+		taskReport = TaskReport.gql( "WHERE name = 'w3cValidation' AND url = :1", domainUrl ).get()
+		if taskReport is not None:
+			data = json.loads( taskReport.content )
+			beauty.find( id = 'w3cValidity' ).replace_with( NavigableString( data ) )
+
+		self.writeResponse( str( beauty ) )
 
 

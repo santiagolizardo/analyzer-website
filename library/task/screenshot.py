@@ -8,12 +8,11 @@ from library.task.base import BaseTask
 
 class ScreenshotGrabberTask( BaseTask ):
 
-	def start( self, url, channelId ):
+	def getName( self ): return 'screenshot'
 
-		response = {
-			'type': 'screenshot',
-			'body': 'http://img5.wsimg.com/pc/img/1/86649_pc_header.png',
-		}
+	def start( self, url ):
+
+		content = 'http://img5.wsimg.com/pc/img/1/86649_pc_header.png'
 		
 		debugActive = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' ) 
 		if not debugActive:
@@ -22,17 +21,12 @@ class ScreenshotGrabberTask( BaseTask ):
 			url = 'http://api.snapito.com/web/%s/%s?url=%s' % ( serviceApi, screenshotSize, url )
 			result = urlfetch.fetch( url )
 			
-			body = None
+			content = None
 			logging.info( result.status_code )
 			if result.status_code == 200:
 				logging.info( result.final_url )
-				body = result.final_url 
-			
-			response = {
-				'type': 'screenshot',
-				'body': body,
-			}
+				content = result.final_url 
 
-		send_message( channelId, json.dumps( response ) )
-
+		self.saveReport( url, content )
+		self.sendMessage( content )
 

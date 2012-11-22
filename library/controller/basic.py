@@ -26,3 +26,4 @@ class BasicController( webapp2.RequestHandler ):
 	def writeResponse( self, body, contentType = 'text/html' ):
 		self.response.headers['Content-Type'] = contentType
 		self.response.write( body )
+
