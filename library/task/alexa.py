@@ -25,11 +25,14 @@ class AlexaAnalyzerTask( BaseTask ):
 			content['worldRank'] = respXml.find( '//{%s}Rank' % api.NS_PREFIXES['awis'] ).text
 			if content['worldRank'] is None:
 				content['worldRank'] = 'Unknown'
-			content['loadTime'] = respXml.find( '//{%s}MedianLoadTime' % api.NS_PREFIXES['awis'] ).text + ' seconds'
-			if int( respXml.find( '//{%s}Percentile' % api.NS_PREFIXES['awis'] ).text ) < 50:
-				content['loadTime'] += ' (SLOW)'
-			else:
-				content['loadTime'] += ' (FAST)'
+
+			temp = respXml.find( '//{%s}MedianLoadTime' % api.NS_PREFIXES['awis'] ).text
+			if temp is not None:
+				content['loadTime'] = temp + ' seconds'
+				if int( respXml.find( '//{%s}Percentile' % api.NS_PREFIXES['awis'] ).text ) < 50:
+					content['loadTime'] += ' (SLOW)'
+				else:
+					content['loadTime'] += ' (FAST)'
 
 		self.saveReport( baseUrl, content )
 		self.sendMessage( content )

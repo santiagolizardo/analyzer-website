@@ -11,6 +11,10 @@
 	</div>
 </form>
 
+<%include file="googleAdsense/topBanner.html"/>
+
+<h4>Recent analyzed sites</h4>
+
 <ul class="nav nav-pills">
 % for recentDomain in recentDomains:
 	<li><a href="${uriFor( 'staticReport', domainUrl = recentDomain.url  )}">${recentDomain.url}</a>

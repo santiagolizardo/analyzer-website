@@ -11,7 +11,7 @@ class IndexController( PageController ):
 		self.addJavaScript( '/bootstrap/js/bootstrap.min.js' )
 		self.addStyleSheet( '/bootstrap/css/bootstrap.min.css' )
 
-		recentDomains = db.GqlQuery( 'SELECT * FROM Domain ORDER BY analysisDate DESC' ).fetch( 20 )
+		recentDomains = db.GqlQuery( 'SELECT * FROM Domain ORDER BY analysisDate DESC' ).fetch( 50 )
 
 		values = {
 			'appUrl': self.app.config.get( 'url' ),

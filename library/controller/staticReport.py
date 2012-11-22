@@ -53,13 +53,13 @@ class StaticReportController( PageController ):
 		if taskReport is not None:
 			data = json.loads( taskReport.content )
 			beauty.find( id = 'pageTitle' ).replace_with( NavigableString( data['pageTitle'] ) )
-			beauty.find( id = 'pageDescription' ).replace_with( NavigableString( data['pageDescription'] ) )
+			beauty.find( id = 'pageDescription' ).replace_with( NavigableString( data['pageDescription'] if data['pageDescription'] else 'Unknown' ) )
 			beauty.find( id = 'docType' ).replace_with( NavigableString( data['docType'] ) )
 			beauty.find( id = 'images' ).replace_with( NavigableString( data['images'] ) )
 			beauty.find( id = 'headings' ).replace_with( NavigableString( data['headings'] ) )
 			beauty.find( id = 'softwareStack' ).replace_with( NavigableString( data['softwareStack'] ) )
 			beauty.find( id = 'googleAnalytics' ).replace_with( NavigableString( 'Yes' if data['googleAnalytics'] else 'No' ) )
-			beauty.find( id = 'pageSize' ).replace_with( NavigableString( data['pageSize'] ) )
+			beauty.find( id = 'pageSize' ).replace_with( NavigableString( str( data['pageSize'] ) ) )
 			beauty.find( id = 'serverIp' ).replace_with( NavigableString( data['serverIp'] ) )
 
 		taskReport = TaskReport.gql( "WHERE name = 'screenshot' AND url = :1", domainUrl ).get()
@@ -88,6 +88,6 @@ class StaticReportController( PageController ):
 			data = json.loads( taskReport.content )
 			beauty.find( id = 'w3cValidity' ).replace_with( NavigableString( data ) )
 
-		self.writeResponse( str( beauty ) )
+		self.writeResponse( beauty.encode( formatter = None ) )
 
 
