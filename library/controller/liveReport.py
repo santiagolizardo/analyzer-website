@@ -19,6 +19,7 @@ class LiveReportController( PageController ):
 
 		sbOptions = (
 			{ 'id': 'priority-actions', 'label': 'Priority actions' },
+			{ 'id': 'domain', 'label': 'Domain' },
 			{ 'id': 'visitors', 'label': 'Visitors' },
 			{ 'id': 'social-monitoring', 'label': 'Social monitoring' },
 			{ 'id': 'content-optimization', 'label': 'Content optimization' },

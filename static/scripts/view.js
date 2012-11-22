@@ -12,6 +12,12 @@ var messageHandlers = {
 		document.getElementById( 'pageSize' ).innerHTML = body.pageSize;
 		document.getElementById( 'serverIp' ).innerHTML = body.serverIp;
 	},
+	domain: function( body )
+	{
+		document.getElementById( 'domainOwner' ).innerHTML = body.owner;
+		document.getElementById( 'domainRegistrationDate' ).innerHTML = body.registrationDate;
+		document.getElementById( 'domainExpirationDate' ).innerHTML = body.expirationDate;
+	},
 	traffic: function( body )
 	{
 		document.getElementById( 'worldRank' ).innerHTML = body.worldRank;

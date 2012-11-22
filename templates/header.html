@@ -15,13 +15,16 @@
 </head>
 <body data-spy="scroll" data-target=".report-sidebar">
 
-<div class="container">
-	<div class="navbar">
+	<div class="navbar navbar-inverse">
 		<div class="navbar-inner">
 			<a class="brand" href="http://${appUrl}/">DomainGrasp</a>
 			<ul class="nav">
 			  <li class="active"><a href="#">Home</a></li>
-			</ul>
+		  </ul>
+			<form class="navbar-search pull-right">
+				<input type="text" class="search-query input-xlarge" placeholder="Search previous reports (e.g. foobar.com)" />
+			</form>
 		</div>
 	</div>
 
+<div class="container">

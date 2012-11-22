@@ -2,7 +2,6 @@
 import sys, json, logging
 
 from google.appengine.api import urlfetch
-from google.appengine.api.channel import send_message
 
 from library.task.base import BaseTask
 

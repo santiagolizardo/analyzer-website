@@ -9,6 +9,7 @@ from google.appengine.ext import deferred
 from library.model.domain import Domain
 
 from library.task.html import HtmlAnalyzerTask 
+from library.task.domain import DomainAnalyzerTask 
 from library.task.twitter import TwitterAccountCheckerTask 
 from library.task.robots import RobotsTxtCheckerTask, SitemapXmlCheckerTask 
 from library.task.screenshot import ScreenshotGrabberTask 
@@ -31,6 +32,9 @@ class InitProcessingController( webapp2.RequestHandler ):
 		# Sorted by required time per task 
 		htmlAnalyzer = HtmlAnalyzerTask( channelId )
 		deferred.defer( htmlAnalyzer.start, domainUrl, fullUrl )
+
+		domainAnalyzer = DomainAnalyzerTask( channelId )
+		deferred.defer( domainAnalyzer.start, fullUrl )
 
 		screenshotGrabber = ScreenshotGrabberTask( channelId )
 		deferred.defer( screenshotGrabber.start, fullUrl )
