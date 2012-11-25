@@ -11,13 +11,17 @@ class DomainAnalyzerTask( BaseTask ):
 
 	def getName( self ): return 'domain'
 
-	def start( self, fullUrl ):
+	def getDefaultData( self ):
 
-		content = {
+		return {
 			'owner': 'N/A',
 			'registrationDate': 'N/A',
 			'expirationDate': 'N/A',
 		}
+
+	def start( self, fullUrl ):
+
+		content = self.getDefaultData()
 		actions = []
 
 		baseUrl = fullUrl.replace( 'http://', '' ).replace( '/', '' )

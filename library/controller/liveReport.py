@@ -12,7 +12,7 @@ class LiveReportController( PageController ):
 		self.addJavaScript( '//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js' )
 		self.addJavaScript( '/_ah/channel/jsapi' )
 		self.addJavaScript( '/bootstrap/js/bootstrap.min.js' )
-		self.addJavaScript( '/scripts/view.js' )
+		self.addJavaScript( '/scripts/liveReport.js' )
 		
 		self.addStyleSheet( '/bootstrap/css/bootstrap.min.css' )
 		self.addStyleSheet( '/styles/allmedia.css' )

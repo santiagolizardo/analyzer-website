@@ -9,9 +9,13 @@ class W3cValidatorTask( BaseTask ):
 
 	def getName( self ): return 'w3cValidation'
 
+	def getDefaultData( self ):
+
+		return 'Unable to contact W3C servers'
+
 	def start( self, fullUrl ):
 		
-		content = 'Unable to contact W3C servers',
+		content = self.getDefaultData(),
 		actions = []
 	    
 		url = 'http://validator.w3.org/check?uri=%s&charset=%%28detect+automatically%%29&doctype=Inline&group=1&output=json' % fullUrl

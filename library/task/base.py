@@ -7,12 +7,17 @@ from library.model.report import TaskReport
 
 class BaseTask( object ):
 
-	def __init__( self, channelId ):
+	def __init__( self, channelId  = None ):
 
 		self.channelId = channelId
 
 	def getName( self ):
 
+		raise Exception( 'Method not implemented' )
+
+
+	def getDefaultData( self ):
+		
 		raise Exception( 'Method not implemented' )
 
 	def sendAndSaveReport( self, url, content, actions = [] ):
@@ -32,4 +37,13 @@ class BaseTask( object ):
 
 		taskReport = TaskReport( name = self.getName(), url = niceUrl, messageEncoded = messageEncoded )
 		taskReport.put()
+
+	def getSavedReport( self, domainUrl ):
+		data = self.getDefaultData()
+
+		taskReport = TaskReport.gql( "WHERE name = :1 AND url = :2", self.getName(), domainUrl ).get()
+		if taskReport is not None:
+			data = json.loads( taskReport.messageEncoded )
+
+		return data
 

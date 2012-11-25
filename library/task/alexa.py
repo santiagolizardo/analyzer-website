@@ -7,12 +7,17 @@ class AlexaAnalyzerTask( BaseTask ):
 
 	def getName( self ): return 'traffic'
 
-	def start( self, baseUrl ):
+	def getDefaultData( self ):
 
-		content = {
+		return {
 			'worldRank': 'N/A',
 			'countryRank': 'N/A',
+			'loadTime': 'N/A'
 		}
+
+	def start( self, baseUrl ):
+
+		content = self.getDefaultData()
 		actions = []
 
 		queryUrl = baseUrl.replace( 'http://', '' )

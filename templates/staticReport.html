@@ -2,6 +2,7 @@
 
 <script type="text/javascript">
 var domainUrl = '${domain}';
+var loadTime = {loadTime};
 </script>
 
 <h1>${domain}</h1>
@@ -9,9 +10,7 @@ var domainUrl = '${domain}';
 
 <div class="row">
 
-	<div class="span3">...</div>
-	
-	<div class="report-sidebar" style="position: fixed;">
+	<div class="report-sidebar span3">
 
 	<%include file="/googleAdsense.html"/>
 
@@ -27,7 +26,10 @@ var domainUrl = '${domain}';
 	<div class="span9">
 	% for sbOption in sbOptions:
 	<div id="${sbOption['id']}">
-	<%include file="/sections/${sbOption['id']}.html"/>
+		<%include file="/sections/${sbOption['id']}.html"/>
+		% if sbOption['id'] == 'priority-actions':
+		<%include file="googleAdsense/topBanner.html"/>
+		% endif
 	</div>
 	% endfor
 	</div>

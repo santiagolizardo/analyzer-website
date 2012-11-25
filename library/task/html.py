@@ -1,12 +1,9 @@
 
-import webapp2
 import logging
 import urllib2
 import json
 
 from library.model.responseBody import ResponseBody
-
-from google.appengine.api.channel import send_message
 
 import time, re, sys
 
@@ -20,9 +17,9 @@ class HtmlAnalyzerTask( BaseTask ):
 
 	def getName( self ): return 'htmlBody'
 
-	def start( self, baseUrl, url ):
-		
-		content = {
+	def getDefaultData( self ):
+
+		return {
 			'pageTitle': 'N/A',
 			'pageDescription': 'N/A',
 			'googleAnalytics': 'N/A',
@@ -33,6 +30,10 @@ class HtmlAnalyzerTask( BaseTask ):
 			'pageSize': 'N/A',
 			'serverIp': 'N/A',
 		}
+
+	def start( self, baseUrl, url ):
+		
+		content = self.getDefaultData()
 		actions = []
 
 		try:
@@ -54,7 +55,7 @@ class HtmlAnalyzerTask( BaseTask ):
 			if len( metaDescriptions ) > 0:
 				pageDescription = metaDescriptions[0]['content']
 
-			content = {
+			content.update({
 				'pageTitle': pageTitle,
 				'pageDescription': pageDescription,
 				'googleAnalytics': ( '/ga.js' in body ),
@@ -64,7 +65,7 @@ class HtmlAnalyzerTask( BaseTask ):
 				'softwareStack': extractSoftwareStack( httpResp ),
 				'pageSize': extractPageSize( httpResp ),
 				'serverIp': '%s (%s)' % ( httpReq.get_host(), 'country not available' ),
-			}
+			})
 
 			if pageTitle is None:
 				actions.append({ 'status': 'bad', 'description': 'Your page title is missing. This is critical for SEO and should be fixed ASAP.' })

@@ -10,12 +10,16 @@ class RobotsTxtCheckerTask( BaseTask ):
 
 	def getName( self ): return 'robotsTxt'
 
+	def getDefaultData( self ):
+
+		return 'N/A'
+
 	def start( self, domain ):
 
 		url = domain + '/robots.txt'
 		result = urlfetch.fetch( url )
 
-		content = 'N/A'
+		content = self.getDefaultData()
 		actions = []
 
 		if result.status_code == 200:
@@ -31,12 +35,16 @@ class SitemapXmlCheckerTask( BaseTask ):
 
 	def getName( self ): return 'sitemapXml'
 
+	def getDefaultData( self ):
+
+		return 'N/A'
+
 	def start( self, domain ):
 
 		url = domain + '/sitemap.xml'
 		result = urlfetch.fetch( url )
 
-		content = 'N/A'
+		content = self.getDefaultData()
 		actions = []
 
 		if result.status_code == 200:

@@ -10,9 +10,13 @@ class ScreenshotGrabberTask( BaseTask ):
 
 	def getName( self ): return 'screenshot'
 
+	def getDefaultData( self ):
+
+		return 'http://img5.wsimg.com/pc/img/1/86649_pc_header.png'
+
 	def start( self, url ):
 
-		content = 'http://img5.wsimg.com/pc/img/1/86649_pc_header.png'
+		content = self.getDefaultData() 
 		actions = []
 		
 		debugActive = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' ) 

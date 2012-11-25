@@ -16,7 +16,7 @@ class IndexController( PageController ):
 
 		values = {
 			'appUrl': self.app.config.get( 'url' ),
-			'pageTitle': 'Analyze your domain free. Check social, SEO and technical factors to improve your business | DomainGrasp ',
+			'pageTitle': 'Analyze your domain for free. Check social, SEO and technical metrics to improve your business | DomainGrasp',
 			'pageDescription': 'A free alternative to Woorank',
 			'javaScripts': self.javaScripts,
 			'styleSheets': self.styleSheets,

@@ -7,12 +7,16 @@ class TwitterAccountCheckerTask( BaseTask ):
 
 	def getName( self ): return 'twitterAccount'
 
+	def getDefaultData( self ):
+
+		return 'N/A'
+
 	def start( self, baseDomain ):
 
 		url = 'http://twitter.com/' + baseDomain
 		result = urlfetch.fetch( url )
 
-		content = 'N/A'
+		content = self.getDefaultData() 
 		actions = []
 
 		if result.status_code == 200:
