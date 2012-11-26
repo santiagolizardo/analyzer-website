@@ -15,6 +15,7 @@ from library.task.robots import RobotsTxtCheckerTask, SitemapXmlCheckerTask
 from library.task.screenshot import ScreenshotGrabberTask 
 from library.task.w3c import W3cValidatorTask
 from library.task.alexa import AlexaAnalyzerTask
+from library.task.social import FacebookCounterTask
 
 class InitProcessingController( webapp2.RequestHandler ):
 
@@ -53,6 +54,9 @@ class InitProcessingController( webapp2.RequestHandler ):
 	
 		alexaAnalyzer = AlexaAnalyzerTask( channelId )
 		deferred.defer( alexaAnalyzer.start, fullUrl )
+
+		fbCounter = FacebookCounterTask( channelId )
+		deferred.defer( fbCounter.start, domainUrl )
 	
 		domain = Domain.gql( 'WHERE url = :url', url = domainUrl ).get()
 		if domain is None:
