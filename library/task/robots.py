@@ -12,7 +12,7 @@ class RobotsTxtCheckerTask( BaseTask ):
 
 	def getDefaultData( self ):
 
-		return 'N/A'
+		return { self.getName(): 'N/A' }
 
 	def start( self, domain ):
 
@@ -23,10 +23,10 @@ class RobotsTxtCheckerTask( BaseTask ):
 		actions = []
 
 		if result.status_code == 200:
-			content = url
+			content[ self.getName() ] = url
 			actions.append({ 'status': 'good' })
 		elif result.status_code == 404:
-			content = 'Missing' 
+			content[ self.getName() ] = 'Missing' 
 			actions.append({ 'status': 'regular', 'description': 'Add a robots.txt file to your site' })
 
 		self.sendAndSaveReport( domain, content, actions )
@@ -36,8 +36,8 @@ class SitemapXmlCheckerTask( BaseTask ):
 	def getName( self ): return 'sitemapXml'
 
 	def getDefaultData( self ):
-
-		return 'N/A'
+		
+		return { self.getName(): 'N/A' }
 
 	def start( self, domain ):
 
@@ -48,10 +48,10 @@ class SitemapXmlCheckerTask( BaseTask ):
 		actions = []
 
 		if result.status_code == 200:
-			content = url
+			content[ self.getName() ] = url
 			actions.append({ 'status': 'good' })
 		elif result.status_code == 404:
-			content = 'Missing' 
+			content[ self.getName() ] = 'Missing' 
 			actions.append({ 'status': 'regular', 'description': 'Add a sitemap.xml to your site' })
 
 		self.sendAndSaveReport( domain, content, actions )

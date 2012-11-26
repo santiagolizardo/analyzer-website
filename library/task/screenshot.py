@@ -12,7 +12,7 @@ class ScreenshotGrabberTask( BaseTask ):
 
 	def getDefaultData( self ):
 
-		return 'http://img5.wsimg.com/pc/img/1/86649_pc_header.png'
+		return { self.getName(): 'http://img5.wsimg.com/pc/img/1/86649_pc_header.png' }
 
 	def start( self, url ):
 
@@ -26,11 +26,10 @@ class ScreenshotGrabberTask( BaseTask ):
 			url = 'http://api.snapito.com/web/%s/%s?url=%s' % ( serviceApi, screenshotSize, url )
 			result = urlfetch.fetch( url )
 			
-			content = None
 			logging.info( result.status_code )
 			if result.status_code == 200:
 				logging.info( result.final_url )
-				content = result.final_url 
+				content[ self.getName() ] = result.final_url 
 
 		self.sendAndSaveReport( url, content, actions )
 

@@ -73,13 +73,13 @@ class StaticReportController( PageController ):
 			if 'actions' in report:
 				actions.extend( report['actions'] )
 
-			data.update( task.getDefaultData() )
+			defaultData = task.getDefaultData()
 			if 'content' in report:
 				if type( report['content'] ) == dict:
-					data.update( report['content'] )
+					defaultData.update( report['content'] )
 				else:
-					logging.info( report['content'] )
-					data[ task.getName() ] = report['content']
+					defaultData[ task.getName() ] = report['content']
+			data.update( defaultData )
 
 		values['loadTimeMs'] = data['loadTimeMs']
 
@@ -123,9 +123,10 @@ class StaticReportController( PageController ):
 		beauty.find( id = 'regularStatuses' ).replace_with( NavigableString( str( statuses['regular'] ) ) )
 		beauty.find( id = 'badStatuses' ).replace_with( NavigableString( str( statuses['bad'] ) ) )
 
-		beauty.find( 'div', 'bar bar-success' )['style'] = 'width: %d%%;' % ( ( statuses['good'] * 100 ) / totalStatuses )
-		beauty.find( 'div', 'bar bar-warning' )['style'] = 'width: %d%%;' % ( ( statuses['regular'] * 100 ) / totalStatuses )
-		beauty.find( 'div', 'bar bar-danger' )['style'] = 'width: %d%%;' % ( ( statuses['bad'] * 100 ) / totalStatuses )
+		if totalStatuses > 0:
+			beauty.find( 'div', 'bar bar-success' )['style'] = 'width: %d%%;' % ( ( statuses['good'] * 100 ) / totalStatuses )
+			beauty.find( 'div', 'bar bar-warning' )['style'] = 'width: %d%%;' % ( ( statuses['regular'] * 100 ) / totalStatuses )
+			beauty.find( 'div', 'bar bar-danger' )['style'] = 'width: %d%%;' % ( ( statuses['bad'] * 100 ) / totalStatuses )
 
 		self.writeResponse( beauty.encode( formatter = None ) )
 

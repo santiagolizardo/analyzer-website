@@ -11,11 +11,11 @@ class W3cValidatorTask( BaseTask ):
 
 	def getDefaultData( self ):
 
-		return 'Unable to contact W3C servers'
+		return { self.getName(): 'Unable to contact W3C servers' }
 
 	def start( self, fullUrl ):
 		
-		content = self.getDefaultData(),
+		content = self.getDefaultData()
 		actions = []
 	    
 		url = 'http://validator.w3.org/check?uri=%s&charset=%%28detect+automatically%%29&doctype=Inline&group=1&output=json' % fullUrl
@@ -24,7 +24,7 @@ class W3cValidatorTask( BaseTask ):
 			try:
 				data = json.loads( result.content )
 				if len( data['messages'] ) == 0:
-					content = 'No errors detected. Great!'
+					content[ self.getName() ] = 'No errors detected. Great!'
 					actions.append({ 'status': 'good' })
 				else:
 					counting = { 'info': 0, 'error': 0, 'warning': 0 }
@@ -32,7 +32,7 @@ class W3cValidatorTask( BaseTask ):
 						counting[ message['type'] ] += 1
 					del counting['info']
 
-					content = 'Your HTML has %d error(s) and %d warning(s).' % tuple( counting.itervalues() )
+					content[ self.getName() ] = 'Your HTML has %d error(s) and %d warning(s).' % tuple( counting.itervalues() )
 					actions.append({ 'status': 'regular', 'description': 'Clean your HTML and fix the erros and warnings detected by the W3C validator' })
 			except:
 				e = sys.exc_info()[1]
