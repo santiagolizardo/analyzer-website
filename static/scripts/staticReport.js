@@ -3,7 +3,7 @@ function drawChart()
 {
 	var data = google.visualization.arrayToDataTable([
 		[ 'Label', 'Value' ],
-		[ 'Load time', loadTime ],
+		[ 'Load time', loadTimeMs ],
 	]);
 
 	var options = {

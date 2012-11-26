@@ -71,8 +71,18 @@ class StaticReportController( PageController ):
 		for task in tasks:
 			report = task.getSavedReport( domainUrl )
 			if 'actions' in report:
-				data.update( report['content'] )
 				actions.extend( report['actions'] )
+
+			data.update( task.getDefaultData() )
+			if 'content' in report:
+				if type( report['content'] ) == dict:
+					data.update( report['content'] )
+				else:
+					logging.info( report['content'] )
+					data[ task.getName() ] = report['content']
+
+		values['loadTimeMs'] = data['loadTimeMs']
+
 		html = self.renderTemplate( 'staticReport.html', values )
 
 		beauty = BeautifulSoup( html )
@@ -87,16 +97,16 @@ class StaticReportController( PageController ):
 		beauty.find( id = 'pageSize' ).replace_with( NavigableString( str( data['pageSize'] ) ) )
 		beauty.find( id = 'serverIp' ).replace_with( NavigableString( data['serverIp'] ) )
 
-		beauty.find( id = 'screenshot' )['src'] = data
+		beauty.find( id = 'screenshot' )['src'] = data['screenshot']
 
 		beauty.find( id = 'worldRank' ).replace_with( NavigableString( data['worldRank'] ) )
 		beauty.find( id = 'loadTime' ).replace_with( NavigableString( data['loadTime'] ) )
 
-		beauty.find( id = 'sitemapXml' ).replace_with( NavigableString( data ) )
+		beauty.find( id = 'sitemapXml' ).replace_with( NavigableString( data['sitemapXml'] ) )
 
-		beauty.find( id = 'robotsTxt' ).replace_with( NavigableString( data ) )
+		beauty.find( id = 'robotsTxt' ).replace_with( NavigableString( data['robotsTxt'] ) )
 
-		beauty.find( id = 'w3cValidity' ).replace_with( NavigableString( data ) )
+		beauty.find( id = 'w3cValidity' ).replace_with( NavigableString( data['w3cValidation'] ) )
 
 		statuses = {
 			'good': 0,

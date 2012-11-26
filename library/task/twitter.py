@@ -28,5 +28,5 @@ class TwitterAccountCheckerTask( BaseTask ):
 			content = 'The Twitter&trade; Account @%s is free. <a href="%s" rel="nofollow" target="_blank">Book it now</a>!' % ( baseDomain, newTwitterAccountUrl ) 
 			actions.append({ 'status': 'regular', 'description': 'Register the twitter account %s before somebody else do it' % baseDomain })
 
-		self.sendAndSaveReport( url, content, actions )
+		self.sendAndSaveReport( baseDomain, content, actions )
 

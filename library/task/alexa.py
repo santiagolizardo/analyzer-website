@@ -12,6 +12,7 @@ class AlexaAnalyzerTask( BaseTask ):
 		return {
 			'worldRank': 'N/A',
 			'countryRank': 'N/A',
+			'loadTimeMs': 0,
 			'loadTime': 'N/A'
 		}
 
@@ -34,7 +35,8 @@ class AlexaAnalyzerTask( BaseTask ):
 
 			temp = respXml.find( '//{%s}MedianLoadTime' % api.NS_PREFIXES['awis'] ).text
 			if temp is not None:
-				content['loadTime'] = temp + ' seconds'
+				content['loadTimeMs'] = long( temp )
+				content['loadTime'] = temp + ' milliseconds'
 				if int( respXml.find( '//{%s}Percentile' % api.NS_PREFIXES['awis'] ).text ) < 50:
 					content['loadTime'] += ' (SLOW)'
 					actions.append({ 'status': 'regular', 'description': 'You have to speed up your site (e.g. serving smaller images, reducing the number of HTTP requests, compressing CSS and JavaScript files, etc...)' })

@@ -12,9 +12,7 @@ var domainUrl = '${domain}';
 
 <div class="row">
 
-	<div class="span3">...</div>
-	
-	<div class="report-sidebar" style="position: fixed;">
+	<div class="report-sidebar span3">
 
 	<%include file="/googleAdsense.html"/>
 
@@ -29,9 +27,12 @@ var domainUrl = '${domain}';
 
 	<div class="span9">
 	% for sbOption in sbOptions:
-	<div id="${sbOption['id']}">
-	<%include file="/sections/${sbOption['id']}.html"/>
-	</div>
+		<div id="${sbOption['id']}">
+		<%include file="/sections/${sbOption['id']}.html"/>
+		</div>
+		% if sbOption['id'] == 'content-optimization':
+		<%include file="googleAdsense/topBanner.html"/>
+		% endif
 	% endfor
 	</div>
 

@@ -29,7 +29,7 @@ class RobotsTxtCheckerTask( BaseTask ):
 			content = 'Missing' 
 			actions.append({ 'status': 'regular', 'description': 'Add a robots.txt file to your site' })
 
-		self.sendAndSaveReport( url, content, actions )
+		self.sendAndSaveReport( domain, content, actions )
 
 class SitemapXmlCheckerTask( BaseTask ):
 
@@ -54,5 +54,5 @@ class SitemapXmlCheckerTask( BaseTask ):
 			content = 'Missing' 
 			actions.append({ 'status': 'regular', 'description': 'Add a sitemap.xml to your site' })
 
-		self.sendAndSaveReport( url, content, actions )
+		self.sendAndSaveReport( domain, content, actions )
 
