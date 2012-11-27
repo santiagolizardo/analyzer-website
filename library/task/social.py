@@ -27,12 +27,10 @@ class FacebookCounterTask( BaseTask ):
             'format': 'json'
         }
         url = 'https://api.facebook.com/method/fql.query?' + urllib.urlencode(params)
-        logging.info(url)
         result = urlfetch.fetch( url )
         if result.status_code == 200:
             try:
                 data = json.loads( result.content )[0]
-                logging.info(data)
                 content['facebookLikes'] = data['like_count']
                 content['facebookComments'] = data['comment_count']
                 content['facebookShares'] = data['share_count']

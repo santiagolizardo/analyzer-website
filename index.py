@@ -25,6 +25,8 @@ routes = [
 	routes.DomainRoute( 'www.domaingrasp.<:dev|com>',
 		[
 			webapp2.Route( '/', handler = IndexController ),
+			webapp2.Route( '/features', handler = 'library.controller.static.FeaturesController', name = 'features' ),
+			webapp2.Route( '/about', handler = 'library.controller.static.AboutController', name = 'about' ),
 		]
 	),
 	routes.DomainRoute( 'ranking.domaingrasp.<:dev|com>',

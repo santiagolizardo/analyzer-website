@@ -14,7 +14,10 @@ class AnalyzeDomainController( webapp2.RequestHandler ):
 
 		debugActive = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' )
 
-		url = uriFor( 'liveReport', domainUrl = domain )
+		if len( domain ) == 0:
+			url = self.request.referer
+		else:
+			url = uriFor( 'liveReport', domainUrl = domain )
 
 		self.redirect( url )
 

@@ -15,6 +15,7 @@ from library.task.screenshot import ScreenshotGrabberTask
 from library.task.w3c import W3cValidatorTask
 from library.task.alexa import AlexaAnalyzerTask
 from library.task.social import FacebookCounterTask
+from library.task.search import SearchTask 
 
 from library.model.report import SiteReport
 
@@ -63,7 +64,12 @@ class StaticReportController( StandardPageController ):
 		twitterChecker = TwitterAccountCheckerTask()
 		alexaAnalyzer = AlexaAnalyzerTask()
 
-		tasks = ( htmlAnalyzer, domainAnalyzer, screenshotGrabber, w3cValidator, robotsChecker, sitemapChecker, twitterChecker, alexaAnalyzer, FacebookCounterTask() )
+		tasks = (
+			htmlAnalyzer,
+			domainAnalyzer,
+			screenshotGrabber, w3cValidator, robotsChecker, sitemapChecker, twitterChecker, alexaAnalyzer, FacebookCounterTask(),
+			SearchTask(),
+		)
 
 		data = {}
 		actions = []
@@ -111,6 +117,8 @@ class StaticReportController( StandardPageController ):
 		beauty.find( id = 'facebookComments' ).replace_with( NavigableString( str( data['facebookComments'] ) ) )
 		beauty.find( id = 'facebookLikes' ).replace_with( NavigableString( str( data['facebookLikes'] ) ) )
 		beauty.find( id = 'facebookShares' ).replace_with( NavigableString( str( data['facebookShares'] ) ) )
+		
+		beauty.find( id = 'indexedPages' ).replace_with( NavigableString( data['indexedPages'] ) )
 
 		siteReport = SiteReport.gql( 'WHERE url = :url', url = domainUrl ).get()
 

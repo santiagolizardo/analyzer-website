@@ -84,6 +84,10 @@ var messageHandlers = {
 		document.getElementById( 'facebookComments' ).innerHTML = content.facebookComments;
 		document.getElementById( 'facebookShares' ).innerHTML = content.facebookShares;
 	},
+	indexedPages: function( content )
+	{
+		document.getElementById( 'indexedPages' ).innerHTML = content.indexedPages;
+	},
 	score: function( content )
 	{
 		score = content;

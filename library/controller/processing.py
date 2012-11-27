@@ -14,6 +14,7 @@ from library.task.screenshot import ScreenshotGrabberTask
 from library.task.w3c import W3cValidatorTask
 from library.task.alexa import AlexaAnalyzerTask
 from library.task.social import FacebookCounterTask
+from library.task.search import SearchTask
 
 class InitProcessingController( webapp2.RequestHandler ):
 
@@ -56,3 +57,6 @@ class InitProcessingController( webapp2.RequestHandler ):
 		fbCounter = FacebookCounterTask( channelId )
 		deferred.defer( fbCounter.start, domainUrl )
 	
+		searchTask = SearchTask( channelId )
+		deferred.defer( searchTask.start, domainUrl )
+
