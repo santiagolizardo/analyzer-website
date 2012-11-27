@@ -1,12 +1,12 @@
 
 from google.appengine.ext import deferred
-from library.controller.page import PageController
+from library.controller.page import StandardPageController
 
 import uuid, logging
 
 from google.appengine.api.channel import create_channel
 
-class LiveReportController( PageController ):
+class LiveReportController( StandardPageController ):
 
 	def get( self, domainUrl ):
 		self.addJavaScript( '//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js' )
@@ -42,12 +42,9 @@ class LiveReportController( PageController ):
 		from datetime import date
 
 		values = {
-			'appUrl': self.app.config.get( 'url' ),
 			'domain': domainUrl,
 			'domainLength': len( domainUrl.replace( '.com', '' ) ),
 			'clientId': clientId,
-			'javaScripts': self.javaScripts,
-			'styleSheets': self.styleSheets,
 			'sbOptions': sbOptions,
 			'generatedOnDate': date.today().isoformat(),
 			'pageTitle': '%(domainUrl)s | Domain insights for %(domainUrl)s by DomainGrasp.com' % { 'domainUrl': domainUrl },

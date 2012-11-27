@@ -44,5 +44,7 @@ class AlexaAnalyzerTask( BaseTask ):
 					actions.append({ 'status': 'good' })
 					content['loadTime'] += ' (FAST)'
 
+
+		from google.appengine.api.channel import send_message
 		self.sendAndSaveReport( baseUrl, content, actions )
 

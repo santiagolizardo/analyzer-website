@@ -21,7 +21,7 @@ google.load( 'visualization', '1', { packages:['gauge'] } );
 google.setOnLoadCallback( drawChart );
 
 $( document ).ready( function()
-{
-});
-
-
+	{
+	
+	}
+);

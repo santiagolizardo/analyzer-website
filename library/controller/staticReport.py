@@ -1,5 +1,5 @@
 
-from library.controller.page import PageController
+from library.controller.page import StandardPageController
 
 import logging, json
 
@@ -14,8 +14,9 @@ from library.task.robots import RobotsTxtCheckerTask, SitemapXmlCheckerTask
 from library.task.screenshot import ScreenshotGrabberTask 
 from library.task.w3c import W3cValidatorTask
 from library.task.alexa import AlexaAnalyzerTask
+from library.task.social import FacebookCounterTask
 
-class StaticReportController( PageController ):
+class StaticReportController( StandardPageController ):
 
 	def get( self, domainUrl ):
 		self.addJavaScript( '//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js' )
@@ -44,10 +45,7 @@ class StaticReportController( PageController ):
 
 		values = {
 			'domain': domainUrl,
-			'appUrl': self.app.config.get( 'url' ),
 			'domainLength': len( domainUrl.replace( '.com', '' ) ),
-			'javaScripts': self.javaScripts,
-			'styleSheets': self.styleSheets,
 			'sbOptions': sbOptions,
 			'generatedOnDate': date.today().isoformat(),
 			'pageTitle': '%(domainUrl)s | Domain insights for %(domainUrl)s by DomainGrasp.com' % { 'domainUrl': domainUrl },
@@ -63,7 +61,7 @@ class StaticReportController( PageController ):
 		twitterChecker = TwitterAccountCheckerTask()
 		alexaAnalyzer = AlexaAnalyzerTask()
 
-		tasks = ( htmlAnalyzer, domainAnalyzer, screenshotGrabber, w3cValidator, robotsChecker, sitemapChecker, twitterChecker, alexaAnalyzer )
+		tasks = ( htmlAnalyzer, domainAnalyzer, screenshotGrabber, w3cValidator, robotsChecker, sitemapChecker, twitterChecker, alexaAnalyzer, FacebookCounterTask() )
 
 		data = {}
 		actions = []
@@ -107,6 +105,10 @@ class StaticReportController( PageController ):
 		beauty.find( id = 'robotsTxt' ).replace_with( NavigableString( data['robotsTxt'] ) )
 
 		beauty.find( id = 'w3cValidity' ).replace_with( NavigableString( data['w3cValidation'] ) )
+		
+		beauty.find( id = 'facebookComments' ).replace_with( NavigableString( str( data['facebookComments'] ) ) )
+		beauty.find( id = 'facebookLikes' ).replace_with( NavigableString( str( data['facebookLikes'] ) ) )
+		beauty.find( id = 'facebookShares' ).replace_with( NavigableString( str( data['facebookShares'] ) ) )
 
 		statuses = {
 			'good': 0,

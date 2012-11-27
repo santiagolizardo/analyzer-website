@@ -6,11 +6,11 @@ from library.utilities import uriFor
 class AnalyzeDomainController( webapp2.RequestHandler ):
 
 	def post( self ):
-		domain = self.request.get( 'domain' ) 		# 'http://FOOBAR.com/    '
-		domain = domain.strip() 			# 'http://FOOBAR.com/'
-		domain = domain.rstrip( '/' ) 			# 'http://FOOBAR.com'
-		domain = re.sub( '^http://', '', domain ) 	# 'FOOBAR.com'
-		domain = domain.lower() 			# 'foobar.com'
+		domain = self.request.get( 'domain' ) 		# 'http://FOOBAR.com/          '
+		domain = domain.lower()				# 'http://foobar.com/      '
+		domain = domain.strip() 			# 'http://foobar.com/'
+		domain = domain.rstrip( '/' ) 			# 'http://foobar.com'
+		domain = re.sub( '^http://', '', domain ) 	# 'foobar.com'
 
 		debugActive = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' )
 

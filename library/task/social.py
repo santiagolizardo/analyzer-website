@@ -12,8 +12,9 @@ class FacebookCounterTask( BaseTask ):
     
     def getDefaultData(self):
         return {
-            'likeCount': 0,
-            'commentcount': 0
+            'facebookLikes': 0,
+            'facebookComments': 0,
+            'facebookShares': 0
         }
         
     def start(self, domainUrl):
@@ -32,8 +33,17 @@ class FacebookCounterTask( BaseTask ):
             try:
                 data = json.loads( result.content )[0]
                 logging.info(data)
-                content['likeCount'] = data['like_count']
-                content['commentCount'] = data['comment_count']
+                content['facebookLikes'] = data['like_count']
+                content['facebookComments'] = data['comment_count']
+                content['facebookShares'] = data['share_count']
+                
+                totalCount = sum( content.values() )
+                if totalCount < 10:
+                    actions.append({ 'status': 'bad', 'description': 'Your social activity is almost null. You have to be more social on Facebook' })
+                elif totalCount < 100:
+                    actions.append({ 'status': 'regular', 'description': 'Your social activity on Facebook is good, but try to engage more users' })
+                else:
+                    actions.append({ 'status': 'good' })
             except:
                 ex = sys.exc_info()[1]
                 logging.error(ex)

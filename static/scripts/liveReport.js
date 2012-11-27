@@ -13,9 +13,6 @@ function addAction( action )
 	statuses[ action.status ]++;
 	totalStatuses++;
 
-	console.dir(action);
-	console.dir(statuses);
-
 	$( 'div#statuses > div.bar-success' )
 		.css( 'width', ( ( statuses['good'] * 100 ) / totalStatuses ) + '%' );
 	$( 'div#statuses > div.bar-warning' )
@@ -60,26 +57,37 @@ var messageHandlers = {
 	},
 	twitterAccount: function( content )
 	{
-		document.getElementById( 'twitterAccount' ).innerHTML = content;
+		document.getElementById( 'twitterAccount' ).innerHTML = content.twitterAccount;
 	},
 	robotsTxt: function( content )
 	{
-		document.getElementById( 'robotsTxt' ).innerHTML = content;
+		document.getElementById( 'robotsTxt' ).innerHTML = content.robotsTxt;
 	},
 	sitemapXml: function( content )
 	{
-		document.getElementById( 'sitemapXml' ).innerHTML = content;
+		document.getElementById( 'sitemapXml' ).innerHTML = content.sitemapXml;
 	},
 	screenshot: function( content )
 	{
 		if( null !== content )
 		{
-			document.getElementById( 'screenshot' ).src = content;
+			document.getElementById( 'screenshot' ).src = content.screenshot;
 		}
 	},
 	w3cValidation: function( content )
 	{
 		document.getElementById( 'w3cValidity' ).innerHTML = content;
+	},
+	facebook: function( content )
+	{
+		document.getElementById( 'facebookLikes' ).innerHTML = content.facebookLikes;
+		document.getElementById( 'facebookComments' ).innerHTML = content.facebookComments;
+		document.getElementById( 'facebookShares' ).innerHTML = content.facebookShares;
+	},
+	score: function( content )
+	{
+		score = content;
+		document.getElementById( 'score' ).innerHTML = content;
 	},
 };
 
@@ -89,18 +97,23 @@ for( var key in messageHandlers )
 {
 	numSubreports += ( messageHandlers.hasOwnProperty( key ) ? 1 : 0 );
 }
+var score = null;
 
 function increaseProgressBar()
 {
 	reportCompletionPercentage += Math.ceil( 100 / numSubreports );
 
 	var progressBar = document.getElementById( 'mainProgressBar' );
-	var innerBar = progressBar.getElementsByTagName( 'div' )[0];
-	innerBar.style.width = reportCompletionPercentage + '%';
+	if( progressBar )
+	{
+		var innerBar = progressBar.getElementsByTagName( 'div' )[0];
+		innerBar.style.width = reportCompletionPercentage + '%';
+	}
 
 	if( reportCompletionPercentage >= 100 )
 	{
 		$( progressBar ).fadeOut( 'normal', function() { $( this ).remove(); } );
+		if( score == null ) $.get( '/calculateScore?domainUrl=' + domainUrl );
 	}
 }
 
@@ -110,7 +123,7 @@ $( document ).ready( function()
 		var handlers = {
 			onopen: function()
 			{
-				$.get( '/initProcessing?domainUrl=' + domainUrl );
+				$.get( '/launchSubreports?domainUrl=' + domainUrl );
 			},
 			onclose: function()
 			{

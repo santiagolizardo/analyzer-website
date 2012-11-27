@@ -12,7 +12,7 @@ class ScreenshotGrabberTask( BaseTask ):
 
 	def getDefaultData( self ):
 
-		return { self.getName(): 'http://img5.wsimg.com/pc/img/1/86649_pc_header.png' }
+		return { self.getName(): '/images/1x1.png' }
 
 	def start( self, url ):
 

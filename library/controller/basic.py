@@ -1,6 +1,6 @@
 
 import webapp2
-import os
+import os, logging
 
 from mako.lookup import TemplateLookup
 
@@ -10,7 +10,7 @@ class BasicController( webapp2.RequestHandler ):
 
 	def renderTemplate( self, name, values = {} ):
 		values['uriFor'] = uriFor
-
+		
 		templateDirs = [ os.path.abspath( 'templates' ) ]
 		templateFinder = TemplateLookup( directories = templateDirs, input_encoding = 'utf-8', output_encoding = 'utf-8', encoding_errors = 'ignore', disable_unicode = False )
 		templ = templateFinder.get_template( name );

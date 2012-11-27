@@ -1,0 +1,30 @@
+<%include file="header.html"/>
+
+<h2>These are the best Websites in term of SEO and Social good practices</h2>
+
+<table class="table table-striped">
+<thead>
+	<tr>
+	<th>#</th>
+	<th>Score</th>
+	<th>Site name and description</th>
+	<th>Last report Url</th>
+	<th>Website Url</th>
+	</tr>
+</thead>
+<tbody>
+% for site in sites:
+	<tr>
+	<td>${site['position']}</td>
+	<td>${site['score']}</td>
+	<td>${site['name']}<br /><em>${site['description']}</em></td>
+	<td><a href="${site['lastReportUrl']}">View last SEO/Social report</a></td>
+	<td><a href="http://${site['url']}" rel="nofollow" target="_blank">${site['url']}</a></td>
+	</tr>
+% endfor
+</tbody>
+</table>
+
+<p>This ranking updates every 6 hours. Do not be nervous if you don't see your Website here immediately. :)</p>
+
+<%include file="footer.html"/>
