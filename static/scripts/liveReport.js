@@ -97,6 +97,7 @@ for( var key in messageHandlers )
 {
 	numSubreports += ( messageHandlers.hasOwnProperty( key ) ? 1 : 0 );
 }
+numSubreports--; // score does not count.
 var score = null;
 
 function increaseProgressBar()

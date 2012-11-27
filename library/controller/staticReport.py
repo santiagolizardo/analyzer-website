@@ -16,6 +16,8 @@ from library.task.w3c import W3cValidatorTask
 from library.task.alexa import AlexaAnalyzerTask
 from library.task.social import FacebookCounterTask
 
+from library.model.report import SiteReport
+
 class StaticReportController( StandardPageController ):
 
 	def get( self, domainUrl ):
@@ -110,16 +112,19 @@ class StaticReportController( StandardPageController ):
 		beauty.find( id = 'facebookLikes' ).replace_with( NavigableString( str( data['facebookLikes'] ) ) )
 		beauty.find( id = 'facebookShares' ).replace_with( NavigableString( str( data['facebookShares'] ) ) )
 
+		siteReport = SiteReport.gql( 'WHERE url = :url', url = domainUrl ).get()
+
+		beauty.find( id = 'score' ).replace_with( NavigableString( str( siteReport.score ) + '/100' ) )
+
 		statuses = {
 			'good': 0,
 			'regular': 0,
 			'bad': 0,
 		}
-		totalStatuses = 0
 
 		for action in actions:
 			statuses[ action['status'] ] = statuses[ action['status'] ] + 1
-			totalStatuses = totalStatuses + 1
+		totalStatuses = sum( statuses.values() )
 
 		beauty.find( id = 'goodStatuses' ).replace_with( NavigableString( str( statuses['good'] ) ) )
 		beauty.find( id = 'regularStatuses' ).replace_with( NavigableString( str( statuses['regular'] ) ) )

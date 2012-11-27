@@ -6,8 +6,6 @@ from google.appengine.api.channel import create_channel
 
 from google.appengine.ext import deferred
 
-from library.model.domain import Domain
-
 from library.task.html import HtmlAnalyzerTask 
 from library.task.domain import DomainAnalyzerTask 
 from library.task.twitter import TwitterAccountCheckerTask 
@@ -58,8 +56,3 @@ class InitProcessingController( webapp2.RequestHandler ):
 		fbCounter = FacebookCounterTask( channelId )
 		deferred.defer( fbCounter.start, domainUrl )
 	
-		domain = Domain.gql( 'WHERE url = :url', url = domainUrl ).get()
-		if domain is None:
-			domain = Domain( url = domainUrl )
-			domain.put()
-

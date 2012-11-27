@@ -5,9 +5,11 @@
 	% if pageTitle:
 	<title>${pageTitle}</title>
 	% endif
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	% for styleSheet in styleSheets:
 	<link href="${styleSheet}" rel="stylesheet" type="text/css" />
 	% endfor
+	<link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 	% for javaScript in javaScripts:
 	<script type="text/javascript" src="${javaScript}"></script>
 	% endfor

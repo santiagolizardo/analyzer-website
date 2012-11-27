@@ -14,7 +14,7 @@ var domainUrl = '${domain}';
 
 	<div class="report-sidebar span3">
 
-	<%include file="/googleAdsense.html"/>
+	<p><%include file="/googleAdsense.html"/></p>
 
 	<ul class="nav nav-list report-sidenav">
 	% for sbOption in sbOptions:
@@ -22,7 +22,8 @@ var domainUrl = '${domain}';
 	% endfor
 	</ul>
 
-	<%include file="/googleAdsense.html"/>
+	<p><%include file="/googleAdsense.html"/></p>
+	<p><%include file="/shareLinks.html"/></p>
 	</div>
 
 	<div class="span9">
@@ -35,7 +36,6 @@ var domainUrl = '${domain}';
 		% endif
 	% endfor
 	</div>
-
 </div>
 
 <%include file="footer.html"/>

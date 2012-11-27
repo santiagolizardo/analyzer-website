@@ -1,6 +1,5 @@
 
 from library.controller.page import StandardPageController
-from library.model.domain import Domain
 
 from google.appengine.ext import db
 
@@ -12,7 +11,7 @@ class IndexController( StandardPageController ):
 		self.addStyleSheet( '/bootstrap/css/bootstrap.min.css' )
 		self.addStyleSheet( '/styles/allmedia.css' )
 
-		recentDomains = db.GqlQuery( 'SELECT * FROM Domain ORDER BY analysisDate DESC' ).fetch( 50 )
+		recentDomains = db.GqlQuery( 'SELECT * FROM SiteReport ORDER BY creationDate DESC' ).fetch( 50 )
 
 		values = {
 			'recentDomains': recentDomains,
