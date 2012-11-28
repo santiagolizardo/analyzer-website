@@ -14,7 +14,7 @@ class SearchTask( BaseTask ):
 	def getDefaultData( self ):
 
 		return {
-			'indexedPages': 0,
+			'indexedPages': '0',
 		}
 
 	def start( self, domainUrl ):
