@@ -1,7 +1,7 @@
 
 from library.controller.page import StandardPageController
 
-import logging, json
+import logging, json, sys, os
 
 from datetime import date
 
@@ -19,9 +19,39 @@ from library.task.search import SearchTask
 
 from library.model.report import SiteReport
 
+#short 
+from google.appengine.api import app_identity
+from google.appengine.api import urlfetch
+
+def create_short_url(long_url):
+    scope = "https://www.googleapis.com/auth/urlshortener"
+    authorization_token, _ = app_identity.get_access_token(scope)
+    logging.info("Using token %s to represent identity %s",
+                 authorization_token, app_identity.get_service_account_name())
+    payload = json.dumps({"longUrl": long_url})
+    response = urlfetch.fetch(
+            "https://www.googleapis.com/urlshortener/v1/url?pp=1",
+            method=urlfetch.POST,
+            payload=payload,
+            headers = {"Content-Type": "application/json",
+                       "Authorization": "OAuth " + authorization_token})
+    if response.status_code == 200:
+        result = json.loads(response.content)
+        return result["id"]
+    raise Exception("Call failed. Status code %s. Body %s",
+                    response.status_code, response.content)
+
 class StaticReportController( StandardPageController ):
 
 	def get( self, domainUrl ):
+
+		siteReport = SiteReport.gql( 'WHERE url = :url', url = domainUrl ).get()
+	
+		if siteReport is None:
+			self.response.set_status( 404 )
+			self.response.write( 'Report not found' )
+			return
+
 		self.addJavaScript( '//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js' )
 		self.addJavaScript( '/bootstrap/js/bootstrap.min.js' )
 		self.addJavaScript( 'https://www.google.com/jsapi' )
@@ -89,6 +119,15 @@ class StaticReportController( StandardPageController ):
 
 		values['loadTimeMs'] = data['loadTimeMs']
 
+		debugActive = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' )
+
+		values['shortUrl'] = self.request.url
+		if debugActive is False:
+			try:
+				values['shortUrl'] = create_short_url( self.request.url )
+			except:
+				logging.error( sys.exc_info()[1] )
+
 		html = self.renderTemplate( 'staticReport.html', values )
 
 		beauty = BeautifulSoup( html )
@@ -119,8 +158,6 @@ class StaticReportController( StandardPageController ):
 		beauty.find( id = 'facebookShares' ).replace_with( NavigableString( str( data['facebookShares'] ) ) )
 		
 		beauty.find( id = 'indexedPages' ).replace_with( NavigableString( data['indexedPages'] ) )
-
-		siteReport = SiteReport.gql( 'WHERE url = :url', url = domainUrl ).get()
 
 		beauty.find( id = 'score' ).replace_with( NavigableString( str( siteReport.score ) + '/100' ) )
 

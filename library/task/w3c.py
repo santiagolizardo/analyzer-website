@@ -18,10 +18,10 @@ class W3cValidatorTask( BaseTask ):
 		content = self.getDefaultData()
 		actions = []
 	    
-		url = 'http://validator.w3.org/check?uri=%s&charset=%%28detect+automatically%%29&doctype=Inline&group=1&output=json' % fullUrl
-		result = urlfetch.fetch( url )
-		if result.status_code == 200:
-			try:
+		try:
+			url = 'http://validator.w3.org/check?uri=%s&charset=%%28detect+automatically%%29&doctype=Inline&group=1&output=json' % fullUrl
+			result = urlfetch.fetch( url, deadline = 10 )
+			if result.status_code == 200:
 				data = json.loads( result.content )
 				if len( data['messages'] ) == 0:
 					content[ self.getName() ] = 'No errors detected. Great!'
@@ -34,9 +34,8 @@ class W3cValidatorTask( BaseTask ):
 
 					content[ self.getName() ] = 'Your HTML has %d error(s) and %d warning(s).' % tuple( counting.itervalues() )
 					actions.append({ 'status': 'regular', 'description': 'Clean your HTML and fix the erros and warnings detected by the W3C validator' })
-			except:
-				e = sys.exc_info()[1]
-				logging.error( str( e ) )
+		except:
+			logging.warning( sys.exc_info()[1] )
 
 		self.sendAndSaveReport( fullUrl, content, actions )
 

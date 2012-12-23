@@ -1,5 +1,5 @@
 
-import json, logging, os
+import json, logging, os, sys
 
 from google.appengine.api import urlfetch
 from google.appengine.api.channel import send_message
@@ -48,18 +48,20 @@ class ScreenshotGrabberTask( BaseTask ):
 		if not debugActive:
 			serviceApi = '18e1518747b2702d9bd216465603dbb3d74b8fea'
 			screenshotSize = 'mc'
-			apiUrl = 'http://api.snapito.com/web/%s/%s?url=%s' % ( serviceApi, screenshotSize, url )
-			result = urlfetch.fetch( apiUrl )
-						
-			logging.info( result.status_code )
-			if result.status_code == 200:
-				imageData = urllib2.urlopen( result.final_url ).read()
 
-				#storeFileInCloud( imageData, url )
-				imageUrl = storeFileInBlobstore( imageData, url )
+			try:
+				apiUrl = 'http://api.snapito.com/web/%s/%s?url=%s' % ( serviceApi, screenshotSize, url )
+				result = urlfetch.fetch( apiUrl, deadline = 30 )
+							
+				if result.status_code == 200:
+					imageData = urllib2.urlopen( result.final_url ).read()
 
-				logging.info( result.final_url )
-				content[ self.getName() ] = imageUrl
+					#storeFileInCloud( imageData, url )
+					imageUrl = storeFileInBlobstore( imageData, url )
+
+					content[ self.getName() ] = imageUrl
+			except:
+				logging.warning( sys.exc_info()[1] )
 
 		self.sendAndSaveReport( url, content, actions )
 
