@@ -28,6 +28,9 @@ handlers:
 - url: /images
   static_dir: static/images
 
+- url: /robots\.txt
+  static_files: static/robots.txt
+  upload: static/robots\.txt
 - url: /(.+\.ico)
   static_files: static/\1
   upload: static/(.+\.ico)
