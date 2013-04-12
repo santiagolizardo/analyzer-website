@@ -14,7 +14,12 @@
 	<dd id="badStatuses">0</dd>
 </dl>
 
-<h2>Your score is <span id="score">...</span></h2>
+<h2>${domain} score</h2>
+
+<span itemscope itemtype="http://data-vocabulary.org/Review-aggregate">
+The domain <span itemprop="itemreviewed">${domain}</span> has been rated <span itemprop="rating" itemscope itemtype="http://data-vocabulary.org/Rating"> <span id="score" class="badge badge-important" itemprop="average">...</span> out of <span itemprop="best">100</span>
+</span> (based on <span itemprop="count">1</span> review)
+</span>
 
 <div id="statuses" class="progress">
 <div class="bar bar-success" style="width: 0%;"></div>

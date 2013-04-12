@@ -159,7 +159,7 @@ class StaticReportController( StandardPageController ):
 		
 		beauty.find( id = 'indexedPages' ).replace_with( NavigableString( data['indexedPages'] ) )
 
-		beauty.find( id = 'score' ).replace_with( NavigableString( str( siteReport.score ) + '/100' ) )
+		beauty.find( id = 'score' ).contents[0].replace_with( str( siteReport.score ) )
 
 		statuses = {
 			'good': 0,

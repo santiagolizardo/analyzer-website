@@ -16,6 +16,22 @@ from library.task.alexa import AlexaAnalyzerTask
 from library.task.social import FacebookCounterTask
 from library.task.search import SearchTask
 
+import twitter
+
+def tweet( domain ):
+	api = twitter.Api(
+		consumer_key = 'wdRZHTPeaz8rpCsIW4Kw',
+		consumer_secret = 'pPb3hsR6ugXLJrTL6SDSeP12D0AGTcT2H2hylaNqGg',
+		access_token_key = '957283916-yTeTCwS2IpTwiLjTshf2gaOGMC2kuH3R7xBXmJy9',
+		access_token_secret = '5Ch8cgaB7OmOE5l9XDNILLCK67xiNlM5JSYiLG1kDk',
+		cache = None
+	)
+
+	api.VerifyCredentials()
+
+	message = 'The domain %s has been reviewed on SEO. Check the report here: http://report.domaingrasp.com/%s' % ( domain, domain )
+	status = api.PostUpdate( message )
+
 class InitProcessingController( webapp2.RequestHandler ):
 
 	def get( self ):
@@ -28,6 +44,8 @@ class InitProcessingController( webapp2.RequestHandler ):
 		result = urlfetch.fetch( url )
 		apiData = json.loads( result.content )
 		baseDomain = apiData['domain']
+
+		deferred.defer( tweet, domainUrl )
 		
 		# Sorted by required time per task 
 		htmlAnalyzer = HtmlAnalyzerTask( channelId )
