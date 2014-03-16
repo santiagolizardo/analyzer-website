@@ -20,6 +20,7 @@ class BasicController( webapp2.RequestHandler ):
 		except:
 			from mako import exceptions
 			htmlOutput = exceptions.html_error_template().render()
+			self.writeResponse( htmlOutput )
 
 		return htmlOutput
 

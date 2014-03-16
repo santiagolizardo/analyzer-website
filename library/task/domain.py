@@ -7,6 +7,8 @@ from library.task.base import BaseTask
 
 from datetime import timedelta, datetime
 
+from bs4 import BeautifulSoup, NavigableString
+
 class DomainAnalyzerTask( BaseTask ):
 
 	def getName( self ): return 'domain'
@@ -19,18 +21,26 @@ class DomainAnalyzerTask( BaseTask ):
 			'expirationDate': 'N/A',
 		}
 
-	def start( self, fullUrl ):
+	def updateView( self, beauty, data ):
+
+		beauty.find( id = 'domainOwner' ).replace_with( str( data['owner'] ) )
+		beauty.find( id = 'domainRegistrationDate' ).replace_with( str( data['registrationDate'] ) )
+		beauty.find( id = 'domainExpirationDate' ).replace_with( str( data['expirationDate'] ) )
+
+	def start( self, baseUrl ):
+
+		fullUrl = 'http://' + baseUrl
 
 		content = self.getDefaultData()
 		actions = []
 
-		baseUrl = fullUrl.replace( 'http://', '' ).replace( '/', '' )
 		apiUsername = 'devsantiago.lizardo'
 		apiKey = '2dc9a-aceb3-a310e-e73b3-54f1d'
 
-		url = 'http://api.domaintools.com/v1/%s/?format=json&api_username=%s&api_key=%s' % ( baseUrl, apiUsername, apiKey )
+		url = 'http://freeapi.domaintools.com/v1/%s/?format=json&api_username=%s&api_key=%s' % ( baseUrl, apiUsername, apiKey )
 
 		debugActive = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' ) 
+		debugActive = False
 		if debugActive:
 			url = 'http://api.domaintools.com/v1/domaintools.com/whois/'
 
@@ -40,7 +50,7 @@ class DomainAnalyzerTask( BaseTask ):
 			oneYear = timedelta( days = 365 )
 
 			data = json.loads( result.content )
-			content['owner'] = data['response']['registrant']
+			content['owner'] = data['response']['registrant']['name']
 
 			regDate = data['response']['registration']['created']
 			content['registrationDate'] = regDate 

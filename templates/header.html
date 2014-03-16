@@ -1,30 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf8" />
-	% if pageTitle:
-	<title>${pageTitle}</title>
-	% endif
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	% for styleSheet in styleSheets:
-	<link href="${styleSheet}" rel="stylesheet" type="text/css" />
-	% endfor
-	<link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-	% for javaScript in javaScripts:
-	<script type="text/javascript" src="${javaScript}"></script>
-	% endfor
-	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
-</head>
+<%include file="htmlHeader.html" />
 <body data-spy="scroll" data-target=".report-sidebar">
 
-	<div class="container">
-
-	<p><a class="brand" href="http://${appUrl}/"><img src="/images/logo.png" alt="DomainGrasp logo" /></a></p>
+	<div class="container">	
 
 	<div class="navbar">
 		<div class="navbar-inner">
 		 <ul class="nav">
-			<li data-noclass="active"><a href="http://ranking.${appDomain}">Ranking</a></li>
+			<li data-noclass="active"><a class="brand" href="http://${appUrl}/"><img src="/images/logo.png" alt="EGO size logo" style="height: 25px;" /> EGOsize</a></li>
       	</ul>
 		<form action="/analyze" method="post" class="navbar-search pull-right">
 			<div class="input-prepend input-append">

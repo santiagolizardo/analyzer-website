@@ -63,9 +63,17 @@ var messageHandlers = {
 	{
 		document.getElementById( 'robotsTxt' ).innerHTML = content.robotsTxt;
 	},
+	humansTxt: function( content )
+	{
+		document.getElementById( 'humansTxt' ).innerHTML = content.humansTxt;
+	},
 	sitemapXml: function( content )
 	{
 		document.getElementById( 'sitemapXml' ).innerHTML = content.sitemapXml;
+	},
+	pageFavicon: function( content )
+	{
+		document.getElementById( 'pageFavicon' ).innerHTML = content.pageFavicon;
 	},
 	screenshot: function( content )
 	{
@@ -76,7 +84,7 @@ var messageHandlers = {
 	},
 	w3cValidation: function( content )
 	{
-		document.getElementById( 'w3cValidity' ).innerHTML = content;
+		document.getElementById( 'w3cValidity' ).innerHTML = content.w3cValidation;
 	},
 	facebook: function( content )
 	{

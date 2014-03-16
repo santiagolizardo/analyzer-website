@@ -3,6 +3,10 @@ from google.appengine.api import urlfetch
 
 from library.task.base import BaseTask
 
+from bs4 import BeautifulSoup, NavigableString
+
+import json
+
 class TwitterAccountCheckerTask( BaseTask ):
 
 	def getName( self ): return 'twitterAccount'
@@ -11,7 +15,14 @@ class TwitterAccountCheckerTask( BaseTask ):
 
 		return { self.getName(): 'N/A' }
 
-	def start( self, baseDomain ):
+	def start( self, baseUrl ):
+
+		fullUrl = 'http://' + baseUrl
+
+		url = 'http://tldextract.appspot.com/api/extract?url=' + fullUrl
+		result = urlfetch.fetch( url )
+		apiData = json.loads( result.content )
+		baseDomain = apiData['domain']
 
 		url = 'http://twitter.com/' + baseDomain
 		result = urlfetch.fetch( url )

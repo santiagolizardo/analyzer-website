@@ -10,9 +10,11 @@ from library.task.base import BaseTask
 
 import urllib2
 
+from bs4 import BeautifulSoup, NavigableString
+
 def storeFileInCloud( data, url ):
 
-	filename = '/gs/domaingrasp-screenshots/' + url.replace( 'http://', '' ).replace( '.', '-' ) + '.png'
+	filename = '/gs/egosize-screenshots/' + url.replace( 'http://', '' ).replace( '.', '-' ) + '.png'
 	writable_file_name = files.gs.create( filename, mime_type = 'image/png', acl = 'public-read', user_metadata= { 'x-goog-project-id': '1004040993338' } )
 	with files.open(writable_file_name, 'a' ) as f:
 		f.write( imageData )
@@ -39,29 +41,59 @@ class ScreenshotGrabberTask( BaseTask ):
 
 		return { self.getName(): '/images/1x1.png' }
 
-	def start( self, url ):
+	def updateView( self, beauty, data ):
+
+		beauty.find( id = 'screenshot' )['src'] = data['screenshot']
+
+	def start( self, baseUrl ):
+
+		url = 'http://' + baseUrl
 
 		content = self.getDefaultData() 
 		actions = []
 		
 		debugActive = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' )
+		debugActive = False
 		if not debugActive:
-			serviceApi = '18e1518747b2702d9bd216465603dbb3d74b8fea'
-			screenshotSize = 'mc'
+			# imageData = captureScreenshotSnapito( url )
+			imageData = captureScreenshotWordpress( url )
+			if imageData is not None:
+				# storeFileInCloud( imageData, url )
+				imageUrl = storeFileInBlobstore( imageData, url )
 
-			try:
-				apiUrl = 'http://api.snapito.com/web/%s/%s?url=%s' % ( serviceApi, screenshotSize, url )
-				result = urlfetch.fetch( apiUrl, deadline = 30 )
-							
-				if result.status_code == 200:
-					imageData = urllib2.urlopen( result.final_url ).read()
-
-					#storeFileInCloud( imageData, url )
-					imageUrl = storeFileInBlobstore( imageData, url )
-
-					content[ self.getName() ] = imageUrl
-			except:
-				logging.warning( sys.exc_info()[1] )
-
+				content[ self.getName() ] = imageUrl
+		
 		self.sendAndSaveReport( url, content, actions )
+
+def captureScreenshotSnapito( url ):
+	serviceApi = '18e1518747b2702d9bd216465603dbb3d74b8fea'
+	screenshotSize = 'mc'
+
+	try:
+		apiUrl = 'http://api.snapito.com/web/%s/%s/%s' % ( serviceApi, screenshotSize, url )
+		result = urlfetch.fetch( apiUrl, deadline = 30 )
+		if result.status_code == 200:
+			imageData = urllib2.urlopen( result.final_url ).read()
+			return imageData
+	except:
+		logging.warning( sys.exc_info()[1] )
+
+	return None
+
+from urllib import quote_plus
+import time
+
+def captureScreenshotWordpress( url ):
+	apiUrl = 'http://s.wordpress.com/mshots/v1/%s?w=250' % quote_plus( url )
+	result = urlfetch.fetch( apiUrl, deadline = 30, follow_redirects = False )
+	if result.status_code == 200:
+		imageData = urllib2.urlopen( apiUrl ).read()
+		return imageData
+	elif result.status_code == 307:
+		time.sleep( 4 )
+		return captureScreenshotWordpress( url )
+	else:
+		return None
+
+	return None
 

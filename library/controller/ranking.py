@@ -1,12 +1,6 @@
 
 from library.controller.page import StandardPageController
 
-import logging, json
-
-from datetime import date
-
-from bs4 import BeautifulSoup, NavigableString
-
 from library.model.report import SiteReport
 
 from library.utilities import uriFor
@@ -17,8 +11,6 @@ class RankingController( StandardPageController ):
     def get( self, country = None ):
         self.addJavaScript( '//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js' )
         self.addJavaScript( '/bootstrap/js/bootstrap.min.js' )
-        self.addJavaScript( 'https://www.google.com/jsapi' )
-        self.addJavaScript( '/scripts/staticReport.js' )
         
         self.addStyleSheet( '/bootstrap/css/bootstrap.min.css' )
         self.addStyleSheet( '/styles/allmedia.css' )
@@ -34,8 +26,8 @@ class RankingController( StandardPageController ):
             sites.append( site )
 
         values = {
-            'pageTitle': 'Best SEO Social Websites  | Ranking of the top Websites SEO Social by DomainGrasp.com',
-            'pageDescription': 'Check this list out! A ranking with the best Websites in terms of SEO and Social factors',
+            'pageTitle': 'Ranking of the most optimized websites for SEO/SEM/WPO - EGOsize',
+            'pageDescription': 'Discover what are the most successful websites in terms of their UX, SEO/SEM and WPO practices. Learn from their reports for free.',
             'sites': sites
         }
         

@@ -8,8 +8,8 @@ def uriFor( routeName, **namedParams ):
     domainExt = 'dev:9090' if isDebugActive() else 'com' 
 
     specialRoutes = {
-        'liveReport': 'live-report.domaingrasp.' + domainExt,
-        'staticReport': 'report.domaingrasp.' + domainExt,
+        'liveReport': 'live-report.egosize.' + domainExt,
+        'staticReport': 'report.egosize.' + domainExt,
     }
     
     netLoc = None

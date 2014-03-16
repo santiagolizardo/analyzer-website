@@ -26,8 +26,8 @@ class StandardPageController( PageController ):
 		defaultValues = {
 			'appUrl': self.app.config.get( 'url' ),
 			'appDomain': self.app.config.get( 'domain' ),
-			'pageTitle': 'Analyze your domain for free. Check social, SEO and technical metrics to improve your business | DomainGrasp',
-			'pageDescription': 'Check in less than a minute how your site is performing in terms of social and seo aspects. A free alternative to Woorank',
+			'pageTitle': 'EGOsize reviews any site and returns insights and improvements',
+			'pageDescription': 'Free tool to generate reports out of websites with SEO and SEM metrics and get improvement ideas. Meant to marketers and developers.',
 			'javaScripts': self.javaScripts,
 			'styleSheets': self.styleSheets,
 		}

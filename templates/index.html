@@ -1,15 +1,47 @@
-<%include file="header.html"/>
+<%include file="htmlHeader.html"/>
+
+<body data-spy="scroll" data-target=".report-sidebar">
+
+	<div class="container">
+
+	<p><a class="brand" href="http://${appUrl}/"><img src="/images/logo.png" alt="EGO size logo" style="height: 100px;" /></a></p>
+
+	<h2>How big is your <strong>marketer/developer</strong> ego?</h2>
+
+	<p>Show off everyone how good are you doing in your website. Or get free advice on the key things you need to change to improve your position in search results (SERP), and increase your conversions.</p>
+
+	<form action="/analyze" method="post">
+		<div class="input-prepend input-append">
+			<span class="add-on">http://</span>
+			<input type="text" name="domain" class="search-query input-xlarge" required="required" autofocus="autofocus" />
+			<button type="submit" class="input-xlarge btn btn-primary">Get your FREE report now!</button>
+		</div>
+	</form>
 
 <h3>Free social, SEO and technical metrics about any site</h3>
 
-<%include file="googleAdsense/topBanner.html"/>
+<div class="row">
+	<div class="span6">
+	<h4>Website with fresh reports</h4>
 
-<h4>Recent Website reports</h4>
+	<ul>
+	% for recentDomain in recentDomains:
+	<li><a href="${uriFor( 'staticReport', domainUrl = recentDomain.url  )}">${recentDomain.url}</a></li>
+	% endfor
+	</ul>
+	</div>
 
-<ul class="nav nav-pills">
-% for recentDomain in recentDomains:
-	<li><a href="${uriFor( 'staticReport', domainUrl = recentDomain.url  )}">${recentDomain.url}</a>
-% endfor
-</ul>
+	<div class="span6">
+	<h4>Sites with a huge EGO</h4>
+
+	<ol>
+	% for recentDomain in recentDomains:
+	<li><a href="${uriFor( 'staticReport', domainUrl = recentDomain.url  )}">${recentDomain.url}</a> <span class="badge">${recentDomain.score}/100</span></li>
+	% endfor
+	</ol>
+	</div>	
+</div>
+
+<%include file="userVoice.html"/>
 
 <%include file="footer.html"/>

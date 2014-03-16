@@ -10,38 +10,40 @@ from library.controller.liveReport import LiveReportController
 from library.controller.staticReport import StaticReportController 
 from library.controller.ranking import RankingController 
 from library.controller.errorPage import ErrorPageController
+from library.controller.channel import ChannelController
 
 debugActive = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' ) 
 
 config = {
 	'debugActive': debugActive,
-	'domain': 'domaingrasp.dev:9090' if debugActive else 'domaingrasp.com',
-	'url': 'www.domaingrasp.dev:9090' if debugActive else 'www.domaingrasp.com',
+	'domain': 'egosize.dev:9090' if debugActive else 'egosize.com',
+	'url': 'www.egosize.dev:9090' if debugActive else 'www.egosize.com',
 }
 
 routes = [
+	webapp2.Route( '/_ah/channel/connected/', handler = ChannelController ),
+	webapp2.Route( '/_ah/channel/disconnected/', handler = ChannelController ),
 	webapp2.Route( '/analyze', handler = AnalyzeDomainController ),
 	webapp2.Route( '/launchSubreports', handler = 'library.controller.processing.InitProcessingController' ),
 	webapp2.Route( '/calculateScore', handler = 'library.controller.scores.CalculateScoreController' ),
 	webapp2.Route( '/sitemap.xml', handler = 'library.controller.static.SitemapController' ),
-	routes.DomainRoute( 'www.domaingrasp.<:dev|com>',
+	routes.DomainRoute( 'www.egosize.<:dev|com>',
 		[
 			webapp2.Route( '/', handler = IndexController ),
 			webapp2.Route( '/features', handler = 'library.controller.static.FeaturesController', name = 'features' ),
-			webapp2.Route( '/about', handler = 'library.controller.static.AboutController', name = 'about' ),
 		]
 	),
-	routes.DomainRoute( 'ranking.domaingrasp.<:dev|com>',
+	routes.DomainRoute( 'ranking.egosize.<:dev|com>',
 		[
 			webapp2.Route( '/<:.*>', handler = RankingController, name = 'ranking' ),
 		]
 	),
-	routes.DomainRoute( 'live-report.domaingrasp.<:dev|com>',
+	routes.DomainRoute( 'live-report.egosize.<:dev|com>',
 		[
 			webapp2.Route( '/<domainUrl:.+>', handler = LiveReportController, name = 'liveReport' ),
 		]
 	),
-	routes.DomainRoute( 'report.domaingrasp.<:dev|com>',
+	routes.DomainRoute( 'report.egosize.<:dev|com>',
 		[
 			webapp2.Route( '/<domainUrl:.+>', handler = StaticReportController, name = 'staticReport' ),
 		]

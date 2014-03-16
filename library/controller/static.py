@@ -24,8 +24,8 @@ class SitemapController( StandardPageController ):
 	sites = SiteReport.all()
 
         values = {
-            'pageTitle': 'See what DomainGrasp has to tell about your site and your competitors',
-            'pageDescription': 'Check a detailed list of DomainGrasp features. All of them are free to use and immediately available.',
+            'pageTitle': 'See what EGO size has to tell about your site and your competitors',
+            'pageDescription': 'Check a detailed list of EGO size features. All of them are free to use and immediately available.',
 	    'sites': sites,
         }
         
@@ -53,30 +53,12 @@ class FeaturesController( StandardPageController ):
 	)
 
         values = {
-            'pageTitle': 'See what DomainGrasp has to tell about your site and your competitors',
-            'pageDescription': 'Check a detailed list of DomainGrasp features. All of them are free to use and immediately available.',
+            'pageTitle': 'A list of things to take care when optimizing Websites - EGOsize',
+            'pageDescription': 'A comprehensive list of things to do to have better SERP and increase conversions. All of them are part of EGOsize reports.',
 	    'features': features,
         }
         
         html = self.renderTemplate( 'features.html', values)
-
-        self.writeResponse( html )
-
-class AboutController( StandardPageController ):
-
-    def get( self, country = None ):
-        self.addJavaScript( '//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js' )
-        self.addJavaScript( '/bootstrap/js/bootstrap.min.js' )
-        
-        self.addStyleSheet( '/bootstrap/css/bootstrap.min.css' )
-        self.addStyleSheet( '/styles/allmedia.css' )
-
-        values = {
-            'pageTitle': 'About the DomainGrasp project',
-            'pageDescription': 'A few words on DomainGrasp mission and history',
-        }
-        
-        html = self.renderTemplate( 'about.html', values)
 
         self.writeResponse( html )
 

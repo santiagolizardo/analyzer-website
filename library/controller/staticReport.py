@@ -5,41 +5,13 @@ import logging, json, sys, os
 
 from datetime import date
 
-from bs4 import BeautifulSoup, NavigableString
-
-from library.task.html import HtmlAnalyzerTask 
-from library.task.domain import DomainAnalyzerTask 
-from library.task.twitter import TwitterAccountCheckerTask 
-from library.task.robots import RobotsTxtCheckerTask, SitemapXmlCheckerTask 
-from library.task.screenshot import ScreenshotGrabberTask 
-from library.task.w3c import W3cValidatorTask
-from library.task.alexa import AlexaAnalyzerTask
-from library.task.social import FacebookCounterTask
-from library.task.search import SearchTask 
+from bs4 import BeautifulSoup
 
 from library.model.report import SiteReport
 
-#short 
-from google.appengine.api import app_identity
-from google.appengine.api import urlfetch
+from library.services import createShortUrl
 
-def create_short_url(long_url):
-    scope = "https://www.googleapis.com/auth/urlshortener"
-    authorization_token, _ = app_identity.get_access_token(scope)
-    logging.info("Using token %s to represent identity %s",
-                 authorization_token, app_identity.get_service_account_name())
-    payload = json.dumps({"longUrl": long_url})
-    response = urlfetch.fetch(
-            "https://www.googleapis.com/urlshortener/v1/url?pp=1",
-            method=urlfetch.POST,
-            payload=payload,
-            headers = {"Content-Type": "application/json",
-                       "Authorization": "OAuth " + authorization_token})
-    if response.status_code == 200:
-        result = json.loads(response.content)
-        return result["id"]
-    raise Exception("Call failed. Status code %s. Body %s",
-                    response.status_code, response.content)
+import library.task.manager
 
 class StaticReportController( StandardPageController ):
 
@@ -81,86 +53,29 @@ class StaticReportController( StandardPageController ):
 			'domainLength': len( domainUrl.replace( '.com', '' ) ),
 			'sbOptions': sbOptions,
 			'generatedOnDate': date.today().isoformat(),
-			'pageTitle': '%(domainUrl)s | Domain insights for %(domainUrl)s by DomainGrasp.com' % { 'domainUrl': domainUrl },
-			'pageDescription': 'Check %(domainUrl)s metrics on SEO, social and other relevant aspects thanks to DomainGrasp',
+			'pageTitle': '%(domainUrl)s SEO and SEM performance metrics - EGOsize' % { 'domainUrl': domainUrl.capitalize() },
+			'pageDescription': 'Review %(domainUrl)s website report including SEO and SEM KPI and improvements. Learn how to do better at SERP and increase conversions.' % { 'domainUrl': domainUrl },
 		}
 
-		htmlAnalyzer = HtmlAnalyzerTask()
-		domainAnalyzer = DomainAnalyzerTask()
-		screenshotGrabber = ScreenshotGrabberTask()
-		w3cValidator = W3cValidatorTask()
-		robotsChecker = RobotsTxtCheckerTask()
-		sitemapChecker = SitemapXmlCheckerTask()
-		twitterChecker = TwitterAccountCheckerTask()
-		alexaAnalyzer = AlexaAnalyzerTask()
-
-		tasks = (
-			htmlAnalyzer,
-			domainAnalyzer,
-			screenshotGrabber, w3cValidator, robotsChecker, sitemapChecker, twitterChecker, alexaAnalyzer, FacebookCounterTask(),
-			SearchTask(),
-		)
+		tasks = library.task.manager.findAll()
 
 		data = {}
 		actions = []
 
 		for task in tasks:
-			report = task.getSavedReport( domainUrl )
-			if 'actions' in report:
-				actions.extend( report['actions'] )
-
-			defaultData = task.getDefaultData()
-			if 'content' in report:
-				if type( report['content'] ) == dict:
-					defaultData.update( report['content'] )
-				else:
-					defaultData[ task.getName() ] = report['content']
-			data.update( defaultData )
-
-		values['loadTimeMs'] = data['loadTimeMs']
-
+			subreport = task.getSavedReport( domainUrl )
+			if 'actions' in subreport:
+				actions.extend( subreport['actions'] )
+			
 		debugActive = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' )
 
 		values['shortUrl'] = self.request.url
 		if debugActive is False:
 			try:
-				values['shortUrl'] = create_short_url( self.request.url )
+				values['shortUrl'] = createShortUrl( self.request.url )
 			except:
 				logging.error( sys.exc_info()[1] )
-
-		html = self.renderTemplate( 'staticReport.html', values )
-
-		beauty = BeautifulSoup( html )
-
-		beauty.find( id = 'pageTitle' ).replace_with( NavigableString( data['pageTitle'] ) )
-		beauty.find( id = 'pageDescription' ).replace_with( NavigableString( data['pageDescription'] if data['pageDescription'] else 'Unknown' ) )
-		beauty.find( id = 'docType' ).replace_with( NavigableString( data['docType'] ) )
-		beauty.find( id = 'images' ).replace_with( NavigableString( data['images'] ) )
-		beauty.find( id = 'headings' ).replace_with( NavigableString( data['headings'] ) )
-		beauty.find( id = 'softwareStack' ).replace_with( NavigableString( data['softwareStack'] ) )
-		beauty.find( id = 'googleAnalytics' ).replace_with( NavigableString( 'Yes' if data['googleAnalytics'] else 'No' ) )
-		beauty.find( id = 'pageSize' ).replace_with( NavigableString( str( data['pageSize'] ) ) )
-		beauty.find( id = 'serverIp' ).replace_with( NavigableString( data['serverIp'] ) )
-
-		beauty.find( id = 'screenshot' )['src'] = data['screenshot']
-
-		beauty.find( id = 'worldRank' ).replace_with( NavigableString( data['worldRank'] ) )
-		beauty.find( id = 'loadTime' ).replace_with( NavigableString( data['loadTime'] ) )
-
-		beauty.find( id = 'sitemapXml' ).replace_with( NavigableString( data['sitemapXml'] ) )
-
-		beauty.find( id = 'robotsTxt' ).replace_with( NavigableString( data['robotsTxt'] ) )
-
-		beauty.find( id = 'w3cValidity' ).replace_with( NavigableString( data['w3cValidation'] ) )
 		
-		beauty.find( id = 'facebookComments' ).replace_with( NavigableString( str( data['facebookComments'] ) ) )
-		beauty.find( id = 'facebookLikes' ).replace_with( NavigableString( str( data['facebookLikes'] ) ) )
-		beauty.find( id = 'facebookShares' ).replace_with( NavigableString( str( data['facebookShares'] ) ) )
-		
-		beauty.find( id = 'indexedPages' ).replace_with( NavigableString( data['indexedPages'] ) )
-
-		beauty.find( id = 'score' ).contents[0].replace_with( str( siteReport.score ) )
-
 		statuses = {
 			'good': 0,
 			'regular': 0,
@@ -170,16 +85,28 @@ class StaticReportController( StandardPageController ):
 		for action in actions:
 			statuses[ action['status'] ] = statuses[ action['status'] ] + 1
 		totalStatuses = sum( statuses.values() )
+		
+		values['loadTimeMs'] = 0
+		html = self.renderTemplate( 'staticReport.html', values )
+		beauty = BeautifulSoup( html )
+		beauty.find( id = 'score' ).contents[0].replace_with( str( siteReport.score ) )
 
-		beauty.find( id = 'goodStatuses' ).replace_with( NavigableString( str( statuses['good'] ) ) )
-		beauty.find( id = 'regularStatuses' ).replace_with( NavigableString( str( statuses['regular'] ) ) )
-		beauty.find( id = 'badStatuses' ).replace_with( NavigableString( str( statuses['bad'] ) ) )
+		beauty.find( id = 'goodStatuses' ).string.replace_with( str( statuses['good'] ) )
+		beauty.find( id = 'regularStatuses' ).string.replace_with( str( statuses['regular'] ) )
+		beauty.find( id = 'badStatuses' ).string.replace_with( str( statuses['bad'] ) )
 
 		if totalStatuses > 0:
 			beauty.find( 'div', 'bar bar-success' )['style'] = 'width: %d%%;' % ( ( statuses['good'] * 100 ) / totalStatuses )
 			beauty.find( 'div', 'bar bar-warning' )['style'] = 'width: %d%%;' % ( ( statuses['regular'] * 100 ) / totalStatuses )
 			beauty.find( 'div', 'bar bar-danger' )['style'] = 'width: %d%%;' % ( ( statuses['bad'] * 100 ) / totalStatuses )
 
-		self.writeResponse( beauty.encode( formatter = None ) )
+		for task in tasks:
+			subreport = task.getSavedReport( domainUrl )
+			data = task.getDefaultData()
+			if 'content' in subreport:
+				data.update( subreport['content'] )
 
+			task.updateView( beauty, data )
+
+		self.writeResponse( beauty.encode( formatter = None ) )
 

@@ -5,17 +5,17 @@
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 <url>
-  <loc>http://www.domaingrasp.com/</loc>
+  <loc>http://www.egosize.com/</loc>
   <changefreq>daily</changefreq>
   <priority>1.00</priority>
 </url>
 <url>
-  <loc>http://www.domaingrasp.com/features</loc>
+  <loc>http://www.egosize.com/features</loc>
   <changefreq>daily</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>http://www.domaingrasp.com/about</loc>
+  <loc>http://www.egosize.com/about</loc>
   <changefreq>daily</changefreq>
   <priority>0.80</priority>
 </url>

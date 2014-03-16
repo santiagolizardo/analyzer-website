@@ -2,7 +2,6 @@
 import logging
 
 from google.appengine.api import urlfetch
-from google.appengine.api.channel import send_message
 
 from library.task.base import BaseTask
 
@@ -16,51 +15,35 @@ class RobotsTxtCheckerTask( BaseTask ):
 
 		return { self.getName(): 'N/A' }
 
-	def start( self, domain ):
+	def updateView( self, beauty, data ):
+			
+		beauty.find( id = 'robotsTxt' ).string.replace_with( data['robotsTxt'] )
+
+	def start( self, baseUrl ):
+
+		domain = 'http://' + baseUrl
 
 		content = self.getDefaultData()
 		actions = []
 		
 		try:
 			url = domain + '/robots.txt'
+			htmlLink = '<a href="%(robotsUrl)s" class="external" rel="nofollow" target="_blank">%(robotsUrl)s</a>' % { 'robotsUrl': url }
 			result = urlfetch.fetch( url, deadline = 4 )
 
 			if result.status_code == 200:
-				content[ self.getName() ] = url
-				actions.append({ 'status': 'good' })
+				contentType = result.headers['Content-type']
+				if 'text/plain' in contentType:
+					content[ self.getName() ] = htmlLink 
+					actions.append({ 'status': 'good' })
+				else:
+					content[ self.getName() ] = '%(htmlLink)s has been found but with a wrong content type (%(contentType)s)' % { 'htmlLink': htmlLink, 'contentType': contentType } 
+					actions.append({ 'status': 'regular', 'description': 'Fix the content type for the %s URL' % url })
 			elif result.status_code == 404:
 				content[ self.getName() ] = 'Missing' 
-				actions.append({ 'status': 'regular', 'description': 'Add a robots.txt file to your site' })
+				actions.append({ 'status': 'bad', 'description': 'The %s file is missing' % htmlLink })
 		except:
 			logging.warning( sys.exc_info()[1] )
 
-		self.sendAndSaveReport( domain, content, actions )
-
-class SitemapXmlCheckerTask( BaseTask ):
-
-	def getName( self ): return 'sitemapXml'
-
-	def getDefaultData( self ):
-		
-		return { self.getName(): 'N/A' }
-
-	def start( self, domain ):
-
-		content = self.getDefaultData()
-		actions = []
-
-		try:
-			url = domain + '/sitemap.xml'
-			result = urlfetch.fetch( url, deadline = 4 )
-
-			if result.status_code == 200:
-				content[ self.getName() ] = url
-				actions.append({ 'status': 'good' })
-			elif result.status_code == 404:
-				content[ self.getName() ] = 'Missing' 
-				actions.append({ 'status': 'regular', 'description': 'Add a sitemap.xml to your site' })
-		except:
-			logging.warning( sys.exc_info()[1] )
-
-		self.sendAndSaveReport( domain, content, actions )
+		self.sendAndSaveReport( baseUrl, content, actions )
 

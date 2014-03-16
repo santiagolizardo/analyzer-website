@@ -1,6 +1,6 @@
 <%include file="header.html"/>
 
-<script type="text/javascript">
+<script>
 var clientId = '${clientId}';
 var domainUrl = '${domain}';
 </script>
@@ -13,17 +13,13 @@ var domainUrl = '${domain}';
 <div class="row">
 
 	<div class="report-sidebar span3">
+		<p><%include file="/addThis.html"/></p><br />
 
-	<p><%include file="/googleAdsense.html"/></p>
-
-	<ul class="nav nav-list report-sidenav">
-	% for sbOption in sbOptions:
-	<li><a href="#${sbOption['id']}"><i class="icon-chevron-right"></i> ${sbOption['label']}</a></li>
-	% endfor
-	</ul>
-
-	<p><%include file="/googleAdsense.html"/></p>
-	<p><%include file="/shareLinks.html"/></p>
+		<ul class="nav nav-list report-sidenav">
+		% for sbOption in sbOptions:
+		<li><a href="#${sbOption['id']}"><i class="icon-chevron-right"></i> ${sbOption['label']}</a></li>
+		% endfor
+		</ul>
 	</div>
 
 	<div class="span9">
@@ -31,9 +27,6 @@ var domainUrl = '${domain}';
 		<div id="${sbOption['id']}">
 		<%include file="/sections/${sbOption['id']}.html"/>
 		</div>
-		% if sbOption['id'] == 'content-optimization':
-		<%include file="googleAdsense/topBanner.html"/>
-		% endif
 	% endfor
 	</div>
 </div>

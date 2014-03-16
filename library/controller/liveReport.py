@@ -1,6 +1,8 @@
 
 from google.appengine.ext import deferred
 from library.controller.page import StandardPageController
+from library.utilities import uriFor
+from library.model.report import SiteReport
 
 import uuid, logging
 
@@ -9,6 +11,12 @@ from google.appengine.api.channel import create_channel
 class LiveReportController( StandardPageController ):
 
 	def get( self, domainUrl ):
+		report = SiteReport.all().filter( 'url =', domainUrl ).get()
+		if report is not None:
+			url = uriFor( 'staticReport', domainUrl = domainUrl )
+			self.redirect( url )
+			return
+
 		self.addJavaScript( '//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js' )
 		self.addJavaScript( '/_ah/channel/jsapi' )
 		self.addJavaScript( '/bootstrap/js/bootstrap.min.js' )
@@ -47,8 +55,8 @@ class LiveReportController( StandardPageController ):
 			'clientId': clientId,
 			'sbOptions': sbOptions,
 			'generatedOnDate': date.today().isoformat(),
-			'pageTitle': '%(domainUrl)s | Domain insights for %(domainUrl)s by DomainGrasp.com' % { 'domainUrl': domainUrl },
-			'pageDescription': 'Check %(domainUrl)s metrics on SEO, social and other relevant aspects thanks to DomainGrasp'
+			'pageTitle': '%(domainUrl)s | Domain insights for %(domainUrl)s by EGOsize.com' % { 'domainUrl': domainUrl },
+			'pageDescription': 'Check %(domainUrl)s metrics on SEO, social and other relevant aspects thanks to EGO size'
 		}
 
 		html = self.renderTemplate( 'liveReport.html', values )

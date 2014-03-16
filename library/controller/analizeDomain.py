@@ -3,6 +3,8 @@ import webapp2, os, re
 
 from library.utilities import uriFor
 
+from library.model.report import SiteReport
+
 class AnalyzeDomainController( webapp2.RequestHandler ):
 
 	def post( self ):
@@ -17,7 +19,11 @@ class AnalyzeDomainController( webapp2.RequestHandler ):
 		if len( domain ) == 0:
 			url = self.request.referer
 		else:
-			url = uriFor( 'liveReport', domainUrl = domain )
+			report = SiteReport.all().filter( 'url =', domain ).get()
+
+			reportType = 'liveReport' if report is None else 'staticReport'
+
+			url = uriFor( reportType, domainUrl = domain )
 
 		self.redirect( url )
 

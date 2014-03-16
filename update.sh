@@ -1,5 +1,5 @@
 #!/bin/bash
 
 rm ~/.appcfg*
-appcfg.py update .
+appcfg.py --oauth2 update .
 

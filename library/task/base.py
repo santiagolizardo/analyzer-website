@@ -11,14 +11,21 @@ class BaseTask( object ):
 
 		self.channelId = channelId
 
+	def setChannelId( self, channelId ):
+
+		self.channelId = channelId
+
 	def getName( self ):
 
 		raise Exception( 'Method not implemented' )
 
-
 	def getDefaultData( self ):
 		
 		raise Exception( 'Method not implemented' )
+
+	def updateView( self, beauty, data ):
+
+		pass
 
 	def sendAndSaveReport( self, url, content, actions = [] ):
 

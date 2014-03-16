@@ -5,6 +5,8 @@ from google.appengine.api import urlfetch
 
 from library.task.base import BaseTask
 
+from bs4 import BeautifulSoup, NavigableString
+
 class W3cValidatorTask( BaseTask ):
 
 	def getName( self ): return 'w3cValidation'
@@ -13,7 +15,13 @@ class W3cValidatorTask( BaseTask ):
 
 		return { self.getName(): 'Unable to contact W3C servers' }
 
-	def start( self, fullUrl ):
+	def updateView( self, beauty, data ):
+
+		beauty.find( id = 'w3cValidity' ).replace_with( NavigableString( data['w3cValidation'] ) )
+
+	def start( self, baseUrl ):
+
+		fullUrl = 'http://' + baseUrl
 		
 		content = self.getDefaultData()
 		actions = []
@@ -36,6 +44,6 @@ class W3cValidatorTask( BaseTask ):
 					actions.append({ 'status': 'regular', 'description': 'Clean your HTML and fix the erros and warnings detected by the W3C validator' })
 		except:
 			logging.warning( sys.exc_info()[1] )
-
+		
 		self.sendAndSaveReport( fullUrl, content, actions )
 

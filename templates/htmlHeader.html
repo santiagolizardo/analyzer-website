@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf8" />
+	% if pageTitle:
+	<title>${pageTitle}</title>
+	% endif
+	% if pageDescription:
+	<meta name="description" content="${pageDescription}" />
+	% endif
+	% if pageKeywords:
+	<meta name="keywords" content="${pageKeywords}" />
+	% endif
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	% for styleSheet in styleSheets:
+	<link href="${styleSheet}" rel="stylesheet" />
+	% endfor
+	<link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+	% for javaScript in javaScripts:
+	<script src="${javaScript}"></script>
+	% endfor
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+</head>

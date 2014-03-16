@@ -1,3 +1,18 @@
 [submodule "externals/awis"]
 	path = externals/awis
 	url = https://github.com/muhuk/python-awis.git
+[submodule "externals/twitter"]
+	path = externals/twitter
+	url = https://github.com/bear/python-twitter.git
+[submodule "externals/requests"]
+	path = externals/requests
+	url = git://github.com/kennethreitz/requests.git
+[submodule "externals/requests-oauthlib"]
+	path = externals/requests-oauthlib
+	url = https://github.com/requests/requests-oauthlib.git
+[submodule "externals/oauthlib"]
+	path = externals/oauthlib
+	url = https://github.com/idan/oauthlib.git
+[submodule "externals/tweepy"]
+	path = externals/tweepy
+	url = https://github.com/tweepy/tweepy.git

@@ -5,6 +5,8 @@ from library.task.base import BaseTask
 
 from google.appengine.api import urlfetch
 
+from bs4 import BeautifulSoup, NavigableString
+
 class SearchTask( BaseTask ):
 
 	def getName( self ):
@@ -16,6 +18,10 @@ class SearchTask( BaseTask ):
 		return {
 			'indexedPages': '0',
 		}
+
+	def updateView( self, beauty, data ):
+
+		beauty.find( id = 'indexedPages' ).replace_with( NavigableString( data['indexedPages'] ) )
 
 	def start( self, domainUrl ):
 

@@ -13,6 +13,8 @@ from library.task.base import BaseTask
 
 import library.geoip as geoip
 
+from bs4 import BeautifulSoup, NavigableString
+
 class HtmlAnalyzerTask( BaseTask ):
 
 	def getName( self ): return 'htmlBody'
@@ -31,7 +33,21 @@ class HtmlAnalyzerTask( BaseTask ):
 			'serverIp': 'N/A',
 		}
 
-	def start( self, baseUrl, url ):
+	def updateView( self, beauty, data ):
+
+		beauty.find( id = 'pageTitle' ).replace_with( NavigableString( data['pageTitle'] ) )
+		beauty.find( id = 'pageDescription' ).replace_with( NavigableString( data['pageDescription'] if data['pageDescription'] else 'Unknown' ) )
+		beauty.find( id = 'docType' ).replace_with( NavigableString( data['docType'] ) )
+		beauty.find( id = 'images' ).replace_with( NavigableString( data['images'] ) )
+		beauty.find( id = 'headings' ).contents[0].replace_with( NavigableString( data['headings'] ) )
+		beauty.find( id = 'softwareStack' ).replace_with( NavigableString( data['softwareStack'] ) )
+		beauty.find( id = 'googleAnalytics' ).replace_with( NavigableString( 'Yes' if data['googleAnalytics'] else 'No' ) )
+		beauty.find( id = 'pageSize' ).replace_with( NavigableString( str( data['pageSize'] ) ) )
+		beauty.find( id = 'serverIp' ).replace_with( NavigableString( data['serverIp'] ) )
+
+	def start( self, baseUrl ):
+
+		url = 'http://' + baseUrl
 		
 		content = self.getDefaultData()
 		actions = []
@@ -144,6 +160,7 @@ def extractHeadings( bSoup ):
 		<td>%d</td>
 		<td>%d</td>
 	</tr>
+	</table>
 	""" % count
 	
 	return html

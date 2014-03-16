@@ -1,4 +1,4 @@
-application: domaingrasp 
+application: egosize
 version: 1
 runtime: python27
 api_version: 1
@@ -17,6 +17,8 @@ libraries:
   version: latest
 - name: markupsafe
   version: latest
+- name: ssl
+  version: latest
 
 handlers:
 - url: /bootstrap
@@ -31,6 +33,10 @@ handlers:
 - url: /robots\.txt
   static_files: static/robots.txt
   upload: static/robots\.txt
+- url: /humans\.txt
+  static_files: static/humans.txt
+  upload: static/humans\.txt
+
 - url: /(.+\.ico)
   static_files: static/\1
   upload: static/(.+\.ico)

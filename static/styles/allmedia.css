@@ -1,11 +1,23 @@
 
+html, body
+{
+	height: 100%;
+}
+
 body
 {
 	padding: 5px;
+	background-color: #EEFEFF;
+	background: url('/images/background.jpg') #000000;
+	margin: 0px;
 }
 
 div.container
 {
+	background-color: white;
+	padding: 15px;
+	min-height: 80%;
+	border-radius: 10px;
 }
 
 div#mainProgressBar > div.bar { width: 0%; }
@@ -30,4 +42,13 @@ div.ScreenshotMonitor
 .centered-pills a { float:left; }
 * html .centered-pills ul.nav-pills { display:inline; } /* IE6 */
 *+html .centered-pills ul.nav-pills { display:inline; } /* IE7 */
+
+.twitter-follow-button { margin-top: 6px; }
+
+a.external
+{
+	padding-right: 14px;
+	margin-right: 4px;
+	background: url('/images/external-link.png') no-repeat right 2px;
+}
 

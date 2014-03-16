@@ -3,6 +3,8 @@ from library.task.base import BaseTask
 
 import logging
 
+from bs4 import BeautifulSoup, NavigableString
+
 class AlexaAnalyzerTask( BaseTask ):
 
 	def getName( self ): return 'traffic'
@@ -16,12 +18,17 @@ class AlexaAnalyzerTask( BaseTask ):
 			'loadTime': 'N/A'
 		}
 
+	def updateView( self, beauty, data ):
+
+		beauty.find( id = 'worldRank' ).replace_with( NavigableString( data['worldRank'] ) )
+		beauty.find( id = 'loadTime' ).replace_with( NavigableString( data['loadTime'] ) )
+
 	def start( self, baseUrl ):
+
+		queryUrl = 'http://' + baseUrl
 
 		content = self.getDefaultData()
 		actions = []
-
-		queryUrl = baseUrl.replace( 'http://', '' )
 
 		from library.awis import AwisApi
 		api = AwisApi( 'AKIAJDGJO3ACZ7KIGHCA', 'dIc3teMI2OoSw0W7z9EXgP9cQnvUlja8uSQN2MBT' )
