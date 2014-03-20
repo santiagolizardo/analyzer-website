@@ -62,3 +62,32 @@ class FeaturesController( StandardPageController ):
 
         self.writeResponse( html )
 
+class PricingController( StandardPageController ):
+
+    def get( self, country = None ):
+        self.addJavaScript( '//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js' )
+        self.addJavaScript( '/bootstrap/js/bootstrap.min.js' )
+        
+        self.addStyleSheet( '/bootstrap/css/bootstrap.min.css' )
+        self.addStyleSheet( '/styles/allmedia.css' )
+
+	features = (
+		'Number of indexed pages on Google',
+		'Page title and description',
+		'Meta keywords',
+		'Sitemap XML',
+		'Robots TXT',
+		'Load time',
+		'HTML errors and warnings',
+	)
+
+        values = {
+            'pageTitle': 'Pricing (FREE!) - EGOsize',
+	    'pageDescription': 'The EGOsize pricing schema is simple: Free service',
+	    'features': features,
+        }
+        
+        html = self.renderTemplate( 'pricing.html', values)
+
+        self.writeResponse( html )
+

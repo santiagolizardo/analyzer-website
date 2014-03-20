@@ -35,19 +35,21 @@ var messageHandlers = {
 	{
 		document.getElementById( 'pageTitle' ).innerHTML = content.pageTitle;
 		document.getElementById( 'pageDescription' ).innerHTML = content.pageDescription;
+		document.getElementById( 'pageKeywords' ).innerHTML = content.pageKeywords;
+
 		document.getElementById( 'googleAnalytics' ).innerHTML = content.googleAnalytics ? 'Yes' : 'No';
 		document.getElementById( 'docType' ).innerHTML = content.docType;
 		document.getElementById( 'images' ).innerHTML = content.images;
 		document.getElementById( 'headings' ).innerHTML = content.headings;
 		document.getElementById( 'softwareStack' ).innerHTML = content.softwareStack;
 		document.getElementById( 'pageSize' ).innerHTML = content.pageSize;
-		document.getElementById( 'serverIp' ).innerHTML = content.serverIp;
 	},
 	domain: function( content )
 	{
 		document.getElementById( 'domainOwner' ).innerHTML = content.owner;
 		document.getElementById( 'domainRegistrationDate' ).innerHTML = content.registrationDate;
 		document.getElementById( 'domainExpirationDate' ).innerHTML = content.expirationDate;
+		document.getElementById( 'serverIp' ).innerHTML = content.serverIp;
 	},
 	traffic: function( content )
 	{
@@ -74,6 +76,10 @@ var messageHandlers = {
 	pageFavicon: function( content )
 	{
 		document.getElementById( 'pageFavicon' ).innerHTML = content.pageFavicon;
+	},
+	googlePageRank: function( content )
+	{
+		document.getElementById( 'googlePageRank' ).innerHTML = content.googlePageRank;
 	},
 	screenshot: function( content )
 	{

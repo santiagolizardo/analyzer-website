@@ -1,5 +1,5 @@
 
-import webapp2, logging, json
+import webapp2, logging, json, os
 
 from google.appengine.api import urlfetch
 from google.appengine.api.channel import send_message
@@ -8,15 +8,15 @@ from google.appengine.ext import deferred
 
 from library.model.report import SiteReport
 
-from library.task.html import HtmlAnalyzerTask 
-from library.task.domain import DomainAnalyzerTask 
-from library.task.twitter import TwitterAccountCheckerTask 
-from library.task.robots import RobotsTxtCheckerTask
-from library.task.sitemap import SitemapXmlCheckerTask 
-from library.task.screenshot import ScreenshotGrabberTask 
-from library.task.w3c import W3cValidatorTask
-from library.task.alexa import AlexaAnalyzerTask
-from library.task.social import FacebookCounterTask
+from library.services.twitter import TwitterService
+
+import library.task.manager
+
+def send_twitter_update( domainUrl ):
+	message = '%(domainUrl)s website SEO/SEM/WPO metrics report available at http://report.egosize.com/%(domainUrl)s, get yours for free!' % { 'domainUrl': domainUrl }
+
+	twitterService = TwitterService()
+	twitterService.update_status( message )
 
 class CalculateScoreController( webapp2.RequestHandler ):
 
@@ -24,16 +24,7 @@ class CalculateScoreController( webapp2.RequestHandler ):
 		domainUrl = self.request.get( 'domainUrl' )
 		channelId = self.request.cookies.get( 'channelId' )
 		
-		htmlAnalyzer = HtmlAnalyzerTask()
-		domainAnalyzer = DomainAnalyzerTask()
-		screenshotGrabber = ScreenshotGrabberTask()
-		w3cValidator = W3cValidatorTask()
-		robotsChecker = RobotsTxtCheckerTask()
-		sitemapChecker = SitemapXmlCheckerTask()
-		twitterChecker = TwitterAccountCheckerTask()
-		alexaAnalyzer = AlexaAnalyzerTask()
-
-		tasks = ( htmlAnalyzer, domainAnalyzer, screenshotGrabber, w3cValidator, robotsChecker, sitemapChecker, twitterChecker, alexaAnalyzer, FacebookCounterTask() )
+		tasks = library.task.manager.findAll()
 	
 		data = {}
 		actions = []
@@ -77,5 +68,9 @@ class CalculateScoreController( webapp2.RequestHandler ):
 		}
 		messageEncoded = json.dumps( message )
 				
+		is_devel_env = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' )
+		if not is_devel_env:
+			deferred.defer( send_twitter_update, domainUrl )
+
 		send_message( channelId, messageEncoded )
 

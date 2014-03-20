@@ -21,7 +21,7 @@ class SearchTask( BaseTask ):
 
 	def updateView( self, beauty, data ):
 
-		beauty.find( id = 'indexedPages' ).replace_with( NavigableString( data['indexedPages'] ) )
+		beauty.find( id = 'indexedPages' ).string.replace_with( data['indexedPages'] )
 
 	def start( self, domainUrl ):
 

@@ -38,6 +38,12 @@ routes = [
 			webapp2.Route( '/<:.*>', handler = RankingController, name = 'ranking' ),
 		]
 	),
+	routes.DomainRoute( 'pricing.egosize.<:dev|com>',
+		[
+			webapp2.Route( '/<:.*>', handler = 'library.controller.static.PricingController' ),
+		]
+	),
+
 	routes.DomainRoute( 'live-report.egosize.<:dev|com>',
 		[
 			webapp2.Route( '/<domainUrl:.+>', handler = LiveReportController, name = 'liveReport' ),

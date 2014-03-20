@@ -3,13 +3,12 @@ from library.controller.page import StandardPageController
 
 import logging, json, sys, os
 
-from datetime import date
-
 from bs4 import BeautifulSoup
 
 from library.model.report import SiteReport
+from library.model.report import TaskReport
 
-from library.services import createShortUrl
+from library.services.shorturl import createShortUrl
 
 import library.task.manager
 
@@ -35,11 +34,11 @@ class StaticReportController( StandardPageController ):
 		sbOptions = (
 			{ 'id': 'priority-actions', 'label': 'Priority actions' },
 			{ 'id': 'domain', 'label': 'Domain' },
+			{ 'id': 'page-metadata', 'label': 'Page Metadata' },
 			{ 'id': 'visitors', 'label': 'Visitors' },
 			{ 'id': 'social-monitoring', 'label': 'Social monitoring' },
 			{ 'id': 'content-optimization', 'label': 'Content optimization' },
 			{ 'id': 'usability', 'label': 'Usability' },
-			{ 'id': 'mobile', 'label': 'Mobile' },
 			{ 'id': 'seo-basics', 'label': 'SEO basics' },
 			{ 'id': 'seo-keywords', 'label': 'SEO keywords' },
 			{ 'id': 'seo-authority', 'label': 'SEO authority' },
@@ -52,10 +51,12 @@ class StaticReportController( StandardPageController ):
 			'domain': domainUrl,
 			'domainLength': len( domainUrl.replace( '.com', '' ) ),
 			'sbOptions': sbOptions,
-			'generatedOnDate': date.today().isoformat(),
+			'generatedOnDate': siteReport.creationDate.date().isoformat(),
 			'pageTitle': '%(domainUrl)s SEO and SEM performance metrics - EGOsize' % { 'domainUrl': domainUrl.capitalize() },
-			'pageDescription': 'Review %(domainUrl)s website report including SEO and SEM KPI and improvements. Learn how to do better at SERP and increase conversions.' % { 'domainUrl': domainUrl },
+			'pageDescription': 'Review %(domainUrl)s website report including SEO and SEM KPI and improvements. Learn how to do better at SERP to increase conversions.' % { 'domainUrl': domainUrl },
 		}
+
+		self.set_twitter_card( domainUrl )
 
 		tasks = library.task.manager.findAll()
 
@@ -109,4 +110,16 @@ class StaticReportController( StandardPageController ):
 			task.updateView( beauty, data )
 
 		self.writeResponse( beauty.encode( formatter = None ) )
+
+	def set_twitter_card( self, domainUrl ):
+
+		screenshotReport = TaskReport.all().filter( 'url =', domainUrl ).filter( 'name = ', 'screenshot' ).get()
+		screenshot = json.loads( screenshotReport.messageEncoded )
+	
+		self.pageMetas.append({ 'name': 'twitter:card', 'content': 'summary' })
+		self.pageMetas.append({ 'name': 'twitter:site', 'content': '@egosizereports' })
+		self.pageMetas.append({ 'name': 'twitter:title', 'content': '%s SEO and SEM performace metrics' % domainUrl })
+		self.pageMetas.append({ 'name': 'twitter:description', 'content': 'Detailed report for %s Website with all major metrics and improvement points' % domainUrl })
+		self.pageMetas.append({ 'name': 'twitter:creator', 'content': '@egosizereports' })
+		self.pageMetas.append({ 'name': 'twitter:image:src', 'content': screenshot['content']['screenshot'] })
 

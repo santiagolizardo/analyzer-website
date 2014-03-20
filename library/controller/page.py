@@ -12,6 +12,7 @@ class PageController( BasicController ):
 		
 		self.styleSheets = []
 		self.javaScripts = []
+		self.pageMetas = []
 
 	def addJavaScript( self, javaScript ):
 		self.javaScripts.append( javaScript )
@@ -28,6 +29,7 @@ class StandardPageController( PageController ):
 			'appDomain': self.app.config.get( 'domain' ),
 			'pageTitle': 'EGOsize reviews any site and returns insights and improvements',
 			'pageDescription': 'Free tool to generate reports out of websites with SEO and SEM metrics and get improvement ideas. Meant to marketers and developers.',
+			'pageMetas': self.pageMetas,
 			'javaScripts': self.javaScripts,
 			'styleSheets': self.styleSheets,
 		}

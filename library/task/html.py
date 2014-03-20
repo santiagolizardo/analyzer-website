@@ -11,8 +11,6 @@ from bs4 import BeautifulSoup, element
 
 from library.task.base import BaseTask
 
-import library.geoip as geoip
-
 from bs4 import BeautifulSoup, NavigableString
 
 class HtmlAnalyzerTask( BaseTask ):
@@ -22,28 +20,32 @@ class HtmlAnalyzerTask( BaseTask ):
 	def getDefaultData( self ):
 
 		return {
+			# Page Metadata
 			'pageTitle': 'N/A',
 			'pageDescription': 'N/A',
+			'pageKeywords': 'N/A',
+
 			'googleAnalytics': 'N/A',
 			'docType': 'N/A',
 			'headings': 'N/A',
 			'images': 'N/A',
 			'softwareStack': 'N/A',
 			'pageSize': 'N/A',
-			'serverIp': 'N/A',
 		}
 
 	def updateView( self, beauty, data ):
 
-		beauty.find( id = 'pageTitle' ).replace_with( NavigableString( data['pageTitle'] ) )
-		beauty.find( id = 'pageDescription' ).replace_with( NavigableString( data['pageDescription'] if data['pageDescription'] else 'Unknown' ) )
-		beauty.find( id = 'docType' ).replace_with( NavigableString( data['docType'] ) )
-		beauty.find( id = 'images' ).replace_with( NavigableString( data['images'] ) )
+		# Page Metadata
+		beauty.find( id = 'pageTitle' ).string.replace_with( data['pageTitle'] )
+		beauty.find( id = 'pageDescription' ).string.replace_with( data['pageDescription'] if data['pageDescription'] else 'Unknown' )
+		beauty.find( id = 'pageKeywords' ).string.replace_with( data['pageKeywords'] if data['pageKeywords'] else 'Unknown' )
+
+		beauty.find( id = 'docType' ).string.replace_with( data['docType'] )
+		beauty.find( id = 'images' ).string.replace_with( data['images'] )
 		beauty.find( id = 'headings' ).contents[0].replace_with( NavigableString( data['headings'] ) )
-		beauty.find( id = 'softwareStack' ).replace_with( NavigableString( data['softwareStack'] ) )
-		beauty.find( id = 'googleAnalytics' ).replace_with( NavigableString( 'Yes' if data['googleAnalytics'] else 'No' ) )
-		beauty.find( id = 'pageSize' ).replace_with( NavigableString( str( data['pageSize'] ) ) )
-		beauty.find( id = 'serverIp' ).replace_with( NavigableString( data['serverIp'] ) )
+		beauty.find( id = 'softwareStack' ).string.replace_with( data['softwareStack'] )
+		beauty.find( id = 'googleAnalytics' ).string.replace_with( 'Yes' if data['googleAnalytics'] else 'No' )
+		beauty.find( id = 'pageSize' ).string.replace_with( str( data['pageSize'] ) )
 
 	def start( self, baseUrl ):
 
@@ -57,8 +59,6 @@ class HtmlAnalyzerTask( BaseTask ):
 			httpResp = urllib2.urlopen( httpReq )
 			body = httpResp.read().decode( 'utf8' )
 
-			# logging.info( geoip.query( '74.117.156.228', True ) )
-
 			respbody = ResponseBody( domain = url, length = len( body ), body = body )
 			respbody.put()
 
@@ -66,29 +66,31 @@ class HtmlAnalyzerTask( BaseTask ):
 
 			pageTitle = bSoup.title.string
 
-			pageDescription = None
-			metaDescriptions = bSoup.findAll( 'meta', attrs = { 'name': re.compile( '^description$', re.I ) } )
-			if len( metaDescriptions ) > 0:
-				pageDescription = metaDescriptions[0]['content']
-
 			content.update({
-				'pageTitle': pageTitle,
-				'pageDescription': pageDescription,
 				'googleAnalytics': ( '/ga.js' in body ),
 				'docType': extractDocType( bSoup ),
 				'headings': extractHeadings( bSoup ),
 				'images': extractImages( bSoup ),
 				'softwareStack': extractSoftwareStack( httpResp ),
 				'pageSize': extractPageSize( httpResp ),
-				'serverIp': '%s (%s)' % ( httpReq.get_host(), 'country not available' ),
 			})
+
+			# Page Metadata
+			metaDescription = bSoup.find( 'meta', attrs = { 'name': re.compile( '^description$', re.I ) } )
+			if metaDescription is not None:
+				content['pageDescription'] = metaDescription['content']
+			metaKeywords = bSoup.find( 'meta', attrs = { 'name': re.compile( '^keywords$', re.I ) } )
+			if metaKeywords is not None:
+				content['pageKeywords'] = metaKeywords['content']
 
 			if pageTitle is None:
 				actions.append({ 'status': 'bad', 'description': 'Your page title is missing. This is critical for SEO and should be fixed ASAP.' })
 			elif len( pageTitle ) > 70:
 				actions.append({ 'status': 'regular', 'description': 'Your page title is too long. Most of it will be left out from search results.' })
+				content['pageTitle'] = pageTitle
 			else:
 				actions.append({ 'status': 'good' })
+				content['pageTitle'] = pageTitle
 
 			if not content['googleAnalytics']:
 				actions.append({ 'status': 'regular', 'description': 'Add the Google Analytics script to your page to get valuable insights about your visitors' })

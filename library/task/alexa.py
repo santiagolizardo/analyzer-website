@@ -1,8 +1,6 @@
 
 from library.task.base import BaseTask
 
-import logging
-
 from bs4 import BeautifulSoup, NavigableString
 
 class AlexaAnalyzerTask( BaseTask ):

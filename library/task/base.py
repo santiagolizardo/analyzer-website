@@ -1,5 +1,5 @@
 
-import json, logging
+import json
 
 from google.appengine.api.channel import send_message
 

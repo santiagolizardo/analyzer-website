@@ -5,8 +5,6 @@ from google.appengine.api import urlfetch
 
 from library.task.base import BaseTask
 
-from bs4 import BeautifulSoup, NavigableString
-
 class W3cValidatorTask( BaseTask ):
 
 	def getName( self ): return 'w3cValidation'
@@ -17,7 +15,7 @@ class W3cValidatorTask( BaseTask ):
 
 	def updateView( self, beauty, data ):
 
-		beauty.find( id = 'w3cValidity' ).replace_with( NavigableString( data['w3cValidation'] ) )
+		beauty.find( id = 'w3cValidity' ).string.replace_with( data['w3cValidation'] )
 
 	def start( self, baseUrl ):
 

@@ -1,5 +1,7 @@
 
-import sys, json, logging, os
+import sys, json, os
+
+import pygeoip
 
 from google.appengine.api import urlfetch
 
@@ -19,6 +21,7 @@ class DomainAnalyzerTask( BaseTask ):
 			'owner': 'N/A',
 			'registrationDate': 'N/A',
 			'expirationDate': 'N/A',
+			'serverIp': 'N/A',
 		}
 
 	def updateView( self, beauty, data ):
@@ -26,6 +29,7 @@ class DomainAnalyzerTask( BaseTask ):
 		beauty.find( id = 'domainOwner' ).replace_with( str( data['owner'] ) )
 		beauty.find( id = 'domainRegistrationDate' ).replace_with( str( data['registrationDate'] ) )
 		beauty.find( id = 'domainExpirationDate' ).replace_with( str( data['expirationDate'] ) )
+		beauty.find( id = 'serverIp' ).string.replace_with( data['serverIp'] )
 
 	def start( self, baseUrl ):
 
@@ -67,6 +71,14 @@ class DomainAnalyzerTask( BaseTask ):
 				actions.append({ 'status': 'good' })
 			else:
 				actions.append({ 'status': 'regular', 'description': 'Register your domain longer than a year to prove Google and others you are serious about your business.' })
+
+			serverIp = data['response']['server']['ip_address']
+
+			gi = pygeoip.GeoIP( 'GeoIP.dat' )
+			countryCode = gi.country_code_by_addr( serverIp ).lower()
+			countryName = gi.country_name_by_name( serverIp )
+			serverIp = '%(serverIp)s (<img src="/images/flags/%(countryCode)s.png" alt="%(countryName)s flag" /> %(countryName)s)' % { 'countryCode': countryCode, 'countryName': countryName, 'serverIp': serverIp }
+			content['serverIp'] = serverIp
 
 		self.sendAndSaveReport( baseUrl, content, actions )
 

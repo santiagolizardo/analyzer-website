@@ -28,11 +28,11 @@ class LiveReportController( StandardPageController ):
 		sbOptions = (
 			{ 'id': 'priority-actions', 'label': 'Priority actions' },
 			{ 'id': 'domain', 'label': 'Domain' },
+			{ 'id': 'page-metadata', 'label': 'Page Metadata' },
 			{ 'id': 'visitors', 'label': 'Visitors' },
 			{ 'id': 'social-monitoring', 'label': 'Social monitoring' },
 			{ 'id': 'content-optimization', 'label': 'Content optimization' },
 			{ 'id': 'usability', 'label': 'Usability' },
-			{ 'id': 'mobile', 'label': 'Mobile' },
 			{ 'id': 'seo-basics', 'label': 'SEO basics' },
 			{ 'id': 'seo-keywords', 'label': 'SEO keywords' },
 			{ 'id': 'seo-authority', 'label': 'SEO authority' },
@@ -54,7 +54,6 @@ class LiveReportController( StandardPageController ):
 			'domainLength': len( domainUrl.replace( '.com', '' ) ),
 			'clientId': clientId,
 			'sbOptions': sbOptions,
-			'generatedOnDate': date.today().isoformat(),
 			'pageTitle': '%(domainUrl)s | Domain insights for %(domainUrl)s by EGOsize.com' % { 'domainUrl': domainUrl },
 			'pageDescription': 'Check %(domainUrl)s metrics on SEO, social and other relevant aspects thanks to EGO size'
 		}
