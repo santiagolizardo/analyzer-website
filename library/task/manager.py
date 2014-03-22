@@ -12,6 +12,7 @@ from library.task.search import SearchTask
 from library.task.humans import HumansTxtCheckerTask
 from library.task.favicon import FaviconCheckerTask
 from library.task.pageRank import PageRankTask 
+from library.task.custom404 import Custom404Task
 
 def findAll():
 	htmlAnalyzer = HtmlAnalyzerTask()
@@ -37,6 +38,7 @@ def findAll():
 		SearchTask(),
 		HumansTxtCheckerTask(),
 		FaviconCheckerTask(),
+		Custom404Task(),
 	)
 
 	return tasks

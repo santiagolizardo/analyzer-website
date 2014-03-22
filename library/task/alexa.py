@@ -1,7 +1,11 @@
 
 from library.task.base import BaseTask
+from library.awis import AwisApi
 
-from bs4 import BeautifulSoup, NavigableString
+from lxml import etree
+from xml.dom.minidom import parseString
+
+from library.countries import country_name_by_code
 
 class AlexaAnalyzerTask( BaseTask ):
 
@@ -11,15 +15,18 @@ class AlexaAnalyzerTask( BaseTask ):
 
 		return {
 			'worldRank': 'N/A',
-			'countryRank': 'N/A',
 			'loadTimeMs': 0,
-			'loadTime': 'N/A'
+			'loadTime': 'N/A',
+			'visitorsLocation': 'N/A',
 		}
 
 	def updateView( self, beauty, data ):
 
-		beauty.find( id = 'worldRank' ).replace_with( NavigableString( data['worldRank'] ) )
-		beauty.find( id = 'loadTime' ).replace_with( NavigableString( data['loadTime'] ) )
+		beauty.find( id = 'worldRank' ).string.replace_with( data['worldRank'] )
+		beauty.find( id = 'loadTime' ).string.replace_with( data['loadTime'] )
+		beauty.find( id = 'loadTime' ).string.replace_with( data['loadTime'] )
+		beauty.find( id = 'visitorsLocation' ).string.replace_with( data['visitorsLocation'] )
+		beauty.find( id = 'relatedLinks' ).string.replace_with( data['relatedLinks'] )
 
 	def start( self, baseUrl ):
 
@@ -28,12 +35,31 @@ class AlexaAnalyzerTask( BaseTask ):
 		content = self.getDefaultData()
 		actions = []
 
-		from library.awis import AwisApi
 		api = AwisApi( 'AKIAJDGJO3ACZ7KIGHCA', 'dIc3teMI2OoSw0W7z9EXgP9cQnvUlja8uSQN2MBT' )
 		respXml = api.url_info( queryUrl, 'RelatedLinks', 'Categories', 'Rank', 'RankByCountry', 'UsageStats', 'ContactInfo', 'Speed', 'Language', 'Keywords', 'OwnedDomains', 'LinksInCount', 'SiteData' )
+		xml = etree.tostring( respXml )
+		
 		respStatus = respXml.find( '//{%s}StatusCode' % api.NS_PREFIXES['alexa'] ).text
 		if 'Success' == respStatus:
-			from lxml import etree
+
+			dom_doc = parseString( xml )
+			rank_list_items = []
+			for country in dom_doc.getElementsByTagName( 'aws:Country' ):
+				country_code = country.getAttribute( 'Code' )
+				country_name = country_name_by_code( country_code )
+				ranks = country.getElementsByTagName( 'aws:Rank' )
+				if len( ranks ) > 0 and ranks[0].firstChild is not None:
+					rank = ranks[0].firstChild.nodeValue
+					rank_list_items.append( '<li><img src="/images/flags/%s.png" alt="%s flag" /> Ranks #%s in %s</li>' % ( country_code.lower(), country_name, rank, country_name ) )
+			content['visitorsLocation'] = '<ol>' + ''.join( rank_list_items[:3] ) + '</ol>'
+
+			related_list_items = []
+			for related in dom_doc.getElementsByTagName( 'aws:RelatedLink' ):
+				related_url = related.getElementsByTagName( 'aws:NavigableUrl' )[0].firstChild.nodeValue
+				related_title = related.getElementsByTagName( 'aws:Title' )[0].firstChild.nodeValue
+				related_list_items.append( '<li><a href="%s" rel="nofollow" class="external" target="_blank">%s</a></li>' % ( related_url, related_title ) )
+			content['relatedLinks'] = '<ul>' + ''.join( related_list_items[:5] ) + '</ul>'
+
 			content['worldRank'] = respXml.find( '//{%s}Rank' % api.NS_PREFIXES['awis'] ).text
 			if content['worldRank'] is None:
 				content['worldRank'] = 'Unknown'
@@ -48,7 +74,6 @@ class AlexaAnalyzerTask( BaseTask ):
 				else:
 					actions.append({ 'status': 'good' })
 					content['loadTime'] += ' (FAST)'
-
 
 		self.sendAndSaveReport( baseUrl, content, actions )
 

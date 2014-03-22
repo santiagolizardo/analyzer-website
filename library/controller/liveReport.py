@@ -1,5 +1,4 @@
 
-from google.appengine.ext import deferred
 from library.controller.page import StandardPageController
 from library.utilities import uriFor
 from library.model.report import SiteReport
@@ -7,6 +6,8 @@ from library.model.report import SiteReport
 import uuid, logging
 
 from google.appengine.api.channel import create_channel
+
+from library.sections import reportSections
 
 class LiveReportController( StandardPageController ):
 
@@ -25,22 +26,6 @@ class LiveReportController( StandardPageController ):
 		self.addStyleSheet( '/bootstrap/css/bootstrap.min.css' )
 		self.addStyleSheet( '/styles/allmedia.css' )
 
-		sbOptions = (
-			{ 'id': 'priority-actions', 'label': 'Priority actions' },
-			{ 'id': 'domain', 'label': 'Domain' },
-			{ 'id': 'page-metadata', 'label': 'Page Metadata' },
-			{ 'id': 'visitors', 'label': 'Visitors' },
-			{ 'id': 'social-monitoring', 'label': 'Social monitoring' },
-			{ 'id': 'content-optimization', 'label': 'Content optimization' },
-			{ 'id': 'usability', 'label': 'Usability' },
-			{ 'id': 'seo-basics', 'label': 'SEO basics' },
-			{ 'id': 'seo-keywords', 'label': 'SEO keywords' },
-			{ 'id': 'seo-authority', 'label': 'SEO authority' },
-			{ 'id': 'seo-backlinks', 'label': 'SEO backlinks' },
-			{ 'id': 'security', 'label': 'Security' },
-			{ 'id': 'technologies', 'label': 'Technologies' },
-		)
-
 		channelId = self.request.cookies.get( 'channelId' )
 		if channelId is None:
 			channelId = uuid.uuid4().hex
@@ -53,7 +38,7 @@ class LiveReportController( StandardPageController ):
 			'domain': domainUrl,
 			'domainLength': len( domainUrl.replace( '.com', '' ) ),
 			'clientId': clientId,
-			'sbOptions': sbOptions,
+			'sbOptions': reportSections,
 			'pageTitle': '%(domainUrl)s | Domain insights for %(domainUrl)s by EGOsize.com' % { 'domainUrl': domainUrl },
 			'pageDescription': 'Check %(domainUrl)s metrics on SEO, social and other relevant aspects thanks to EGO size'
 		}

@@ -1,5 +1,5 @@
 
-import json
+import json, os
 
 from google.appengine.api.channel import send_message
 
@@ -10,6 +10,8 @@ class BaseTask( object ):
 	def __init__( self, channelId  = None ):
 
 		self.channelId = channelId
+
+		self.is_dev_env = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' )
 
 	def setChannelId( self, channelId ):
 

@@ -39,7 +39,7 @@ class W3cValidatorTask( BaseTask ):
 					del counting['info']
 
 					content[ self.getName() ] = 'Your HTML has %d error(s) and %d warning(s).' % tuple( counting.itervalues() )
-					actions.append({ 'status': 'regular', 'description': 'Clean your HTML and fix the erros and warnings detected by the W3C validator' })
+					actions.append({ 'status': 'regular', 'description': 'Clean your HTML and fix the errors and warnings detected by the W3C validator' })
 		except:
 			logging.warning( sys.exc_info()[1] )
 		

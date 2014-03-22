@@ -35,24 +35,28 @@ class FacebookCounterTask( BaseTask ):
 			'format': 'json'
 		}
 		url = 'https://api.facebook.com/method/fql.query?' + urllib.urlencode(params)
-		result = urlfetch.fetch( url )
-		if result.status_code == 200:
-		    try:
-			data = json.loads( result.content )[0]
-			content['facebookLikes'] = data['like_count']
-			content['facebookComments'] = data['comment_count']
-			content['facebookShares'] = data['share_count']
-			
-			totalCount = sum( content.values() )
-			if totalCount < 10:
-			    actions.append({ 'status': 'bad', 'description': 'Your social activity is almost null. You have to be more social on Facebook' })
-			elif totalCount < 100:
-			    actions.append({ 'status': 'regular', 'description': 'Your social activity on Facebook is good, but try to engage more users' })
-			else:
-			    actions.append({ 'status': 'good' })
-		    except:
-			ex = sys.exc_info()[1]
-			logging.error(ex)
+
+		try:
+			result = urlfetch.fetch( url )
+			if result.status_code == 200:
+			    try:
+				data = json.loads( result.content )[0]
+				content['facebookLikes'] = data['like_count']
+				content['facebookComments'] = data['comment_count']
+				content['facebookShares'] = data['share_count']
+				
+				totalCount = sum( content.values() )
+				if totalCount < 10:
+				    actions.append({ 'status': 'bad', 'description': 'Your social activity is almost null. You have to be more social on Facebook' })
+				elif totalCount < 100:
+				    actions.append({ 'status': 'regular', 'description': 'Your social activity on Facebook is good, but try to engage more users' })
+				else:
+				    actions.append({ 'status': 'good' })
+			    except:
+				ex = sys.exc_info()[1]
+				logging.error(ex)
+		except:
+			logging.error( 'error social' )
 
 		self.sendAndSaveReport( domainUrl, content, actions)
 

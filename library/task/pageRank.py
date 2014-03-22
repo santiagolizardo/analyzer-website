@@ -1,7 +1,8 @@
 
-from library.task.base import BaseTask
-		
+from library.task.base import BaseTask		
 from library.services.pagerank import getPageRank
+
+import random
 
 class PageRankTask( BaseTask ):
 
@@ -17,15 +18,17 @@ class PageRankTask( BaseTask ):
 
 	def start( self, baseUrl ):
 
-		pageRank  = getPageRank( baseUrl )
-
 		content = self.getDefaultData() 
 		actions = []
 
-		if pageRank is None or '' == pageRank:
-			pageRank = '0'
+		if self.is_dev_env:
+			pageRank = random.randint( 0, 10 )
+		else:
+			pageRank  = getPageRank( baseUrl )
+			if pageRank is None or '' == pageRank:
+				pageRank = '0'
+			pageRank = int( pageRank )
 
-		pageRank = int( pageRank )
 		content[ self.getName() ] = 'The domain has a PR%d' % pageRank
 		if pageRank < 3:
 			actions.append({ 'status': 'bad', 'description': 'Your Page Rank is too low. Try to publish original content more often.' })

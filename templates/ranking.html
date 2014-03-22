@@ -8,18 +8,20 @@
 	<th>#</th>
 	<th>Score</th>
 	<th>Site name and description</th>
-	<th>Last report Url</th>
-	<th>Website Url</th>
 	</tr>
 </thead>
 <tbody>
 % for site in sites:
 	<tr>
 	<td>${site['position']}</td>
-	<td>${site['score']}</td>
-	<td>${site['name']}<br /><em>${site['description']}</em></td>
-	<td><a href="${site['lastReportUrl']}">View last SEO/Social report</a></td>
-	<td><a href="http://${site['url']}" rel="nofollow" target="_blank">${site['url']}</a></td>
+	<td>
+		${site['score']}/100<br />
+		<p style="font-size: small;"><a href="${site['lastReportUrl']}" title="View ${site['url']} SEO/SEM audit report">View report</a></p>
+	</td>
+	<td>
+		<a href="http://${site['url']}" rel="nofollow" target="_blank" class="external">${site['url']}</a><br />
+		<strong>${site['name']}</strong>: ${site['description']}
+	</td>	
 	</tr>
 % endfor
 </tbody>

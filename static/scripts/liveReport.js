@@ -5,6 +5,7 @@ var statuses = {
 	bad: 0
 };
 var totalStatuses = 0;
+var channel = null, socket = null;
 
 function addAction( action )
 {
@@ -43,6 +44,10 @@ var messageHandlers = {
 		document.getElementById( 'headings' ).innerHTML = content.headings;
 		document.getElementById( 'softwareStack' ).innerHTML = content.softwareStack;
 		document.getElementById( 'pageSize' ).innerHTML = content.pageSize;
+		
+		document.getElementById( 'textHtmlRatio' ).innerHTML = ( parseFloat( content.textHtmlRatio ) * 100 ).toFixed( 2 ) + '%';
+		
+		document.getElementById( 'declaredLanguage' ).innerHTML = content.declaredLanguage;
 	},
 	domain: function( content )
 	{
@@ -54,8 +59,9 @@ var messageHandlers = {
 	traffic: function( content )
 	{
 		document.getElementById( 'worldRank' ).innerHTML = content.worldRank;
-		document.getElementById( 'countryRank' ).innerHTML = content.countryRank;
 		document.getElementById( 'loadTime' ).innerHTML = content.loadTime;
+		document.getElementById( 'visitorsLocation' ).innerHTML = content.visitorsLocation;
+		document.getElementById( 'relatedLinks' ).innerHTML = content.relatedLinks;
 	},
 	twitterAccount: function( content )
 	{
@@ -80,6 +86,10 @@ var messageHandlers = {
 	googlePageRank: function( content )
 	{
 		document.getElementById( 'googlePageRank' ).innerHTML = content.googlePageRank;
+	},
+	custom404: function( content )
+	{
+		document.getElementById( 'custom404' ).innerHTML = content.custom404;
 	},
 	screenshot: function( content )
 	{
@@ -106,6 +116,7 @@ var messageHandlers = {
 	{
 		score = content;
 		document.getElementById( 'score' ).innerHTML = content;
+		socket.close();
 	},
 };
 
@@ -138,7 +149,8 @@ function increaseProgressBar()
 
 $( document ).ready( function()
 	{
-		var channel = new goog.appengine.Channel( clientId );
+		channel = new goog.appengine.Channel( clientId );
+
 		var handlers = {
 			onopen: function()
 			{
@@ -168,6 +180,7 @@ $( document ).ready( function()
 				console.error( data );
 			}
 		};
-		var socket = channel.open( handlers );
+		socket = channel.open( handlers );
 	}
 );
+

@@ -3,15 +3,15 @@ import logging
 import urllib2
 import json
 
+import pycountry
+
 from library.model.responseBody import ResponseBody
 
-import time, re, sys
+import re, sys
 
 from bs4 import BeautifulSoup, element
 
 from library.task.base import BaseTask
-
-from bs4 import BeautifulSoup, NavigableString
 
 class HtmlAnalyzerTask( BaseTask ):
 
@@ -31,6 +31,10 @@ class HtmlAnalyzerTask( BaseTask ):
 			'images': 'N/A',
 			'softwareStack': 'N/A',
 			'pageSize': 'N/A',
+
+			'textHtmlRatio': 'N/A',
+
+			'declaredLanguage': None,
 		}
 
 	def updateView( self, beauty, data ):
@@ -42,10 +46,19 @@ class HtmlAnalyzerTask( BaseTask ):
 
 		beauty.find( id = 'docType' ).string.replace_with( data['docType'] )
 		beauty.find( id = 'images' ).string.replace_with( data['images'] )
-		beauty.find( id = 'headings' ).contents[0].replace_with( NavigableString( data['headings'] ) )
+		beauty.find( id = 'headings' ).contents[0].replace_with( data['headings'] )
 		beauty.find( id = 'softwareStack' ).string.replace_with( data['softwareStack'] )
 		beauty.find( id = 'googleAnalytics' ).string.replace_with( 'Yes' if data['googleAnalytics'] else 'No' )
 		beauty.find( id = 'pageSize' ).string.replace_with( str( data['pageSize'] ) )
+		
+		try:
+			beauty.find( id = 'textHtmlRatio' ).string.replace_with( '%.2f%%' % float( data['textHtmlRatio'] * 100 ) )
+		except:
+			logging.error(sys.exc_info()[0])
+			logging.error( 'error ratio: ' + str(data['textHtmlRatio'] ))
+			beauty.find( id = 'textHtmlRatio' ).string.replace_with( 'N/A' )
+		
+		beauty.find( id = 'declaredLanguage' ).string.replace_with( data['declaredLanguage'] )
 
 	def start( self, baseUrl ):
 
@@ -66,13 +79,25 @@ class HtmlAnalyzerTask( BaseTask ):
 
 			pageTitle = bSoup.title.string
 
+			page_size = extractPageSize( httpResp, body )
+
+			try:
+				textHtmlRatio = len( bSoup.get_text() ) / float( page_size )
+			except:
+				logging.error(sys.exc_info()[0])
+				textHtmlRatio = 'N/A'
+
 			content.update({
 				'googleAnalytics': ( '/ga.js' in body ),
 				'docType': extractDocType( bSoup ),
 				'headings': extractHeadings( bSoup ),
 				'images': extractImages( bSoup ),
 				'softwareStack': extractSoftwareStack( httpResp ),
-				'pageSize': extractPageSize( httpResp ),
+				'pageSize': page_size,
+				
+				'textHtmlRatio': textHtmlRatio,
+
+				'declaredLanguage': extractLanguage( bSoup ),
 			})
 
 			# Page Metadata
@@ -174,11 +199,22 @@ def extractSoftwareStack( httpResp ):
 			softwareStack.append( 'Apache Web (HTTP) server' )
 	return '<br />'.join( softwareStack )
 
-def extractPageSize( httpResp ):
+def extractPageSize( httpResp, body ):
 	if 'Content-Length' in httpResp.headers:
-		return httpResp.headers['Content-Length']
+		return int( httpResp.headers['Content-Length'] )
 	elif 'content-length' in httpResp.headers:
-		return httpResp.headers['content-length']
+		return int( httpResp.headers['content-length'] )
 	else:
-		return len( httpResp.read() )
+		return len( body )
 	
+def extractLanguage( bSoup ):
+	try:
+		language = bSoup.html['lang']
+		try:
+			return pycountry.languages.get( alpha2 = language ).name
+		except:
+			logging.error( sys.exc_info()[0] )
+	except:
+		logging.error( sys.exc_info()[0] )
+		return 'N/A'
+

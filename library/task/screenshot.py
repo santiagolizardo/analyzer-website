@@ -85,7 +85,7 @@ import time
 
 def captureScreenshotWordpress( url ):
 	apiUrl = 'http://s.wordpress.com/mshots/v1/%s?w=250' % quote_plus( url )
-	result = urlfetch.fetch( apiUrl, deadline = 30, follow_redirects = False )
+	result = urlfetch.fetch( apiUrl, deadline = 12, follow_redirects = False )
 	if result.status_code == 200:
 		imageData = urllib2.urlopen( apiUrl ).read()
 		return imageData

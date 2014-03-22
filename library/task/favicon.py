@@ -27,14 +27,14 @@ class FaviconCheckerTask( BaseTask ):
 		try:
 			url = 'http://' + domain + '/favicon.ico'
 			htmlLink = '<a href="%(faviconUrl)s" class="external" rel="nofollow" target="_blank"><img src="%(faviconUrl)s" alt="Favicon" /></a>' % { 'faviconUrl': url }
-			result = urlfetch.fetch( url, deadline = 4 )
+			result = urlfetch.fetch( url, deadline = 3 )
 
 			if result.status_code == 200:
 				content[ self.getName() ] = htmlLink 
 				actions.append({ 'status': 'good' })
 			elif result.status_code == 404:
 				content[ self.getName() ] = 'Missing'
-				actions.append({ 'status': 'bad', 'description': 'The %s file is missing' % htmlLink })
+				actions.append({ 'status': 'bad', 'description': 'The <a href="%(url)s" class="external" rel="nofollow" target="_blank">%(url)s</a> file is missing' % { 'url': url } })
 		except:
 			logging.warning( sys.exc_info()[1] )
 

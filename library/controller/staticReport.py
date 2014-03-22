@@ -1,4 +1,6 @@
 
+from google.appengine.api import memcache
+
 from library.controller.page import StandardPageController
 
 import logging, json, sys, os
@@ -12,10 +14,23 @@ from library.services.shorturl import createShortUrl
 
 import library.task.manager
 
+from library.sections import reportSections
+
 class StaticReportController( StandardPageController ):
 
 	def get( self, domainUrl ):
 
+		self.is_dev_env = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' )
+
+		cache_key = 'page_' + domainUrl
+		pageHtml = memcache.get( cache_key )
+		if self.is_dev_env or pageHtml is None:
+			pageHtml = self.generate_static_report( domainUrl )
+			memcache.set( key = cache_key, value = pageHtml, time = 86400 )
+
+		self.writeResponse( pageHtml )
+
+	def generate_static_report( self, domainUrl ):
 		siteReport = SiteReport.gql( 'WHERE url = :url', url = domainUrl ).get()
 	
 		if siteReport is None:
@@ -31,26 +46,10 @@ class StaticReportController( StandardPageController ):
 		self.addStyleSheet( '/bootstrap/css/bootstrap.min.css' )
 		self.addStyleSheet( '/styles/allmedia.css' )
 
-		sbOptions = (
-			{ 'id': 'priority-actions', 'label': 'Priority actions' },
-			{ 'id': 'domain', 'label': 'Domain' },
-			{ 'id': 'page-metadata', 'label': 'Page Metadata' },
-			{ 'id': 'visitors', 'label': 'Visitors' },
-			{ 'id': 'social-monitoring', 'label': 'Social monitoring' },
-			{ 'id': 'content-optimization', 'label': 'Content optimization' },
-			{ 'id': 'usability', 'label': 'Usability' },
-			{ 'id': 'seo-basics', 'label': 'SEO basics' },
-			{ 'id': 'seo-keywords', 'label': 'SEO keywords' },
-			{ 'id': 'seo-authority', 'label': 'SEO authority' },
-			{ 'id': 'seo-backlinks', 'label': 'SEO backlinks' },
-			{ 'id': 'security', 'label': 'Security' },
-			{ 'id': 'technologies', 'label': 'Technologies' },
-		)
-
 		values = {
 			'domain': domainUrl,
 			'domainLength': len( domainUrl.replace( '.com', '' ) ),
-			'sbOptions': sbOptions,
+			'sbOptions': reportSections,
 			'generatedOnDate': siteReport.creationDate.date().isoformat(),
 			'pageTitle': '%(domainUrl)s SEO and SEM performance metrics - EGOsize' % { 'domainUrl': domainUrl.capitalize() },
 			'pageDescription': 'Review %(domainUrl)s website report including SEO and SEM KPI and improvements. Learn how to do better at SERP to increase conversions.' % { 'domainUrl': domainUrl },
@@ -109,7 +108,7 @@ class StaticReportController( StandardPageController ):
 
 			task.updateView( beauty, data )
 
-		self.writeResponse( beauty.encode( formatter = None ) )
+		return beauty.encode( formatter = None )
 
 	def set_twitter_card( self, domainUrl ):
 

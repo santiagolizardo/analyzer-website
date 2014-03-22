@@ -16,7 +16,7 @@ var domainUrl = '${domain}';
 
 		<ul class="nav nav-list report-sidenav">
 		% for sbOption in sbOptions:
-		<li><a href="#${sbOption['id']}"><i class="icon-chevron-right"></i> ${sbOption['label']}</a></li>
+		<li><a href="#${sbOption['id']}" title="${sbOption['keywords']}"><i class="icon-chevron-right"></i> ${sbOption['label']}</a></li>
 		% endfor
 		</ul>
 	</div>
@@ -24,7 +24,12 @@ var domainUrl = '${domain}';
 	<div class="span9">
 	% for sbOption in sbOptions:
 		<div id="${sbOption['id']}">
-		<%include file="/sections/${sbOption['id']}.html"/>
+			% if 'keywords' in sbOption:
+				<h3>${sbOption['label']} <small>${sbOption['keywords']}</small></h3>
+			% else:
+				<h3>${sbOption['label']}</h3>
+			% endif
+			<%include file="/sections/${sbOption['id']}.html"/>
 		</div>
 	% endfor
 	</div>

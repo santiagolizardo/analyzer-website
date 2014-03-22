@@ -1,11 +1,13 @@
 
-import sys, json, os
+import sys, json, os, logging
 
+import socket
 import pygeoip
 
 from google.appengine.api import urlfetch
 
 from library.task.base import BaseTask
+from library.services.robowhois import RoboWhois
 
 from datetime import timedelta, datetime
 
@@ -38,47 +40,46 @@ class DomainAnalyzerTask( BaseTask ):
 		content = self.getDefaultData()
 		actions = []
 
-		apiUsername = 'devsantiago.lizardo'
-		apiKey = '2dc9a-aceb3-a310e-e73b3-54f1d'
+		if self.is_dev_env:
+			owner = 'Test Owner'
+			regDate = expDate = datetime.now()
+		else:
+			rw = RoboWhois()
+			rwdata = rw.whois( baseUrl )
+			try:
+				owner = rwdata['registrant_contacts'][0]['name']
+			except:
+				logging.warning( '%s has no registrant contacts' % baseUrl )
+				owner = 'N/A'
+			regDate = datetime.strptime( rwdata['created_on'][0:18], '%Y-%m-%dT%H:%M:%S' )
+			expDate = datetime.strptime( rwdata['expires_on'][0:18], '%Y-%m-%dT%H:%M:%S' )
 
-		url = 'http://freeapi.domaintools.com/v1/%s/?format=json&api_username=%s&api_key=%s' % ( baseUrl, apiUsername, apiKey )
+		todayDate = datetime.today()
+		oneYear = timedelta( days = 365 )
 
-		debugActive = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' ) 
-		debugActive = False
-		if debugActive:
-			url = 'http://api.domaintools.com/v1/domaintools.com/whois/'
+		content['owner'] = owner 
 
-		result = urlfetch.fetch( url )
-		if result.status_code == 200:
-			todayDate = datetime.today()
-			oneYear = timedelta( days = 365 )
+		content['registrationDate'] = regDate.strftime( '%Y-%m-%d' )
+		if regDate < ( todayDate - oneYear ):
+			actions.append({ 'status': 'good' })
+		else:
+			actions.append({ 'status': 'regular', 'description': 'Your domain has been registered during the last year. The older the better. Wait some time to get a better positioning because of this' })
 
-			data = json.loads( result.content )
-			content['owner'] = data['response']['registrant']['name']
+		content['expirationDate'] = expDate.strftime( '%Y-%m-%d' )
+		if expDate > ( todayDate + oneYear ):
+			actions.append({ 'status': 'good' })
+		else:
+			actions.append({ 'status': 'regular', 'description': 'Register your domain longer than a year to prove Google and others you are serious about your business.' })
 
-			regDate = data['response']['registration']['created']
-			content['registrationDate'] = regDate 
-			regDate = datetime.strptime( regDate, '%Y-%m-%d' )
-			if regDate < ( todayDate - oneYear ):
-				actions.append({ 'status': 'good' })
-			else:
-				actions.append({ 'status': 'regular', 'description': 'Your domain has been registered during the last year. The older the better. Wait some time to get a better positioning because of this' })
-
-			expDate = data['response']['registration']['expires']
-			content['expirationDate'] = expDate 
-			expDate = datetime.strptime( expDate, '%Y-%m-%d' )
-			if expDate > ( todayDate + oneYear ):
-				actions.append({ 'status': 'good' })
-			else:
-				actions.append({ 'status': 'regular', 'description': 'Register your domain longer than a year to prove Google and others you are serious about your business.' })
-
-			serverIp = data['response']['server']['ip_address']
-
+		try:
+			serverIp = socket.gethostbyname( baseUrl )
 			gi = pygeoip.GeoIP( 'GeoIP.dat' )
 			countryCode = gi.country_code_by_addr( serverIp ).lower()
 			countryName = gi.country_name_by_name( serverIp )
 			serverIp = '%(serverIp)s (<img src="/images/flags/%(countryCode)s.png" alt="%(countryName)s flag" /> %(countryName)s)' % { 'countryCode': countryCode, 'countryName': countryName, 'serverIp': serverIp }
 			content['serverIp'] = serverIp
+		except:
+			logging.error( sys.exc_info()[0] ) 
 
 		self.sendAndSaveReport( baseUrl, content, actions )
 
