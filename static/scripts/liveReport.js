@@ -48,6 +48,13 @@ var messageHandlers = {
 		document.getElementById( 'textHtmlRatio' ).innerHTML = ( parseFloat( content.textHtmlRatio ) * 100 ).toFixed( 2 ) + '%';
 		
 		document.getElementById( 'declaredLanguage' ).innerHTML = content.declaredLanguage;
+		
+		if( content.encoding )
+		{
+			document.getElementById( 'encoding' ).innerHTML = content.encoding;
+		}
+		
+		document.getElementById( 'emailAddresses' ).innerHTML = content.emailAddresses;
 	},
 	domain: function( content )
 	{

@@ -35,6 +35,10 @@ class HtmlAnalyzerTask( BaseTask ):
 			'textHtmlRatio': 'N/A',
 
 			'declaredLanguage': None,
+			
+			'encoding': None,
+			
+			'emailAddresses': None,
 		}
 
 	def updateView( self, beauty, data ):
@@ -55,10 +59,21 @@ class HtmlAnalyzerTask( BaseTask ):
 			beauty.find( id = 'textHtmlRatio' ).string.replace_with( '%.2f%%' % float( data['textHtmlRatio'] * 100 ) )
 		except:
 			logging.error(sys.exc_info()[0])
-			logging.error( 'error ratio: ' + str(data['textHtmlRatio'] ))
 			beauty.find( id = 'textHtmlRatio' ).string.replace_with( 'N/A' )
-		
-		beauty.find( id = 'declaredLanguage' ).string.replace_with( data['declaredLanguage'] )
+	
+		if 'declaredLanguage' in data and data['declaredLanguage'] is not None:
+			beauty.find( id = 'declaredLanguage' ).string.replace_with( data['declaredLanguage'] )
+		else:
+			beauty.find( id = 'declaredLanguage' ).string.replace_with( 'N/A' )
+
+		if 'encoding' in data and data['encoding'] is not None:
+			beauty.find( id = 'encoding' ).string.replace_with( data['encoding'] )
+		else:
+			beauty.find( id = 'encoding' ).string.replace_with( 'N/A' )
+
+		if 'emailAddresses' in data and data['emailAddresses'] is not None:
+			beauty.find( id = 'emailAddresses' ).string.replace_with( data['emailAddresses'] )
+
 
 	def start( self, baseUrl ):
 
@@ -87,6 +102,11 @@ class HtmlAnalyzerTask( BaseTask ):
 				logging.error(sys.exc_info()[0])
 				textHtmlRatio = 'N/A'
 
+
+			email_addresses_list = extractEmailAddresses( body )
+			if len( email_addresses_list ) > 0:
+				actions.append({ 'status': 'bad', 'description': 'Remove or encode the found email addresses to prevent be victim of spammers.' })
+
 			content.update({
 				'googleAnalytics': ( '/ga.js' in body ),
 				'docType': extractDocType( bSoup ),
@@ -98,6 +118,10 @@ class HtmlAnalyzerTask( BaseTask ):
 				'textHtmlRatio': textHtmlRatio,
 
 				'declaredLanguage': extractLanguage( bSoup ),
+				
+				'encoding': extractEncoding( httpResp ),
+
+				'emailAddresses': ', '.join( email_addresses_list ),
 			})
 
 			# Page Metadata
@@ -132,15 +156,70 @@ class HtmlAnalyzerTask( BaseTask ):
 		self.sendAndSaveReport( baseUrl, content, actions )
 
 def extractDocType( bSoup ):
-	docType = None
+	detected_doc_type = None
 	for child in bSoup.contents:
 		if type( child ) == element.Doctype:
-			docType = child.string.lower()
+			detected_doc_type = child.string
 			break
-	
-	if 'html' == docType: docType = 'HTML5'	
-	
-	return docType
+
+	if detected_doc_type is None:
+		return 'N/A'
+
+	doc_types = (
+		{
+			'name': 'XHTML 1.1',
+			'string': 'html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"',
+			'sub_string': 'DTD XHTML 1.1',
+		},
+		{
+			'name': 'XHTML 1.0 Frameset',
+			'string': 'html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd"',
+			'sub_string': 'DTD XHTML 1.0 Frameset',
+		},
+		{
+			'name': 'XHTML 1.0 Transitional',
+			'string': 'html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"',
+			'sub_string': 'DTD XHTML 1.0 Transitional',
+		},
+		{
+			'name': 'XHTML 1.0 Strict',
+			'string': 'html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"',
+			'sub_string': 'DTD XHTML 1.0 Strict',
+		},
+		{
+			'name': 'HTML 4.01 Frameset',
+			'string': 'HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd"',
+			'sub_string': 'DTD HTML 4.01 Frameset',
+		},
+		{
+			'name': 'HTML 4.01 Transitional',
+			'string': 'HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"',
+			'sub_string': 'DTD HTML 4.01 Transitional',
+		},
+		{
+			'name': 'HTML 4.01 Strict',
+			'string': 'HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"',
+			'sub_string': 'DTD HTML 4.01',
+		},
+		{
+			'name': 'HTML 5',
+			'string': 'html',
+			'sub_string': 'html',
+		}
+	)
+
+	# First try full string
+	for doc_type in doc_types:
+		if doc_type['string'].lower() == detected_doc_type.lower():
+			return doc_type['name']
+
+	# Second try sub string
+	for doc_type in doc_types:
+		if doc_type['sub_string'].lower() == detected_doc_type.lower():
+			return doc_type['name']
+
+	# Else unknown
+	return 'Unknown (%s)' % detected_doc_type	
 
 def extractImages( bSoup ):
 	images = bSoup.find_all( 'img' )
@@ -199,6 +278,19 @@ def extractSoftwareStack( httpResp ):
 			softwareStack.append( 'Apache Web (HTTP) server' )
 	return '<br />'.join( softwareStack )
 
+def extractEncoding( httpResp ):
+	if 'Content-Type' in httpResp.headers:
+		match = re.search( 'charset=(.*)', httpResp.headers['Content-Type'] )
+		if match:
+			encod = match.group( 1 ).upper()
+			return encod
+		return None
+
+	#dic_of_possible_encodings = chardet.detect(unicode(soup))
+	#encod = dic_of_possible_encodings['encoding'] 
+
+	return None
+
 def extractPageSize( httpResp, body ):
 	if 'Content-Length' in httpResp.headers:
 		return int( httpResp.headers['Content-Length'] )
@@ -208,6 +300,9 @@ def extractPageSize( httpResp, body ):
 		return len( body )
 	
 def extractLanguage( bSoup ):
+	if 'lang' not in bSoup.html:
+		return 'N/A'
+
 	try:
 		language = bSoup.html['lang']
 		try:
@@ -217,4 +312,9 @@ def extractLanguage( bSoup ):
 	except:
 		logging.error( sys.exc_info()[0] )
 		return 'N/A'
+
+def extractEmailAddresses( body ):
+	mailsrch = re.compile( r'[\w\-][\w\-\.]+@[\w\-][\w\-\.]+[a-zA-Z]{1,4}' )
+	return mailsrch.findall( body )
+
 

@@ -26,7 +26,11 @@ class AlexaAnalyzerTask( BaseTask ):
 		beauty.find( id = 'loadTime' ).string.replace_with( data['loadTime'] )
 		beauty.find( id = 'loadTime' ).string.replace_with( data['loadTime'] )
 		beauty.find( id = 'visitorsLocation' ).string.replace_with( data['visitorsLocation'] )
-		beauty.find( id = 'relatedLinks' ).string.replace_with( data['relatedLinks'] )
+
+		if 'relatedLinks' in data and data['relatedLinks'] is not None:
+			beauty.find( id = 'relatedLinks' ).string.replace_with( data['relatedLinks'] )
+		else:
+			beauty.find( id = 'relatedLinks' ).string.replace_with( 'N/A' )
 
 	def start( self, baseUrl ):
 

@@ -6,9 +6,20 @@ from library.model.report import SiteReport
 from google.appengine.ext import db
 from library.utilities import uriFor
 
+from google.appengine.api import memcache
+
 class IndexController( StandardPageController ):
 
 	def get( self ):
+
+		html = memcache.get( 'page-index' )
+		if html is None:
+			html = self.generate_html()
+			memcache.set( 'page-index', html, time = 3600 )
+
+		self.writeResponse( html )
+
+	def generate_html( self ):
 		self.addJavaScript( '//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js' )		
 		self.addJavaScript( '/bootstrap/js/bootstrap.min.js' )
 		self.addStyleSheet( '/bootstrap/css/bootstrap.min.css' )
@@ -30,6 +41,7 @@ class IndexController( StandardPageController ):
 			'recentDomains': recentDomains,
 			'sitesRanking': sites,
 		}
-		html = self.renderTemplate( 'index.html', values )
-		self.writeResponse( html )
+
+		return self.renderTemplate( 'index.html', values )
+
 	
