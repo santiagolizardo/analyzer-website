@@ -1,6 +1,7 @@
 
+import os
+
 from library.controller.basic import BasicController
-import statvfs
 
 class PageController( BasicController ):
 
@@ -13,6 +14,8 @@ class PageController( BasicController ):
 		self.styleSheets = []
 		self.javaScripts = []
 		self.pageMetas = []
+
+		self.is_dev_env = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' )
 
 	def addJavaScript( self, javaScript ):
 		self.javaScripts.append( javaScript )

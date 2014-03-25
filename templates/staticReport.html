@@ -6,21 +6,21 @@ var loadTimeMs = ${loadTimeMs};
 </script>
 
 <h1>${domain}</h1>
-<p>Generated on ${generatedOnDate}. Short URL: <a href="${shortUrl}">${shortUrl}</a></p>
+<p>Generated on <time datetime="${generatedDate}">${generatedDateTime}</time>. Short URL: <a href="${shortUrl}">${shortUrl}</a></p>
 
 <div class="row">
 
-	<div class="report-sidebar span3">
+	<div class="report-sidebar col-md-3">
 		<p><%include file="/addThis.html"/></p><br />
 
 		<ul class="nav nav-list report-sidenav">
 		% for sbOption in sbOptions:
-		<li><a href="#${sbOption['id']}" title="${sbOption['keywords']}"><i class="icon-chevron-right"></i> ${sbOption['label']}</a></li>
+		<li><a href="#${sbOption['id']}" title="${sbOption['keywords']}"><i class="glyphicon glyphicon-chevron-right"></i> ${sbOption['label']}</a></li>
 		% endfor
 		</ul>	
 	</div>
 
-	<div class="span9">
+	<div class="col-md-9">
 		% for sbOption in sbOptions:
 		<div id="${sbOption['id']}">
 			% if 'keywords' in sbOption:

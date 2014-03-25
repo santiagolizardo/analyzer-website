@@ -7,21 +7,21 @@ var domainUrl = '${domain}';
 
 <h1>${domain}</h1>
 
-<div id="mainProgressBar" class="progress progress-striped active"><div class="bar"></div></div>
+<div id="mainProgressBar" class="progress progress-striped active"><div class="progress-bar" role="progressbar"></div></div>
 
 <div class="row">
 
-	<div class="report-sidebar span3">
+	<div class="report-sidebar col-md-3">
 		<p><%include file="/addThis.html"/></p><br />
 
 		<ul class="nav nav-list report-sidenav">
 		% for sbOption in sbOptions:
-		<li><a href="#${sbOption['id']}" title="${sbOption['keywords']}"><i class="icon-chevron-right"></i> ${sbOption['label']}</a></li>
+		<li><a href="#${sbOption['id']}" title="${sbOption['keywords']}"><i class="glyphicon glyphicon-chevron-right"></i> ${sbOption['label']}</a></li>
 		% endfor
 		</ul>
 	</div>
 
-	<div class="span9">
+	<div class="col-md-9">
 	% for sbOption in sbOptions:
 		<div id="${sbOption['id']}">
 			% if 'keywords' in sbOption:

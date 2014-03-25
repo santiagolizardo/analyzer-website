@@ -50,7 +50,8 @@ class StaticReportController( StandardPageController ):
 			'domain': domainUrl,
 			'domainLength': len( domainUrl.replace( '.com', '' ) ),
 			'sbOptions': reportSections,
-			'generatedOnDate': siteReport.creationDate.date().isoformat(),
+			'generatedDate': siteReport.creationDate.date().isoformat(),
+			'generatedDateTime': siteReport.creationDate.date().isoformat(),
 			'pageTitle': '%(domainUrl)s SEO and SEM performance metrics - EGOsize' % { 'domainUrl': domainUrl.capitalize() },
 			'pageDescription': 'Review %(domainUrl)s website report including SEO and SEM KPI and improvements. Learn how to do better at SERP to increase conversions.' % { 'domainUrl': domainUrl },
 		}
@@ -99,9 +100,9 @@ class StaticReportController( StandardPageController ):
 		beauty.find( id = 'badStatuses' ).string.replace_with( str( statuses['bad'] ) )
 
 		if totalStatuses > 0:
-			beauty.find( 'div', 'bar bar-success' )['style'] = 'width: %d%%;' % ( ( statuses['good'] * 100 ) / totalStatuses )
-			beauty.find( 'div', 'bar bar-warning' )['style'] = 'width: %d%%;' % ( ( statuses['regular'] * 100 ) / totalStatuses )
-			beauty.find( 'div', 'bar bar-danger' )['style'] = 'width: %d%%;' % ( ( statuses['bad'] * 100 ) / totalStatuses )
+			beauty.find( 'div', 'progress-bar progress-bar-success' )['style'] = 'width: %d%%;' % ( ( statuses['good'] * 100 ) / totalStatuses )
+			beauty.find( 'div', 'progress-bar progress-bar-warning' )['style'] = 'width: %d%%;' % ( ( statuses['regular'] * 100 ) / totalStatuses )
+			beauty.find( 'div', 'progress-bar progress-bar-danger' )['style'] = 'width: %d%%;' % ( ( statuses['bad'] * 100 ) / totalStatuses )
 
 		for task in tasks:
 			subreport = task.getSavedReport( domainUrl )

@@ -1,21 +1,24 @@
 <%include file="htmlHeader.html" />
-<body data-spy="scroll" data-target=".report-sidebar">
+<body data-spy="scroll" data-target=".report-sidenav">
 
 	<div class="container">	
 
-	<div class="navbar">
-		<div class="navbar-inner">
-		 <ul class="nav">
-			<li data-noclass="active"><a class="brand" href="http://${appUrl}/"><img src="/images/logo.png" alt="EGO size logo" style="height: 25px;" /> EGOsize</a></li>
-      	</ul>
-		<form action="/analyze" method="post" class="navbar-search pull-right">
-			<div class="input-prepend input-append">
-				<span class="add-on">http://</span>
-				<input type="text" name="domain" class="search-query input-xlarge" required="required" autofocus="autofocus" />
-				<button type="submit" class="btn btn-primary">Get your free report!</button>
+	<div class="navbar navbar-default" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="http://${appUrl}/"><img src="/images/logo.png" alt="EGO size logo" style="height: 25px;" /> EGOsize</a>
 			</div>
-		</form>
+			<div class="collapse navbar-collapse">
+				<form action="/analyze" method="post" class="navbar-form navbar-left">
+					<div class="input-group">
+						<span class="input-group-addon">http://</span>
+						<input type="text" name="domain" class="form-control" required="required" autofocus="autofocus" placeholder="www.example.com" />
+						<span class="input-group-btn">
+							<button type="submit" class="btn btn-primary">Get your free report!</button>
+						</span>
+					</div>
+				</form>
+			</div>
 		</div>
 	</div>
-
 

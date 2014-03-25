@@ -14,11 +14,11 @@ function addAction( action )
 	statuses[ action.status ]++;
 	totalStatuses++;
 
-	$( 'div#statuses > div.bar-success' )
+	$( 'div#statuses > div.progress-bar-success' )
 		.css( 'width', ( ( statuses['good'] * 100 ) / totalStatuses ) + '%' );
-	$( 'div#statuses > div.bar-warning' )
+	$( 'div#statuses > div.progress-bar-warning' )
 		.css( 'width', ( ( statuses['regular'] * 100 ) / totalStatuses ) + '%' );
-	$( 'div#statuses > div.bar-danger' )
+	$( 'div#statuses > div.progress-bar-danger' )
 		.css( 'width', ( ( statuses['bad'] * 100 ) / totalStatuses ) + '%' );
 
 	$( '#goodStatuses' ).html( statuses['good'] );
