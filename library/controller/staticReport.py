@@ -84,9 +84,12 @@ class StaticReportController( StandardPageController ):
 
 		for action in actions:
 			statuses[ action['status'] ] = statuses[ action['status'] ] + 1
+
 		totalStatuses = sum( statuses.values() )
-		
+
 		values['loadTimeMs'] = 0
+		values['actions'] = actions
+
 		html = self.renderTemplate( 'staticReport.html', values )
 		beauty = BeautifulSoup( html )
 		beauty.find( id = 'score' ).contents[0].replace_with( str( siteReport.score ) )

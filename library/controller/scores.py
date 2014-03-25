@@ -1,6 +1,7 @@
 
 import webapp2, logging, json, os
 
+from google.appengine.api import memcache
 from google.appengine.api import urlfetch
 from google.appengine.api.channel import send_message
 
@@ -71,6 +72,8 @@ class CalculateScoreController( webapp2.RequestHandler ):
 		is_devel_env = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' )
 		if not is_devel_env:
 			deferred.defer( send_twitter_update, domainUrl )
+
+		memcache.delete( 'page-index' )
 
 		send_message( channelId, messageEncoded )
 

@@ -39,6 +39,11 @@ class HtmlAnalyzerTask( BaseTask ):
 			'encoding': None,
 			
 			'emailAddresses': None,
+			
+			'internalLinks': None,
+
+			'containsFlash': None,
+			'pageCompression': None,
 		}
 
 	def updateView( self, beauty, data ):
@@ -74,6 +79,11 @@ class HtmlAnalyzerTask( BaseTask ):
 		if 'emailAddresses' in data and data['emailAddresses'] is not None:
 			beauty.find( id = 'emailAddresses' ).string.replace_with( data['emailAddresses'] )
 
+		if 'internalLinks' in data and data['internalLinks'] is not None:
+			beauty.find( id = 'internalLinks' ).string.replace_with( data['internalLinks'] )
+
+		if 'containsFlash' in data and data['containsFlash'] is not None:
+			beauty.find( id = 'containsFlash' ).string.replace_with( data['containsFlash'] )
 
 	def start( self, baseUrl ):
 
@@ -102,7 +112,6 @@ class HtmlAnalyzerTask( BaseTask ):
 				logging.error(sys.exc_info()[0])
 				textHtmlRatio = 'N/A'
 
-
 			email_addresses_list = extractEmailAddresses( body )
 			if len( email_addresses_list ) > 0:
 				actions.append({ 'status': 'bad', 'description': 'Remove or encode the found email addresses to prevent be victim of spammers.' })
@@ -122,6 +131,11 @@ class HtmlAnalyzerTask( BaseTask ):
 				'encoding': extractEncoding( httpResp ),
 
 				'emailAddresses': ', '.join( email_addresses_list ),
+				
+				'internalLinks': extractInternalLinks( bSoup, baseUrl ),
+
+				'containsFlash': containsFlash( body, actions ),
+				'pageCompression': pageCompression( httpResp, actions ),
 			})
 
 			# Page Metadata
@@ -154,6 +168,12 @@ class HtmlAnalyzerTask( BaseTask ):
 			logging.error( str( e ) )
 
 		self.sendAndSaveReport( baseUrl, content, actions )
+
+def containsFlash( body, actions ):
+	if '.swf"' in body:
+		actions.append({ 'status': 'bad', 'description': 'Replace your Flash content with JavaScript for UI enhancements and interaction' })
+		return 'The page contains Flash content'
+	return 'No Flash has been found in the page'
 
 def extractDocType( bSoup ):
 	detected_doc_type = None
@@ -271,6 +291,15 @@ def extractHeadings( bSoup ):
 	
 	return html
 
+def pageCompression( httpResp, actions ):
+	if 'Content-Encoding' in httpResp.headers:
+		if 'gzip' in httpResp.headers['Content-Encoding']:
+			return 'Gzip is enabled. Great!'
+		else:
+			actions.append({ 'status': 'regular', 'description': 'Your server does not have Gzip compression enabled. Activate it to deliver faster pages.' })
+
+	return 'N/A'
+
 def extractSoftwareStack( httpResp ):
 	softwareStack = []
 	if 'Server' in httpResp.headers:
@@ -317,4 +346,14 @@ def extractEmailAddresses( body ):
 	mailsrch = re.compile( r'[\w\-][\w\-\.]+@[\w\-][\w\-\.]+[a-zA-Z]{1,4}' )
 	return mailsrch.findall( body )
 
+def extractInternalLinks( bSoup, domain ):
+	links = bSoup.find_all( 'a', href = re.compile( domain ) )
+	if len( links ) > 0:
+		links = links[:3]
+		html = [ '<ul>' ]
+		for link in links:
+			html.append( '<li><a href="%s" class="external" rel="nofollow" target="_blank">%s</a></li>' % ( link['href'], link['href'] ) )
+		html.append( '</ul>' )
+		return ''.join( html )
+	return 'N/A'
 

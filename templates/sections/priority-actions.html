@@ -25,7 +25,14 @@ The domain <span itemprop="itemreviewed">${domain}</span> has been rated <span i
 <div class="bar bar-danger" style="width: 0%;"></div>
 </div>
 
-<h4>Top priorities for your website</h4>
+<h4>Top priorities for <strong>${domain}</strong></h4>
 
 <ol id="priorityActions">
+% if actions:
+	% for action in actions:
+		% if 'description' in action:
+		<li>${action['description']}</li>
+		% endif	
+	% endfor
+% endif
 </ol>

@@ -53,6 +53,19 @@ var messageHandlers = {
 		{
 			document.getElementById( 'encoding' ).innerHTML = content.encoding;
 		}
+
+		if( content.internalLinks )
+		{
+			document.getElementById( 'internalLinks' ).innerHTML = content.internalLinks;
+		}
+		if( content.containsFlash )
+		{
+			document.getElementById( 'containsFlash' ).innerHTML = content.containsFlash;
+		}
+		if( content.pageCompression )
+		{
+			document.getElementById( 'pageCompression' ).innerHTML = content.pageCompression;
+		}
 		
 		document.getElementById( 'emailAddresses' ).innerHTML = content.emailAddresses;
 	},

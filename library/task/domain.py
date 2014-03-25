@@ -40,19 +40,22 @@ class DomainAnalyzerTask( BaseTask ):
 		content = self.getDefaultData()
 		actions = []
 
+		owner = 'N/A'
 		if self.is_dev_env:
 			owner = 'Test Owner'
 			regDate = expDate = datetime.now()
 		else:
 			rw = RoboWhois()
 			rwdata = rw.whois( baseUrl )
-			try:
-				owner = rwdata['registrant_contacts'][0]['name']
-			except:
-				logging.warning( '%s has no registrant contacts' % baseUrl )
-				owner = 'N/A'
-			regDate = datetime.strptime( rwdata['created_on'][0:18], '%Y-%m-%dT%H:%M:%S' )
-			expDate = datetime.strptime( rwdata['expires_on'][0:18], '%Y-%m-%dT%H:%M:%S' )
+
+			if rwdata is not None:
+				try:
+					owner = rwdata['registrant_contacts'][0]['name']
+				except:
+					logging.warning( '%s has no registrant contacts' % baseUrl )
+					owner = 'N/A'
+				regDate = datetime.strptime( rwdata['created_on'][0:18], '%Y-%m-%dT%H:%M:%S' )
+				expDate = datetime.strptime( rwdata['expires_on'][0:18], '%Y-%m-%dT%H:%M:%S' )
 
 		todayDate = datetime.today()
 		oneYear = timedelta( days = 365 )

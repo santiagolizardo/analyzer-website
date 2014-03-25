@@ -54,8 +54,8 @@ class AlexaAnalyzerTask( BaseTask ):
 				ranks = country.getElementsByTagName( 'aws:Rank' )
 				if len( ranks ) > 0 and ranks[0].firstChild is not None:
 					rank = ranks[0].firstChild.nodeValue
-					rank_list_items.append( '<li><img src="/images/flags/%s.png" alt="%s flag" /> Ranks #%s in %s</li>' % ( country_code.lower(), country_name, rank, country_name ) )
-			content['visitorsLocation'] = '<ol>' + ''.join( rank_list_items[:3] ) + '</ol>'
+					rank_list_items.append( '<li>%(rank)s<sup>th</sup> most visited website in <img src="/images/flags/%(countryCode)s.png" alt="%(countryName)s flag" /> %(countryName)s</li>' % { 'countryCode': country_code.lower(), 'countryName': country_name, 'rank': rank } )
+			content['visitorsLocation'] = '<ul>' + ''.join( rank_list_items[:3] ) + '</ul>'
 
 			related_list_items = []
 			for related in dom_doc.getElementsByTagName( 'aws:RelatedLink' ):
