@@ -9,11 +9,6 @@ from google.appengine.ext import db
 class RankingController( StandardPageController ):
 
     def get( self, country = None ):
-        self.addJavaScript( '//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js' )
-        self.addJavaScript( '/bootstrap/js/bootstrap.min.js' )
-        
-        self.addStyleSheet( '/bootstrap/css/bootstrap.min.css' )
-        self.addStyleSheet( '/styles/allmedia.css' )
 
         sitesQuery = SiteReport.all()
         sitesQuery.order( '-score' )

@@ -15,11 +15,6 @@ from google.appengine.ext import db
 class SitemapController( StandardPageController ):
 
     def get( self ):
-        self.addJavaScript( '//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js' )
-        self.addJavaScript( '/bootstrap/js/bootstrap.min.js' )
-        
-        self.addStyleSheet( '/bootstrap/css/bootstrap.min.css' )
-        self.addStyleSheet( '/styles/allmedia.css' )
 
 	sites = SiteReport.all()
 
@@ -36,11 +31,6 @@ class SitemapController( StandardPageController ):
 class FeaturesController( StandardPageController ):
 
     def get( self, country = None ):
-        self.addJavaScript( '//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js' )
-        self.addJavaScript( '/bootstrap/js/bootstrap.min.js' )
-        
-        self.addStyleSheet( '/bootstrap/css/bootstrap.min.css' )
-        self.addStyleSheet( '/styles/allmedia.css' )
 
 	features = (
 		'Number of indexed pages on Google',
@@ -65,11 +55,7 @@ class FeaturesController( StandardPageController ):
 class PricingController( StandardPageController ):
 
     def get( self, country = None ):
-        self.addJavaScript( '//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js' )
-        self.addJavaScript( '/bootstrap/js/bootstrap.min.js' )
-        
-        self.addStyleSheet( '/bootstrap/css/bootstrap.min.css' )
-        self.addStyleSheet( '/styles/allmedia.css' )
+        self.addStyleSheet( '/styles/pricing.css' )
 
 	features = (
 		'Number of indexed pages on Google',
@@ -82,8 +68,8 @@ class PricingController( StandardPageController ):
 	)
 
         values = {
-            'pageTitle': 'Pricing (FREE!) - EGOsize',
-	    'pageDescription': 'The EGOsize pricing schema is simple: Free service',
+            'pageTitle': 'Pricing - EGOsize',
+	    'pageDescription': 'The EGOsize pricing schema is simple. Freemium services are available.',
 	    'features': features,
         }
         

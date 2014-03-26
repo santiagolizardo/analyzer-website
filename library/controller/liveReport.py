@@ -18,14 +18,9 @@ class LiveReportController( StandardPageController ):
 			self.redirect( url )
 			return
 
-		self.addJavaScript( '//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js' )
 		self.addJavaScript( '/_ah/channel/jsapi' )
-		self.addJavaScript( '/bootstrap/js/bootstrap.min.js' )
 		self.addJavaScript( '/scripts/liveReport.js' )
 		
-		self.addStyleSheet( '/bootstrap/css/bootstrap.min.css' )
-		self.addStyleSheet( '/styles/allmedia.css' )
-
 		channelId = self.request.cookies.get( 'channelId' )
 		if channelId is None:
 			channelId = uuid.uuid4().hex
@@ -40,7 +35,7 @@ class LiveReportController( StandardPageController ):
 			'clientId': clientId,
 			'sbOptions': reportSections,
 			'pageTitle': '%(domainUrl)s | Domain insights for %(domainUrl)s by EGOsize.com' % { 'domainUrl': domainUrl },
-			'pageDescription': 'Check %(domainUrl)s metrics on SEO, social and other relevant aspects thanks to EGO size'
+			'pageDescription': 'Check %(domainUrl)s metrics on SEO, social and other relevant aspects thanks to EGOsize'
 		}
 
 		html = self.renderTemplate( 'liveReport.html', values )

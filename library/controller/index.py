@@ -20,10 +20,6 @@ class IndexController( StandardPageController ):
 		self.writeResponse( html )
 
 	def generate_html( self ):
-		self.addJavaScript( '//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js' )		
-		self.addJavaScript( '/bootstrap/js/bootstrap.min.js' )
-		self.addStyleSheet( '/bootstrap/css/bootstrap.min.css' )
-		self.addStyleSheet( '/styles/allmedia.css' )
 
 		recentDomains = db.GqlQuery( 'SELECT * FROM SiteReport ORDER BY creationDate DESC' ).fetch( 10 )
 

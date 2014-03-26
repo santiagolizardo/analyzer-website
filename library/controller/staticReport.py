@@ -38,14 +38,9 @@ class StaticReportController( StandardPageController ):
 			self.response.write( 'Report not found' )
 			return
 
-		self.addJavaScript( '//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js' )
-		self.addJavaScript( '/bootstrap/js/bootstrap.min.js' )
 		self.addJavaScript( 'https://www.google.com/jsapi' )
 		self.addJavaScript( '/scripts/staticReport.js' )
 		
-		self.addStyleSheet( '/bootstrap/css/bootstrap.min.css' )
-		self.addStyleSheet( '/styles/allmedia.css' )
-
 		values = {
 			'domain': domainUrl,
 			'domainLength': len( domainUrl.replace( '.com', '' ) ),

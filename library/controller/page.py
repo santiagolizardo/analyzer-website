@@ -17,6 +17,18 @@ class PageController( BasicController ):
 
 		self.is_dev_env = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' )
 
+
+		if self.is_dev_env:
+			self.addJavaScript( '/scripts/jquery.min.js' )
+			self.addJavaScript( '/bootstrap/js/bootstrap.min.js' )
+			self.addStyleSheet( '/bootstrap/css/bootstrap.min.css' )
+		else:
+			self.addJavaScript( '//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js' )
+			self.addJavaScript( '//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js' )
+			self.addStyleSheet( '//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css' )
+
+		self.addStyleSheet( '/styles/allmedia.css' )
+
 	def addJavaScript( self, javaScript ):
 		self.javaScripts.append( javaScript )
 
@@ -24,7 +36,7 @@ class PageController( BasicController ):
 		self.styleSheets.append( styleSheet )
 
 class StandardPageController( PageController ):
-	
+
 	def renderTemplate( self, name, values = {} ):
 
 		defaultValues = {
