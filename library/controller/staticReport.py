@@ -7,7 +7,7 @@ import logging, json, sys, os
 
 from bs4 import BeautifulSoup
 
-from library.model.report import SiteReport
+from library.model.report import SiteReport, SiteRating
 from library.model.report import TaskReport
 
 from library.services.shorturl import createShortUrl
@@ -38,11 +38,28 @@ class StaticReportController( StandardPageController ):
 			self.response.write( 'Report not found' )
 			return
 
+		siteRating = SiteRating.all().filter( 'domain =', domainUrl ).get()
+		userRating = None
+		if siteRating is not None:
+			sumRating = ( siteRating.content + siteRating.usability + siteRating.presentation )
+			partRating = sumRating / 3
+			userRating = partRating / siteRating.num_raters
+
+		print userRating
+
 		self.addJavaScript( 'https://www.google.com/jsapi' )
 		self.addJavaScript( '/scripts/staticReport.js' )
+
+		baseUrl = None
+		if self.is_dev_env:
+			baseUrl = 'http://www.egosize.dev:9090'
+		else:
+			baseUrl = 'http://www.egosize.com'
 		
 		values = {
+			'baseUrl': baseUrl,
 			'domain': domainUrl,
+			'userRating': userRating,
 			'domainLength': len( domainUrl.replace( '.com', '' ) ),
 			'sbOptions': reportSections,
 			'generatedDate': siteReport.creationDate.date().isoformat(),

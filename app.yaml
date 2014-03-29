@@ -2,7 +2,7 @@ application: egosize
 version: 1
 runtime: python27
 api_version: 1
-threadsafe: true
+threadsafe: false
 
 builtins:
 - deferred: on
@@ -29,6 +29,10 @@ handlers:
   static_dir: static/scripts
 - url: /images
   static_dir: static/images
+
+- url: /remote_api
+  script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
+  login: admin
 
 - url: /robots\.txt
   static_files: static/robots.txt

@@ -13,6 +13,13 @@ class SiteReport( db.Model ):
 		
 		return '<SiteReport url=%s>' % self.url
 
+class SiteRating( db.Model ):
+	domain = db.StringProperty( required = True )
+	content = db.IntegerProperty()
+	usability = db.IntegerProperty()
+	presentation = db.IntegerProperty()
+	num_raters = db.IntegerProperty()
+
 class TaskReport( db.Model ):
 
 	name = db.StringProperty( required = True )

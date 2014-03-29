@@ -41,6 +41,8 @@ class DomainAnalyzerTask( BaseTask ):
 		actions = []
 
 		owner = 'N/A'
+		regDate = expDate = None
+
 		if self.is_dev_env:
 			owner = 'Test Owner'
 			regDate = expDate = datetime.now()
@@ -62,17 +64,19 @@ class DomainAnalyzerTask( BaseTask ):
 
 		content['owner'] = owner 
 
-		content['registrationDate'] = regDate.strftime( '%Y-%m-%d' )
-		if regDate < ( todayDate - oneYear ):
-			actions.append({ 'status': 'good' })
-		else:
-			actions.append({ 'status': 'regular', 'description': 'Your domain has been registered during the last year. The older the better. Wait some time to get a better positioning because of this' })
+		if regDate is not None:
+			content['registrationDate'] = regDate.strftime( '%Y-%m-%d' )
+			if regDate < ( todayDate - oneYear ):
+				actions.append({ 'status': 'good' })
+			else:
+				actions.append({ 'status': 'regular', 'description': 'Your domain has been registered during the last year. The older the better. Wait some time to get a better positioning because of this' })
 
-		content['expirationDate'] = expDate.strftime( '%Y-%m-%d' )
-		if expDate > ( todayDate + oneYear ):
-			actions.append({ 'status': 'good' })
-		else:
-			actions.append({ 'status': 'regular', 'description': 'Register your domain longer than a year to prove Google and others you are serious about your business.' })
+		if expDate is not None:
+			content['expirationDate'] = expDate.strftime( '%Y-%m-%d' )
+			if expDate > ( todayDate + oneYear ):
+				actions.append({ 'status': 'good' })
+			else:
+				actions.append({ 'status': 'regular', 'description': 'Register your domain longer than a year to prove Google and others you are serious about your business.' })
 
 		try:
 			serverIp = socket.gethostbyname( baseUrl )

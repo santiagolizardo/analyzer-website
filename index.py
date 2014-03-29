@@ -31,6 +31,7 @@ routes = [
 		[
 			webapp2.Route( '/', handler = IndexController ),
 			webapp2.Route( '/features', handler = 'library.controller.static.FeaturesController', name = 'features' ),
+			webapp2.Route( '/rate', handler = 'library.controller.site.RateController' ),
 		]
 	),
 	routes.DomainRoute( 'ranking.egosize.<:dev|com>',
@@ -43,7 +44,11 @@ routes = [
 			webapp2.Route( '/<:.*>', handler = 'library.controller.static.PricingController' ),
 		]
 	),
-
+	routes.DomainRoute( 'stats.egosize.<:dev|com>',
+		[
+			webapp2.Route( '/<:.*>', handler = 'library.controller.stats.Index' ),
+		]
+	),
 	routes.DomainRoute( 'live-report.egosize.<:dev|com>',
 		[
 			webapp2.Route( '/<domainUrl:.+>', handler = LiveReportController, name = 'liveReport' ),

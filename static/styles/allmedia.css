@@ -50,3 +50,6 @@ a.external
 	background: url('/images/external-link.png') no-repeat right 2px;
 }
 
+
+img.Star { cursor: pointer; }
+

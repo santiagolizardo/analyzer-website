@@ -255,6 +255,7 @@ def extractImages( bSoup ):
 
 def extractHeadings( bSoup ):
 	headings = bSoup.find_all( ( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ) )
+
 	response = {
 		'h1': [],
 		'h2': [],
@@ -288,6 +289,14 @@ def extractHeadings( bSoup ):
 	</tr>
 	</table>
 	""" % count
+
+	listing = [ '<ul>' ]
+	for headerSize, headerValues in response.items():
+		for headerValue in headerValues:
+			listing.append( '<li><strong>%s</strong> %s</li>' % ( headerSize, headerValue ) )
+	listing.append( '</ul>' )
+
+	html = html + ''.join( listing )
 	
 	return html
 

@@ -1,11 +1,26 @@
 <%include file="header.html"/>
 
 <script>
+var baseUrl = '${baseUrl}';
 var domainUrl = '${domain}';
 var loadTimeMs = ${loadTimeMs};
 </script>
 
-<h1>${domain}</h1>
+<div class="rating" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
+	<meta itemprop="ratingValue" content="${userRating}" />
+	<meta itemprop="bestRating" content="5" />
+</div>
+
+<h1>${domain}
+% if userRating is not None:
+% for i in range( 0, userRating ):
+<img src="/images/cyan-star.png"/>
+% endfor
+% for i in range( userRating, 5 ):
+<img src="/images/gray-star.png"/>
+% endfor
+% endif
+</h1>
 <p>Generated on <time datetime="${generatedDate}">${generatedDateTime}</time>. Short URL: <a href="${shortUrl}">${shortUrl}</a></p>
 
 <div class="row">
@@ -18,6 +33,28 @@ var loadTimeMs = ${loadTimeMs};
 		<li><a href="#${sbOption['id']}" title="${sbOption['keywords']}"><i class="glyphicon glyphicon-chevron-right"></i> ${sbOption['label']}</a></li>
 		% endfor
 		</ul>	
+
+		<h3>Your Rating</h3>
+
+		<div id="ratingBox">
+			<p>Your feedback about ${domain}:</p>
+			<p>Content<br />
+			% for i in range( 0, 5 ):
+			<img src="/images/gray-star.png" data-rating-criteria="content" data-rating-value="${i + 1}" class="Star" />
+			% endfor
+			<p>
+			<p>Presentation<br />
+			% for i in range( 0, 5 ):
+			<img src="/images/gray-star.png" data-rating-criteria="presentation" data-rating-value="${i + 1}" class="Star" />
+			% endfor
+			</p>
+			<p>Usability<br />
+			% for i in range( 0, 5 ):
+			<img src="/images/gray-star.png" data-rating-criteria="usability" data-rating-value="${i + 1}" class="Star" />
+			% endfor
+			</p>
+			<p><button class="btn" id="sendRating">Send</button></p>
+		</div>
 	</div>
 
 	<div class="col-md-9">
