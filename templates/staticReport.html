@@ -13,10 +13,10 @@ var loadTimeMs = ${loadTimeMs};
 
 <h1>${domain}
 % if userRating is not None:
-% for i in range( 0, userRating ):
+% for i in range( 0, int( userRating ) ):
 <img src="/images/cyan-star.png"/>
 % endfor
-% for i in range( userRating, 5 ):
+% for i in range( int( userRating ), 5 ):
 <img src="/images/gray-star.png"/>
 % endfor
 % endif

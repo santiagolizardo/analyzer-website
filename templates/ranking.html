@@ -1,30 +1,57 @@
 <%include file="header.html"/>
 
-<h2>Better optimized websites <small>ranking</small></h2>
+<h2>Best Internet sites <small>ranking</small></h2>
 
-<table class="table table-striped">
-<thead>
-	<tr>
-	<th>#</th>
-	<th>Score</th>
-	<th>Site name and description</th>
-	</tr>
-</thead>
-<tbody>
-% for site in sites:
-	<tr>
-	<td>${site['position']}</td>
-	<td>
-		${site['score']}/100<br />
-		<p style="font-size: small;"><a href="${site['lastReportUrl']}" title="View ${site['url']} SEO/SEM audit report">View report</a></p>
-	</td>
-	<td>
-		<a href="http://${site['url']}" rel="nofollow" target="_blank" class="external">${site['url']}</a><br />
-		<strong>${site['name']}</strong>: ${site['description']}
-	</td>	
-	</tr>
-% endfor
-</tbody>
-</table>
+<p class="lead">Wondering how some sites have such amount of traffic? Get to know them and follow their good practices to improve your sites.</p>
+
+<div class="row">
+	<div class="col-md-5">	
+		<div class="panel panel-warning">
+		<div class="panel-heading">Sites with best <strong>audit score</strong></div>
+		<div class="panel-body">
+			<p>An audit score is generated from an analysis of major SEO/SEM and WPO metrics of the site.</p>
+		</div>
+		<table class="table table-striped">
+			<tr>
+				<th>#</th>
+				<th>Score</th>
+				<th>Site</th>
+			</tr>
+			% for i, site in enumerate( sites_by_audit_score ):
+			<tr>
+				<td>${i + 1}</td>
+				<td><a href="${site['lastReportUrl']}" title="View ${site['url']} SEO/SEM audit report">${site['score']}/100</a></td>
+				<td>${site['name']}</td>
+			</tr>
+			% endfor
+		</table>
+		</div>
+	</div>
+	<div class="col-md-2"></div>
+	<div class="col-md-5">
+		<div class="panel panel-warning">
+		<div class="panel-heading">Site with best <strong>user reviews</strong></div>
+		<div class="panel-body">
+			<p>The user reviews rate the site for the quality of its content, presentation and usability.</p>
+			% for site in sites_by_user_reviews:
+			% endfor
+		</div>
+		<table class="table table-striped">
+			<tr>
+				<th>#</th>
+				<th>Score</th>
+				<th>Site</th>
+			</tr>
+			% for i, site in enumerate( sites_by_user_reviews ):
+			<tr>
+				<td>${i + 1}</td>
+				<td><a href="${site['lastReportUrl']}" title="View ${site['domain']} SEO/SEM audit report">${'%.2f' % site['rating_overall']}</a></td>
+				<td>${site['domain']}</td>
+			</tr>
+			% endfor
+		</table>
+		</div>
+	</div>
+</div>
 
 <%include file="footer.html"/>

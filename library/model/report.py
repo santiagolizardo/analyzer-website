@@ -2,7 +2,6 @@
 from google.appengine.ext import db
 
 class SiteReport( db.Model ):
-	
 	creationDate = db.DateTimeProperty( auto_now_add = True )
 	name = db.StringProperty()
 	description = db.StringProperty()
@@ -15,13 +14,13 @@ class SiteReport( db.Model ):
 
 class SiteRating( db.Model ):
 	domain = db.StringProperty( required = True )
-	content = db.IntegerProperty()
-	usability = db.IntegerProperty()
-	presentation = db.IntegerProperty()
-	num_raters = db.IntegerProperty()
+	num_raters = db.IntegerProperty( default = 0 )
+	rating_content = db.IntegerProperty( default = 0 )
+	rating_usability = db.IntegerProperty( default = 0 )
+	rating_presentation = db.IntegerProperty( default = 0 )
+	rating_overall = db.FloatProperty( default = 0.0 )
 
 class TaskReport( db.Model ):
-
 	name = db.StringProperty( required = True )
 	url = db.StringProperty( required = True )
 	messageEncoded = db.TextProperty( required = True )

@@ -41,9 +41,7 @@ class StaticReportController( StandardPageController ):
 		siteRating = SiteRating.all().filter( 'domain =', domainUrl ).get()
 		userRating = None
 		if siteRating is not None:
-			sumRating = ( siteRating.content + siteRating.usability + siteRating.presentation )
-			partRating = sumRating / 3
-			userRating = partRating / siteRating.num_raters
+			userRating = siteRating.rating_overall
 
 		print userRating
 

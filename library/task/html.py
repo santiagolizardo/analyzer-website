@@ -352,8 +352,8 @@ def extractLanguage( bSoup ):
 		return 'N/A'
 
 def extractEmailAddresses( body ):
-	mailsrch = re.compile( r'[\w\-][\w\-\.]+@[\w\-][\w\-\.]+[a-zA-Z]{1,4}' )
-	return mailsrch.findall( body )
+	email_re = re.compile( r'[\w\-][\w\-\.]+@[\w\-][\w\-\.]+[a-zA-Z]{1,4}' )
+	return set( email_re.findall( body ) )
 
 def extractInternalLinks( bSoup, domain ):
 	links = bSoup.find_all( 'a', href = re.compile( domain ) )
