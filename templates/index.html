@@ -13,7 +13,7 @@
 		<form action="/analyze" method="post">
 		<div class="input-group">
 			<span class="input-group-addon">http://</span>
-			<input type="text" name="domain" class="form-control input-lg" required="required" autofocus="autofocus" placeholder="www.example.com" />
+			<input type="text" name="domain" id="domain" class="form-control input-lg" pattern="^[a-zA-Z0-9_\-\.]+$" required="required" autofocus="autofocus" placeholder="www.example.com" />
 			<span class="input-group-btn">
 				<button type="submit" class="btn btn-primary btn-lg">Get your FREE report now!</button>
 			</span>

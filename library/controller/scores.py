@@ -69,10 +69,6 @@ class CalculateScoreController( webapp2.RequestHandler ):
 		}
 		messageEncoded = json.dumps( message )
 				
-		is_devel_env = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' )
-		if not is_devel_env:
-			deferred.defer( send_twitter_update, domainUrl )
-
 		memcache.delete( 'page-index' )
 
 		send_message( channelId, messageEncoded )

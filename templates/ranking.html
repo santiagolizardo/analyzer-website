@@ -9,7 +9,7 @@
 		<div class="panel panel-warning">
 		<div class="panel-heading">Sites with best <strong>audit score</strong></div>
 		<div class="panel-body">
-			<p>An audit score is generated from an analysis of major SEO/SEM and WPO metrics of the site.</p>
+			<p>An audit score is generated from an analysis of major SEO/SEM and WPO metrics of the site.<br />Score goes from 0 to 100.</p>
 		</div>
 		<table class="table table-striped">
 			<tr>
@@ -20,8 +20,8 @@
 			% for i, site in enumerate( sites_by_audit_score ):
 			<tr>
 				<td>${i + 1}</td>
-				<td><a href="${site['lastReportUrl']}" title="View ${site['url']} SEO/SEM audit report">${site['score']}/100</a></td>
-				<td>${site['name']}</td>
+				<td><a href="${site['lastReportUrl']}" title="View ${site['url']} SEO/SEM audit report">${site['score']}</a></td>
+				<td>${site['url']}</td>
 			</tr>
 			% endfor
 		</table>
@@ -32,7 +32,7 @@
 		<div class="panel panel-warning">
 		<div class="panel-heading">Site with best <strong>user reviews</strong></div>
 		<div class="panel-body">
-			<p>The user reviews rate the site for the quality of its content, presentation and usability.</p>
+			<p>The user reviews rate the site for the quality of its content, presentation and usability.<br />Rating goes from 1 to 5.</p>
 			% for site in sites_by_user_reviews:
 			% endfor
 		</div>

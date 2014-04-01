@@ -38,6 +38,8 @@ class IndexController( StandardPageController ):
 			'sitesRanking': sites,
 		}
 
+		self.addJavaScript( '/scripts/index.js' )
+
 		return self.renderTemplate( 'index.html', values )
 
 	
