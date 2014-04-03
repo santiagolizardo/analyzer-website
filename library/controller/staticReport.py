@@ -8,6 +8,7 @@ import logging, json, sys, os
 from bs4 import BeautifulSoup
 
 from library.model.report import SiteReport, SiteRating
+from library.model.site import SiteReview
 from library.model.report import TaskReport
 
 from library.services.shorturl import createShortUrl
@@ -43,8 +44,6 @@ class StaticReportController( StandardPageController ):
 		if siteRating is not None:
 			userRating = siteRating.rating_overall
 
-		print userRating
-
 		self.addJavaScript( 'https://www.google.com/jsapi' )
 		self.addJavaScript( '/scripts/staticReport.js' )
 
@@ -79,6 +78,9 @@ class StaticReportController( StandardPageController ):
 				actions.extend( subreport['actions'] )
 			
 		debugActive = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' )
+
+		site_reviews = SiteReview.all().filter( 'domain = ', domainUrl ).fetch( limit = 5 )
+		values['user_reviews'] = site_reviews
 
 		values['shortUrl'] = self.request.url
 		if debugActive is False:

@@ -5,6 +5,7 @@ import webapp2, os, re
 from library.utilities import uriFor
 
 from library.model.report import SiteReport, SiteRating
+from library.model.site import SiteReview
 
 class RateController( webapp2.RequestHandler ):
 
@@ -26,6 +27,29 @@ class RateController( webapp2.RequestHandler ):
 		overall = ( ( report.rating_content + report.rating_usability + report.rating_presentation ) / 3.0 ) / report.num_raters
 		report.rating_overall = overall
 		report.save()
+
+		cache_key = 'page_' + domain
+		memcache.delete( cache_key )
+
+		self.response.set_status( 200 )
+		self.response.headers['Access-Control-Allow-Origin'] = self.request.headers['Origin']
+		self.response.headers['Content-Type'] = 'application/json'
+		self.response.write( '"true"' )
+
+class AddReviewController( webapp2.RequestHandler ):
+
+	def post( self ):
+		domain = self.request.get( 'domain' )
+
+		title = self.request.get( 'title' )
+		strengths = self.request.get_all( 'strengths[]' )
+		weaknesses = self.request.get_all( 'weaknesses[]' )
+
+		siteReview = SiteReview( domain = domain )
+		siteReview.title = title
+		siteReview.strengths = strengths
+		siteReview.weaknesses = weaknesses
+		siteReview.save()
 
 		cache_key = 'page_' + domain
 		memcache.delete( cache_key )

@@ -23,6 +23,7 @@ config = {
 routes = [
 	webapp2.Route( '/_ah/channel/connected/', handler = ChannelController ),
 	webapp2.Route( '/_ah/channel/disconnected/', handler = ChannelController ),
+	webapp2.Route( '/addReview', handler = 'library.controller.site.AddReviewController' ),
 	webapp2.Route( '/analyze', handler = AnalyzeDomainController ),
 	webapp2.Route( '/launchSubreports', handler = 'library.controller.processing.InitProcessingController' ),
 	webapp2.Route( '/calculateScore', handler = 'library.controller.scores.CalculateScoreController' ),
@@ -30,7 +31,6 @@ routes = [
 	routes.DomainRoute( 'www.egosize.<:dev|com>',
 		[
 			webapp2.Route( '/', handler = IndexController ),
-			webapp2.Route( '/features', handler = 'library.controller.static.FeaturesController', name = 'features' ),
 			webapp2.Route( '/rate', handler = 'library.controller.site.RateController' ),
 		]
 	),

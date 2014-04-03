@@ -75,6 +75,23 @@ $( document ).ready( function()
 				});
 			}
 		);
+
+		$( '#submitReview' ).on( 'click', function()
+			{
+				$.ajax({
+					url: baseUrl + '/addReview',
+					data: $( '#reviewForm' ).serialize(),
+					type: 'POST'
+				}).done( function()
+					{
+					$( '#userReviews' ).html( 'Your review has been saved. Thanks,' );
+					$( '#reviewModal' ).modal( 'hide' );
+				}).fail( function()
+					{
+					alert( 'The form could not be sent' );
+				});
+			}
+		);
 	}
 );
 

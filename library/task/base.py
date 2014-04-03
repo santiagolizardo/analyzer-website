@@ -31,6 +31,10 @@ class BaseTask( object ):
 
 	def sendAndSaveReport( self, url, content, actions = [] ):
 
+		if self.channelId is None:
+			logging.error( 'channelId is None for task: ' + self.getName() )
+			return
+
 		message = {
 			'name': self.getName(),
 			'content': content,

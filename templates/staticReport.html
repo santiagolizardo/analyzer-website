@@ -55,6 +55,57 @@ var loadTimeMs = ${loadTimeMs};
 			</p>
 			<p><button class="btn" id="sendRating">Send</button></p>
 		</div>
+
+		<h3>User Reviews <small><a href="#" id="addReview" data-toggle="modal" data-target="#reviewModal">Add</a></small></h3>
+
+		<div id="userReviews">
+		% if user_reviews:
+		% for user_review in user_reviews:
+			<blockquote>
+			<p>${user_review.title}</p>
+			<footer><cite title="Source Title">Anonymous</cite> user</footer>
+			</blockquote>
+		% endfor	
+		% else:
+		<p>The domain ${domain} has no reviews just yet.<br />Would you like to add one in a minute? Yes, <a href="#" id="addReview" data-toggle="modal" data-target="#reviewModal">add a review</a>.</p>
+		% endif
+		</div>
+
+<div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Your <strong>${domain} review</strong></h4>
+      </div>
+      <div class="modal-body">
+		<form role="form" id="reviewForm">
+			<input type="hidden" name="domain" value="${domain}" />
+			<p><input class="form-control input-lg" name="title" type="text" placeholder="Summarize the site in a sentence" required="required" autofocus="autofocus" /></p>
+			<div class="row">
+				<div class="col-md-6">
+					<h4 class="text-success text-center">Strengths <small>pros</small></h4>
+					<input class="form-control" name="strengths[]" type="text" placeholder="Example: Original content" /><br />
+					<input class="form-control" name="strengths[]" type="text" placeholder="Example: Updates frequently" /><br />
+					<input class="form-control" name="strengths[]" type="text" placeholder="Example: Nice design" />
+				</div>
+				<div class="col-md-6">
+					<h4 class="text-danger text-center">Weaknesses <small>cons</small></h4>
+					<input class="form-control" name="weaknesses[]" type="text" placeholder="Example: Takes too much to load" /><br />
+					<input class="form-control" name="weaknesses[]" type="text" placeholder="Example: Some links are broken" /><br />
+					<input class="form-control" name="weaknesses[]" type="text" placeholder="Example: Too expensive" />
+				</div>
+			</div>
+		</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="submitReview">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 	</div>
 
 	<div class="col-md-9">
