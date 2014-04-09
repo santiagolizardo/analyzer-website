@@ -2,6 +2,7 @@
 from library.task.base import BaseTask		
 from library.services.pagerank import getPageRank
 
+import logging
 import random
 import sys
 
@@ -29,7 +30,7 @@ class PageRankTask( BaseTask ):
 		else:
 			pageRank  = getPageRank( baseUrl )
 			if pageRank is None or '' == pageRank:
-				pageRank = '0'
+				pageRank = 0
 			try:
 				pageRank = int( pageRank )
 			except:

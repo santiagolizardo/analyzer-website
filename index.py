@@ -1,6 +1,7 @@
 
 import sys
 
+sys.path.append( 'vendor' )
 sys.path.append( 'externals/tweepy' )
 sys.path.append( 'externals/awis' )
 

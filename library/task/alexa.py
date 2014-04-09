@@ -1,6 +1,6 @@
 
 from library.task.base import BaseTask
-from library.awis import AwisApi
+from awis import AwisApi
 
 from lxml import etree
 from xml.dom.minidom import parseString
@@ -41,7 +41,7 @@ class AlexaAnalyzerTask( BaseTask ):
 
 		api = AwisApi( 'AKIAJDGJO3ACZ7KIGHCA', 'dIc3teMI2OoSw0W7z9EXgP9cQnvUlja8uSQN2MBT' )
 		respXml = api.url_info( queryUrl, 'RelatedLinks', 'Categories', 'Rank', 'RankByCountry', 'UsageStats', 'ContactInfo', 'Speed', 'Language', 'Keywords', 'OwnedDomains', 'LinksInCount', 'SiteData' )
-		xml = etree.tostring( respXml )
+		xml = etree.tostring( respXml, encoding = 'UTF-8' )
 		
 		respStatus = respXml.find( '//{%s}StatusCode' % api.NS_PREFIXES['alexa'] ).text
 		if 'Success' == respStatus:
@@ -54,7 +54,10 @@ class AlexaAnalyzerTask( BaseTask ):
 				ranks = country.getElementsByTagName( 'aws:Rank' )
 				if len( ranks ) > 0 and ranks[0].firstChild is not None:
 					rank = ranks[0].firstChild.nodeValue
-					rank_list_items.append( '<li>%(rank)s<sup>th</sup> most visited website in <img src="/images/flags/%(countryCode)s.png" alt="%(countryName)s flag" /> %(countryName)s</li>' % { 'countryCode': country_code.lower(), 'countryName': country_name, 'rank': rank } )
+					try:
+						rank_list_items.append( '<li>%(rank)s<sup>th</sup> most visited website in <img src="/images/flags/%(countryCode)s.png" alt="%(countryName)s flag" /> %(countryName)s</li>' % { 'countryCode': country_code.lower(), 'countryName': country_name, 'rank': rank } )
+					except:
+						pass
 			content['visitorsLocation'] = '<ul>' + ''.join( rank_list_items[:3] ) + '</ul>'
 
 			related_list_items = []

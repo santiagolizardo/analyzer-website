@@ -13,6 +13,24 @@ from datetime import timedelta, datetime
 
 from bs4 import BeautifulSoup, NavigableString
 
+import urllib
+import httplib2
+
+import logging
+import urllib2
+
+def make_api_call( name, params ):
+	try:
+		url = 'http://api.egosize.com/%s.php?%s' % ( name, urllib.urlencode( params ) )
+		#http = httplib2.Http()
+		#response, content = http.request( url, params, 'get' )
+		#return content.decode( 'utf8' )
+		logging.info('url ========= ' +url)
+		return urllib2.urlopen( url ).read()
+	except:
+		logging.error( sys.exc_info()[0] )
+		return None
+
 class DomainAnalyzerTask( BaseTask ):
 
 	def getName( self ): return 'domain'
@@ -34,6 +52,8 @@ class DomainAnalyzerTask( BaseTask ):
 		beauty.find( id = 'serverIp' ).string.replace_with( data['serverIp'] )
 
 	def start( self, baseUrl ):
+
+		self.fix_sys_path()
 
 		fullUrl = 'http://' + baseUrl
 
@@ -79,12 +99,16 @@ class DomainAnalyzerTask( BaseTask ):
 				actions.append({ 'status': 'regular', 'description': 'Register your domain longer than a year to prove Google and others you are serious about your business.' })
 
 		try:
-			serverIp = socket.gethostbyname( baseUrl )
-			gi = pygeoip.GeoIP( 'GeoIP.dat' )
-			countryCode = gi.country_code_by_addr( serverIp ).lower()
-			countryName = gi.country_name_by_name( serverIp )
-			serverIp = '%(serverIp)s (<img src="/images/flags/%(countryCode)s.png" alt="%(countryName)s flag" /> %(countryName)s)' % { 'countryCode': countryCode, 'countryName': countryName, 'serverIp': serverIp }
-			content['serverIp'] = serverIp
+			serverIp = make_api_call( 'ip', { 'domain': baseUrl } )
+			if serverIp is not None:
+				gi = pygeoip.GeoIP( 'GeoIP.dat' )
+				countryCode = gi.country_code_by_addr( serverIp ).lower()
+				try:
+					countryName = gi.country_name_by_name( serverIp )
+				except:
+					countryName = 'N/A'
+				serverIp = '%(serverIp)s (<img src="/images/flags/%(countryCode)s.png" alt="%(countryName)s flag" /> %(countryName)s)' % { 'countryCode': countryCode, 'countryName': countryName, 'serverIp': serverIp }
+				content['serverIp'] = serverIp
 		except:
 			logging.error( sys.exc_info()[0] ) 
 

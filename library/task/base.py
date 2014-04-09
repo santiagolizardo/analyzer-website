@@ -1,4 +1,9 @@
 
+import sys
+sys.path.append( 'vendor' )
+sys.path.append( 'externals/tweepy' )
+sys.path.append( 'externals/awis' )
+
 import json, os
 
 from google.appengine.api.channel import send_message
@@ -8,29 +13,28 @@ from library.model.report import TaskReport
 class BaseTask( object ):
 
 	def __init__( self, channelId  = None ):
-
 		self.channelId = channelId
 
 		self.is_dev_env = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' )
 
-	def setChannelId( self, channelId ):
+	def fix_sys_path( self ):
+		sys.path.append( 'vendor' )
+		sys.path.append( 'externals/tweepy' )
+		sys.path.append( 'externals/awis' )
 
+	def setChannelId( self, channelId ):
 		self.channelId = channelId
 
 	def getName( self ):
-
 		raise Exception( 'Method not implemented' )
 
 	def getDefaultData( self ):
-		
 		raise Exception( 'Method not implemented' )
 
 	def updateView( self, beauty, data ):
-
 		pass
 
 	def sendAndSaveReport( self, url, content, actions = [] ):
-
 		if self.channelId is None:
 			logging.error( 'channelId is None for task: ' + self.getName() )
 			return

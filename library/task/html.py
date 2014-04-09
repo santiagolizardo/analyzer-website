@@ -267,9 +267,9 @@ def extractHeadings( bSoup ):
 	for heading in headings:
 		temp = heading.text
 		if len( temp ) > 0:
-			response[ heading.name ].append( temp )
+			response[ heading.name.lower() ].append( temp )
 		
-	count = tuple( len( headingElements ) for headingKey, headingElements in response.items() )
+	count = [ len( items ) for items in response.values() ]
 
 	html = """
 	<table>
@@ -290,7 +290,7 @@ def extractHeadings( bSoup ):
 		<td>%d</td>
 	</tr>
 	</table>
-	""" % count
+	""" % tuple( count )
 
 	listing = [ '<ul>' ]
 	for headerSize, headerValues in response.items():
