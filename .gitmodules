@@ -16,3 +16,6 @@
 [submodule "externals/tweepy"]
 	path = externals/tweepy
 	url = https://github.com/tweepy/tweepy.git
+[submodule "externals\\flotr2"]
+	path = externals\\flotr2
+	url = https://github.com/HumbleSoftware/Flotr2.git
