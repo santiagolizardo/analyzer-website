@@ -1,4 +1,9 @@
 
+import sys
+
+sys.path.append( 'externals/tweepy' )
+sys.path.append( 'externals/awis' )
+
 import webapp2, os, logging
 
 from webapp2_extras import routes

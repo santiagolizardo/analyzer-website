@@ -265,7 +265,9 @@ def extractHeadings( bSoup ):
 		'h6': [],
 	}
 	for heading in headings:
-		response[ heading.name ].append( heading.string )
+		temp = heading.text
+		if len( temp ) > 0:
+			response[ heading.name ].append( temp )
 		
 	count = tuple( len( headingElements ) for headingKey, headingElements in response.items() )
 
