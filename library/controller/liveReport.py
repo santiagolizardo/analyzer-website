@@ -34,8 +34,8 @@ class LiveReportController( StandardPageController ):
 			'domainLength': len( domainUrl.replace( '.com', '' ) ),
 			'clientId': clientId,
 			'sbOptions': reportSections,
-			'pageTitle': '%(domainUrl)s | Domain insights for %(domainUrl)s by EGOsize.com' % { 'domainUrl': domainUrl },
-			'pageDescription': 'Check %(domainUrl)s metrics on SEO, social and other relevant aspects thanks to EGOsize'
+			'pageTitle': '%(domainUrl)s | Domain insights for %(domainUrl)s by Egosize' % { 'domainUrl': domainUrl },
+			'pageDescription': 'Check %(domainUrl)s metrics on SEO, social and other relevant aspects thanks to Egosize'
 		}
 
 		html = self.renderTemplate( 'liveReport.html', values )

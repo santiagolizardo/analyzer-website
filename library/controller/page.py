@@ -1,6 +1,8 @@
 
 import os
 
+import config
+
 from library.controller.basic import BasicController
 
 class PageController( BasicController ):
@@ -15,9 +17,7 @@ class PageController( BasicController ):
 		self.javaScripts = []
 		self.pageMetas = []
 
-		self.is_dev_env = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' )
-
-
+		self.is_dev_env = config.debug_active 
 		if self.is_dev_env:
 			self.addJavaScript( '/scripts/jquery.min.js' )
 			self.addJavaScript( '/bootstrap/js/bootstrap.min.js' )
@@ -40,9 +40,8 @@ class StandardPageController( PageController ):
 	def renderTemplate( self, name, values = {} ):
 
 		defaultValues = {
-			'appUrl': self.app.config.get( 'url' ),
-			'appDomain': self.app.config.get( 'domain' ),
-			'pageTitle': 'EGOsize reviews any site and returns insights and improvements',
+			'appDomain': config.current_instance['url'],
+			'pageTitle': 'Egosize reviews any site and returns insights and improvements',
 			'pageDescription': 'Free tool to generate reports out of websites with SEO and SEM metrics and get improvement ideas. Meant to marketers and developers.',
 			'pageMetas': self.pageMetas,
 			'javaScripts': self.javaScripts,
@@ -51,3 +50,4 @@ class StandardPageController( PageController ):
 		defaultValues.update( values )
 		
 		return super( StandardPageController, self ).renderTemplate( name, defaultValues )
+

@@ -1,6 +1,6 @@
 <%include file="header.html"/>
 
-<h2>Best Internet sites <small>ranking</small></h2>
+<h2>${_('Best Internet sites <small>ranking</small>')}</h2>
 
 <p class="lead">Wondering how some sites have such amount of traffic? Get to know them and follow their good practices to improve your sites.</p>
 
@@ -14,8 +14,8 @@
 		<table class="table table-striped">
 			<tr>
 				<th>#</th>
-				<th>Score</th>
-				<th>Site</th>
+				<th>${_('Score')}</th>
+				<th>${_('Site')}</th>
 			</tr>
 			% for i, site in enumerate( sites_by_audit_score ):
 			<tr>

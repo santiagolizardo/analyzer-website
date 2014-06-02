@@ -14,10 +14,10 @@ var loadTimeMs = ${loadTimeMs};
 <h1>${domain}
 % if userRating is not None:
 % for i in range( 0, int( userRating ) ):
-<img src="/images/cyan-star.png"/>
+<img src="/images/cyan-star.png" alt="" />
 % endfor
 % for i in range( int( userRating ), 5 ):
-<img src="/images/gray-star.png"/>
+<img src="/images/gray-star.png" alt="" />
 % endfor
 % endif
 </h1>
@@ -34,36 +34,36 @@ var loadTimeMs = ${loadTimeMs};
 		% endfor
 		</ul>	
 
-		<h3>Your Rating</h3>
+		<h3>${_('Your Rating')}</h3>
 
 		<div id="ratingBox">
 			<p>Your feedback about ${domain}:</p>
-			<p>Content<br />
+			<p>${_('Content')}<br />
 			% for i in range( 0, 5 ):
 			<img src="/images/gray-star.png" data-rating-criteria="content" data-rating-value="${i + 1}" class="Star" />
 			% endfor
 			<p>
-			<p>Presentation<br />
+			<p>${_('Presentation')}<br />
 			% for i in range( 0, 5 ):
 			<img src="/images/gray-star.png" data-rating-criteria="presentation" data-rating-value="${i + 1}" class="Star" />
 			% endfor
 			</p>
-			<p>Usability<br />
+			<p>${_('Usability')}<br />
 			% for i in range( 0, 5 ):
 			<img src="/images/gray-star.png" data-rating-criteria="usability" data-rating-value="${i + 1}" class="Star" />
 			% endfor
 			</p>
-			<p><button class="btn" id="sendRating">Send</button></p>
+			<p><button class="btn" id="sendRating">${_('Send')}</button></p>
 		</div>
 
-		<h3>User Reviews <small><a href="#" id="addReview" data-toggle="modal" data-target="#reviewModal">Add</a></small></h3>
+		<h3>${_('User Reviews')} <small><a href="#" id="addReview" data-toggle="modal" data-target="#reviewModal">Add</a></small></h3>
 
 		<div id="userReviews">
 		% if user_reviews:
 		% for user_review in user_reviews:
 			<blockquote>
 			<p>${user_review.title}</p>
-			<footer><cite title="Source Title">Anonymous</cite> user</footer>
+			<footer><cite title="Source Title">${_('Anonymous')}</cite> user</footer>
 			</blockquote>
 		% endfor	
 		% else:

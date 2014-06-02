@@ -10,6 +10,7 @@ import webapp2, os, logging
 from webapp2_extras import routes
 
 from library.controller.index import IndexController
+from library.controller.contact import ContactController
 from library.controller.analizeDomain import AnalyzeDomainController
 
 from library.controller.liveReport import LiveReportController 
@@ -18,62 +19,61 @@ from library.controller.ranking import RankingController
 from library.controller.errorPage import ErrorPageController
 from library.controller.channel import ChannelController
 
-debugActive = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' ) 
+import config
 
-config = {
-	'debugActive': debugActive,
-	'domain': 'egosize.dev:9090' if debugActive else 'egosize.com',
-	'url': 'www.egosize.dev:9090' if debugActive else 'www.egosize.com',
-}
+config.load_current_instance()
+
+domain_ext = '<:com.dev|es.dev|com|es>'
 
 routes = [
 	webapp2.Route( '/_ah/channel/connected/', handler = ChannelController ),
 	webapp2.Route( '/_ah/channel/disconnected/', handler = ChannelController ),
 	webapp2.Route( '/addReview', handler = 'library.controller.site.AddReviewController' ),
 	webapp2.Route( '/analyze', handler = AnalyzeDomainController ),
+	webapp2.Route( '/contact', handler = ContactController ),
 	webapp2.Route( '/launchSubreports', handler = 'library.controller.processing.InitProcessingController' ),
 	webapp2.Route( '/calculateScore', handler = 'library.controller.scores.CalculateScoreController' ),
 	webapp2.Route( '/sitemap.xml', handler = 'library.controller.static.SitemapController' ),
-	routes.DomainRoute( 'www.egosize.<:dev|com>',
+	routes.DomainRoute( 'www.egosize.' + domain_ext,
 		[
 			webapp2.Route( '/', handler = IndexController ),
 			webapp2.Route( '/rate', handler = 'library.controller.site.RateController' ),
 		]
 	),
-	routes.DomainRoute( 'ranking.egosize.<:dev|com>',
+	routes.DomainRoute( 'ranking.egosize.' + domain_ext,
 		[
 			webapp2.Route( '/<:.*>', handler = RankingController, name = 'ranking' ),
 		]
 	),
-	routes.DomainRoute( 'pricing.egosize.<:dev|com>',
+	routes.DomainRoute( 'pricing.egosize.' + domain_ext,
 		[
 			webapp2.Route( '/<:.*>', handler = 'library.controller.static.PricingController' ),
 		]
 	),
-	routes.DomainRoute( 'stats.egosize.<:dev|com>',
+	routes.DomainRoute( 'stats.egosize.' + domain_ext,
 		[
 			webapp2.Route( '/<:.*>', handler = 'library.controller.stats.Index' ),
 		]
 	),
-	routes.DomainRoute( 'live-report.egosize.<:dev|com>',
+	routes.DomainRoute( 'live-report.egosize.' + domain_ext,
 		[
 			webapp2.Route( '/<domainUrl:.+>', handler = LiveReportController, name = 'liveReport' ),
 		]
 	),
-	routes.DomainRoute( 'report.egosize.<:dev|com>',
+	routes.DomainRoute( 'report.egosize.' + domain_ext,
 		[
 			webapp2.Route( '/<domainUrl:.+>', handler = StaticReportController, name = 'staticReport' ),
 		]
 	),
 ]
 
-def handle_404(request, response, exception):
-	logging.exception(exception)
+def handle_404( request, response, exception ):
+	logging.exception( exception )
 
 	controller = ErrorPageController( request, response )
 	controller.get()
 
-app = webapp2.WSGIApplication( routes, debug = debugActive, config = config )
+app = webapp2.WSGIApplication( routes, debug = config.debug_active )
 app.error_handlers[404] = handle_404
 app.error_handlers[500] = handle_404
 

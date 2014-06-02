@@ -1,21 +1,21 @@
-<%include file="htmlHeader.html"/>
+<%include file="htmlHeader.html" />
 
 <body data-spy="scroll" data-target=".report-sidebar">
 
 	<div class="container">
 
-	<p><a class="brand" href="http://${appUrl}/"></a></p>
+	<p><a class="brand" href="http://www.${appDomain}/"></a></p>
 
 	<div class="jumbotron">
-		<h2>How <strong>big</strong> is your marketer/developer ego?</h2>
-		<p>Improve your site SERP by using EGOsize audit tool which includes key SEM/SEO and WPO optimizations.</p>
+		<h2>${_('<strong>Website reports</strong> for marketers and developers')}</h2>
+		<p>${_('Improve your site SERP by using Egosize audit tool which includes key SEM/SEO and WPO optimizations.')}</p>
 
 		<form action="/analyze" method="post">
 		<div class="input-group">
 			<span class="input-group-addon">http://</span>
-			<input type="text" name="domain" id="domain" class="form-control input-lg" pattern="^[a-zA-Z0-9_\-\.]+$" required="required" autofocus="autofocus" placeholder="www.example.com" />
+			<input type="text" name="domain" id="domain" class="form-control input-lg" pattern="^[a-zA-Z0-9_\-\.]+$" required="required" autofocus="autofocus" placeholder="${_('www.example.com')}" />
 			<span class="input-group-btn">
-				<button type="submit" class="btn btn-primary btn-lg">Get your FREE report now!</button>
+				<button type="submit" class="btn btn-primary btn-lg">${_('Get your FREE report now!')}</button>
 			</span>
 		</div>
 		</form>
@@ -24,7 +24,7 @@
 	<div class="row">
 		<div class="col-md-6">
 			<div class="panel panel-info">
-				<div class="panel-heading">Website with fresh reports</div>
+				<div class="panel-heading">${_('Website with fresh reports')}</div>
 				<div class="panel-body">
 				<ul>
 					% for recentDomain in recentDomains:
@@ -37,11 +37,11 @@
 
 		<div class="col-md-6">
 			<div class="panel panel-info">
-				<div class="panel-heading">Sites with a huge EGO</div>
+				<div class="panel-heading">${_('Sites with a huge ego')}</div>
 				<div class="panel-body">
 					<ol>
-					% for recentDomain in recentDomains:
-					<li><a href="${uriFor( 'staticReport', domainUrl = recentDomain.url  )}">${recentDomain.url}</a> <span class="badge">${recentDomain.score}/100</span></li>
+					% for recentDomain in sitesRanking:
+					<li><a href="${uriFor( 'staticReport', domainUrl = recentDomain['url']  )}">${recentDomain['url']}</a> <span class="badge">${recentDomain['score']}/100</span></li>
 					% endfor
 					</ol>
 				</div>
@@ -50,6 +50,6 @@
 	</div>	
 </div>
 
-<%include file="userVoice.html"/>
+<%include file="userVoice.html" />
 
-<%include file="footer.html"/>
+<%include file="footer.html" />

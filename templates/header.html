@@ -5,13 +5,13 @@
 
 	<div class="navbar navbar-default" role="navigation">
 		<div class="container-fluid">
-				<a class="navbar-brand navbar-left" href="http://${appUrl}/"><img src="/images/logo.png" alt="Egosize SEO/SEM and WPO audit tool" title="Egosize homepage" style="height: 40px; margin-top: -10px;" /></a>
+				<a class="navbar-brand navbar-left" href="http://www.${appDomain}/"><img src="/images/logo.png" alt="Egosize SEO/SEM and WPO audit tool" title="Egosize homepage" style="height: 40px; margin-top: -10px;" /></a>
 				<form action="/analyze" method="post" class="navbar-form navbar-right" style="width: 80%">
 					<div class="input-group">
 						<span class="input-group-addon">http://</span>
-						<input type="text" name="domain" class="form-control" pattern="^[a-zA-Z0-9_\-\.]+$" required="required" autofocus="autofocus" placeholder="www.example.com" />
+						<input type="text" name="domain" class="form-control" pattern="^[a-zA-Z0-9_\-\.]+$" required="required" autofocus="autofocus" placeholder="${_('www.example.com')}" />
 						<span class="input-group-btn">
-							<button type="submit" class="btn btn-primary">Get your free report!</button>
+							<button type="submit" class="btn btn-primary">${_('Get your free report!')}</button>
 						</span>
 					</div>
 				</form>

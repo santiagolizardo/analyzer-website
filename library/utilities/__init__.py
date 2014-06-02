@@ -1,21 +1,21 @@
 
-import os, webapp2
+import webapp2
 
-def isDebugActive():
-    return os.environ['SERVER_SOFTWARE'].startswith( 'Dev' )
+import config
 
 def uriFor( routeName, **namedParams ):
-    domainExt = 'dev:9090' if isDebugActive() else 'com' 
+	app_domain = config.current_instance['url']
 
-    specialRoutes = {
-        'liveReport': 'live-report.egosize.' + domainExt,
-        'staticReport': 'report.egosize.' + domainExt,
-    }
+	specialRoutes = {
+		'liveReport': 'live-report.' + app_domain,
+		'staticReport': 'report.' + app_domain,
+	}
     
-    netLoc = None
-    if routeName in specialRoutes:
-        netLoc = specialRoutes[ routeName ]
+	netLoc = None
+	if routeName in specialRoutes:
+		netLoc = specialRoutes[ routeName ]
     
-    namedParams['_netloc'] = netLoc
+	namedParams['_netloc'] = netLoc
     
-    return webapp2.uri_for( routeName, **namedParams )
+	return webapp2.uri_for( routeName, **namedParams )
+

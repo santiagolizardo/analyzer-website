@@ -15,6 +15,8 @@ from library.services.shorturl import createShortUrl
 
 import library.task.manager
 
+import config
+
 from library.sections import reportSections
 
 class StaticReportController( StandardPageController ):
@@ -47,11 +49,7 @@ class StaticReportController( StandardPageController ):
 		self.addJavaScript( 'https://www.google.com/jsapi' )
 		self.addJavaScript( '/scripts/staticReport.js' )
 
-		baseUrl = None
-		if self.is_dev_env:
-			baseUrl = 'http://www.egosize.dev:9090'
-		else:
-			baseUrl = 'http://www.egosize.com'
+		baseUrl = 'http://www.' + config.current_instance['url'] 
 		
 		values = {
 			'baseUrl': baseUrl,
@@ -61,7 +59,7 @@ class StaticReportController( StandardPageController ):
 			'sbOptions': reportSections,
 			'generatedDate': siteReport.creationDate.date().isoformat(),
 			'generatedDateTime': siteReport.creationDate.date().isoformat(),
-			'pageTitle': '%(domainUrl)s SEO and SEM performance metrics - EGOsize' % { 'domainUrl': domainUrl.capitalize() },
+			'pageTitle': '%(domainUrl)s SEO and SEM performance metrics - Egosize' % { 'domainUrl': domainUrl.capitalize() },
 			'pageDescription': 'Review %(domainUrl)s website report including SEO and SEM KPI and improvements. Learn how to do better at SERP to increase conversions.' % { 'domainUrl': domainUrl },
 		}
 
@@ -77,13 +75,11 @@ class StaticReportController( StandardPageController ):
 			if 'actions' in subreport:
 				actions.extend( subreport['actions'] )
 			
-		debugActive = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' )
-
 		site_reviews = SiteReview.all().filter( 'domain = ', domainUrl ).fetch( limit = 5 )
 		values['user_reviews'] = site_reviews
 
 		values['shortUrl'] = self.request.url
-		if debugActive is False:
+		if config.debug_active is False:
 			try:
 				values['shortUrl'] = createShortUrl( self.request.url )
 			except:

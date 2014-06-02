@@ -1,4 +1,6 @@
 #!/bin/bash
 
-appcfg.py --oauth2 update .
+appengineapp=$1
+
+appcfg.py --oauth2 --application=$appengineapp update .
 

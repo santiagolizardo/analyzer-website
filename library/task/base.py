@@ -4,7 +4,7 @@ sys.path.append( 'vendor' )
 sys.path.append( 'externals/tweepy' )
 sys.path.append( 'externals/awis' )
 
-import json, os
+import json, os, logging
 
 from google.appengine.api.channel import send_message
 

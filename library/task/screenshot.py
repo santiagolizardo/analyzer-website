@@ -1,6 +1,8 @@
 
 import json, logging, os, sys
 
+import config
+
 from google.appengine.api import urlfetch
 from google.appengine.api.channel import send_message
 from google.appengine.api import files
@@ -52,9 +54,7 @@ class ScreenshotGrabberTask( BaseTask ):
 		content = self.getDefaultData() 
 		actions = []
 		
-		debugActive = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' )
-		debugActive = False
-		if not debugActive:
+		if not config.debug_active:
 			# imageData = captureScreenshotSnapito( url )
 			imageData = captureScreenshotWordpress( url )
 			if imageData is not None:

@@ -1,0 +1,206 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Egosize\n"
+"POT-Creation-Date: 2014-06-02 23:24+0100\n"
+"PO-Revision-Date: 2014-06-02 23:24+0100\n"
+"Last-Translator: Santiago Lizardo <santiago.lizardo@gmail.com>\n"
+"Language-Team: \n"
+"Language: Spanish\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: ../../..\n"
+
+#: ../../../vendor/httplib2/__init__.py:410
+#, python-format
+msgid "Content purported to be compressed with %s but failed to decompress."
+msgstr ""
+
+#: ../../../vendor/httplib2/__init__.py:520
+#, python-format
+msgid "Unsupported value for qop: %s."
+msgstr ""
+
+#: ../../../vendor/httplib2/__init__.py:523
+#: ../../../vendor/httplib2/__init__.py:585
+#, python-format
+msgid "Unsupported value for algorithm: %s."
+msgstr ""
+
+#: ../../../vendor/httplib2/__init__.py:582
+msgid "The challenge doesn't contain a server nonce, or this one is empty."
+msgstr ""
+
+#: ../../../vendor/httplib2/__init__.py:588
+#, python-format
+msgid "Unsupported value for pw-algorithm: %s."
+msgstr ""
+
+#: ../../../vendor/httplib2/__init__.py:1340
+msgid "Redirected but the response is missing a Location: header."
+msgstr ""
+
+#: ../../../library/sections.py:7
+msgid "Priority actions"
+msgstr "Acciones prioritarias"
+
+#: ../../../library/sections.py:22
+msgid "Visitors"
+msgstr "Visitantes"
+
+#: ../../../library/sections.py:32 ../../../templates/staticReport.html:41
+msgid "Content"
+msgstr "Contenido"
+
+#: ../../../library/sections.py:37 ../../../templates/staticReport.html:51
+msgid "Usability"
+msgstr "Usabilidad"
+
+#: ../../../library/sections.py:47
+msgid "Links"
+msgstr "Enlaces"
+
+#: ../../../library/sections.py:52
+msgid "Security"
+msgstr "Seguridad"
+
+#: ../../../library/sections.py:57
+msgid "Technology"
+msgstr "Tecnología"
+
+#: ../../../templates/errorPage.html:3
+msgid "The page you are looking for does not exist"
+msgstr "La página que estas buscando no existe"
+
+#: ../../../templates/footer.html:9
+msgid "Best Internet sites"
+msgstr "Mejores sitios de Internet"
+
+#: ../../../templates/footer.html:10
+msgid "Pricing"
+msgstr "Precio"
+
+#: ../../../templates/footer.html:11
+msgid "Statistics"
+msgstr "Estadísticas"
+
+#: ../../../templates/footer.html:12
+msgid "Contact"
+msgstr "Contacto"
+
+#: ../../../templates/header.html:14
+msgid "Get your free report!"
+msgstr "¡Obtén tu reporte gratuito!"
+
+#: ../../../templates/stats.html:3
+msgid "Domain <small>statistics</small>"
+msgstr "<small>Estadísticas</small> del dominio"
+
+#: ../../../templates/staticReport.html:37
+msgid "Your Rating"
+msgstr "Tu Valoración"
+
+#: ../../../templates/staticReport.html:46
+msgid "Presentation"
+msgstr "Presentación"
+
+#: ../../../templates/staticReport.html:56 ../../../templates/contact.html:9
+msgid "Send"
+msgstr "Enviar"
+
+#: ../../../templates/staticReport.html:59
+msgid "User Reviews"
+msgstr "Opiniones de Usuarios"
+
+#: ../../../templates/staticReport.html:66
+msgid "Anonymous"
+msgstr "Anónimo"
+
+#: ../../../templates/contact.html:3
+msgid "Your email"
+msgstr "Tu correo electrónico"
+
+#: ../../../templates/contact.html:6
+msgid "Message"
+msgstr "Mensaje"
+
+#: ../../../templates/index.html:10
+msgid "<strong>Website reports</strong> for marketers and developers"
+msgstr ""
+"<strong>Reportes de páginas Web</strong> para desarrolladores y marketers"
+
+#: ../../../templates/index.html:11
+msgid ""
+"Improve your site SERP by using Egosize audit tool which includes key SEM/"
+"SEO and WPO optimizations."
+msgstr ""
+"Mejora la posición en buscadores utilizando la herramienta de auditoria "
+"Egosize que incluye métricas SEO/SEM y optimizaciones WPO."
+
+#: ../../../templates/index.html:18
+msgid "Get your FREE report now!"
+msgstr "¡Obtén tu reporte gratuito ahora!"
+
+#: ../../../templates/index.html:27
+msgid "Website with fresh reports"
+msgstr "Sitios Web con reportes frescos"
+
+#: ../../../templates/index.html:40
+msgid "Sites with a huge ego"
+msgstr "Sitios con un gran ego"
+
+#: ../../../templates/ranking.html:3
+msgid "Best Internet sites <small>ranking</small>"
+msgstr "<small>Ranking</small> de los mejores sitios de Internet"
+
+#: ../../../templates/ranking.html:17
+msgid "Score"
+msgstr "Puntuación"
+
+#: ../../../templates/ranking.html:18
+msgid "Site"
+msgstr "Sitio"
+
+#: ../../../templates/sections/seo-backlinks.html:9
+msgid "Internal links"
+msgstr "Enlaces internos"
+
+#: ../../../templates/sections/seo-backlinks.html:12
+msgid "Related links"
+msgstr "Enlaces relacionados"
+
+#: ../../../templates/sections/page-metadata.html:3
+msgid "Title"
+msgstr "Título"
+
+#: ../../../templates/sections/page-metadata.html:6
+msgid "Description"
+msgstr "Descripción"
+
+#: ../../../templates/sections/page-metadata.html:9
+msgid "Keywords"
+msgstr "Palabras claves"
+
+#: ../../../templates/sections/content-optimization.html:5
+msgid "Headings"
+msgstr "Encabezados"
+
+#: ../../../templates/sections/content-optimization.html:8
+msgid "Images"
+msgstr "Imágenes"
+
+#: ../../../templates/sections/usability.html:12
+msgid "Page size"
+msgstr "Tamaño de la página"
+
+#: ../../../templates/sections/usability.html:21
+msgid "Language"
+msgstr "Idioma"
+
+#: ../../../templates/sections/seo-authority.html:6
+msgid "Indexed pages"
+msgstr "Páginas indexadas"

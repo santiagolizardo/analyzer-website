@@ -14,7 +14,7 @@ class RankingController( StandardPageController ):
 		sites_by_user_reviews = self.get_sites_by_user_reviews()
 
 		values = {
-			'pageTitle': 'Ranking of the most optimized websites for SEO/SEM/WPO - EGOsize',
+			'pageTitle': 'Ranking of the most optimized websites for SEO/SEM/WPO - Egosize',
 			'pageDescription': 'Discover what are the most successful websites in terms of their UX, SEO/SEM and WPO practices. Learn from their reports for free.',
 			'sites_by_audit_score': sites_by_audit_score,
 			'sites_by_user_reviews': sites_by_user_reviews,

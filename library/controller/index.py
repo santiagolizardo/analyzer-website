@@ -11,7 +11,6 @@ from google.appengine.api import memcache
 class IndexController( StandardPageController ):
 
 	def get( self ):
-
 		html = memcache.get( 'page-index' )
 		if html is None or self.is_dev_env:
 			html = self.generate_html()
@@ -20,7 +19,6 @@ class IndexController( StandardPageController ):
 		self.writeResponse( html )
 
 	def generate_html( self ):
-
 		recentDomains = db.GqlQuery( 'SELECT * FROM SiteReport ORDER BY creationDate DESC' ).fetch( 10 )
 
 		sitesQuery = SiteReport.all()

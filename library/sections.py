@@ -1,8 +1,10 @@
 
+from gettext import gettext as _
+
 reportSections = (
 	{
 		'id': 'priority-actions',
-		'label': 'Priority actions',
+		'label': _('Priority actions'),
 		'keywords': 'Suggestions to improve the site',
 	},
 	{
@@ -17,7 +19,7 @@ reportSections = (
 	},
 	{
 		'id': 'visitors',
-		'label': 'Visitors',
+		'label': _('Visitors'),
 		'keywords': 'Traits and volume of visits',
 	},
 	{
@@ -27,12 +29,12 @@ reportSections = (
 	},
 	{
 		'id': 'content-optimization',
-		'label': 'Content',
+		'label': _('Content'),
 		'keywords': 'Value and style',
 	},
 	{
 		'id': 'usability',
-		'label': 'Usability',
+		'label': _('Usability'),
 		'keywords': 'Ease of use and compatibility',
 	},
 	{
@@ -42,17 +44,17 @@ reportSections = (
 	},
 	{
 		'id': 'seo-backlinks',
-		'label': 'Links',
+		'label': _('Links'),
 		'keywords': 'Juice flow between pages',
 	},
 	{
 		'id': 'security',
-		'label': 'Security',
+		'label': _('Security'),
 		'keywords': 'Threats and use of good practices',
 	},
 	{
 		'id': 'technologies',
-		'label': 'Technology',
+		'label': _('Technology'),
 		'keywords': 'Responsiveness and other characteristics',
 	},
 )

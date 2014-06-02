@@ -14,8 +14,6 @@ class AnalyzeDomainController( webapp2.RequestHandler ):
 		domain = domain.rstrip( '/' ) 			# 'http://foobar.com'
 		domain = re.sub( '^http://', '', domain ) 	# 'foobar.com'
 
-		debugActive = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' )
-
 		if len( domain ) == 0:
 			url = self.request.referer
 		else:

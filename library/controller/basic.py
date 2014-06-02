@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 import webapp2
 import os, logging
@@ -6,10 +7,17 @@ from mako.lookup import TemplateLookup
 
 from library.utilities import uriFor
 
+import gettext
+import config
+
 class BasicController( webapp2.RequestHandler ):
 
 	def renderTemplate( self, name, values = {} ):
+
+		gettext_instance = gettext.translation( 'messages', 'locales', [ config.current_instance['language'] ] )
+
 		values['uriFor'] = uriFor
+		values['_'] = gettext_instance.ugettext 
 		
 		templateDirs = [ os.path.abspath( 'templates' ) ]
 		templateFinder = TemplateLookup( directories = templateDirs, input_encoding = 'utf-8', output_encoding = 'utf-8', encoding_errors = 'ignore', disable_unicode = False )

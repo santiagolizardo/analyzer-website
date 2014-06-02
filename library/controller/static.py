@@ -25,8 +25,8 @@ class PricingController( StandardPageController ):
         self.addStyleSheet( '/styles/pricing.css' )
 
         values = {
-            'pageTitle': 'Pricing - EGOsize',
-	    'pageDescription': 'The EGOsize pricing schema is simple. Freemium services are available.',
+            'pageTitle': 'Pricing - Egosize',
+	    'pageDescription': 'The Egosize pricing schema is simple. Freemium services are available.',
         }
         
         html = self.renderTemplate( 'pricing.html', values)
