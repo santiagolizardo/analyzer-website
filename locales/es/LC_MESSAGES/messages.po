@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Egosize\n"
-"POT-Creation-Date: 2014-06-02 23:24+0100\n"
-"PO-Revision-Date: 2014-06-02 23:24+0100\n"
+"POT-Creation-Date: 2014-06-03 10:33+0100\n"
+"PO-Revision-Date: 2014-06-03 10:36+0100\n"
 "Last-Translator: Santiago Lizardo <santiago.lizardo@gmail.com>\n"
 "Language-Team: \n"
 "Language: Spanish\n"
@@ -44,31 +44,87 @@ msgstr ""
 msgid "Redirected but the response is missing a Location: header."
 msgstr ""
 
-#: ../../../library/sections.py:7
-msgid "Priority actions"
-msgstr "Acciones prioritarias"
+#: ../../../library/sections.py:11
+msgid "Priority Actions"
+msgstr "Acciones Prioritarias"
+
+#: ../../../library/sections.py:12
+msgid "Suggestions to improve the site"
+msgstr "Sugerencias para mejorar el sitio"
+
+#: ../../../library/sections.py:16
+msgid "URL"
+msgstr ""
+
+#: ../../../library/sections.py:17
+msgid "Facts about the domain and URL structure"
+msgstr ""
+
+#: ../../../library/sections.py:21
+msgid "Page Metadata"
+msgstr "Metadatos de la Página"
 
 #: ../../../library/sections.py:22
+msgid "Data for crawlers, search engines and directories"
+msgstr ""
+
+#: ../../../library/sections.py:26
 msgid "Visitors"
 msgstr "Visitantes"
 
-#: ../../../library/sections.py:32 ../../../templates/staticReport.html:41
+#: ../../../library/sections.py:27
+msgid "Traits and volume of visits"
+msgstr ""
+
+#: ../../../library/sections.py:31
+msgid "Social Metrics"
+msgstr "Métricas Sociales"
+
+#: ../../../library/sections.py:32
+msgid "User interaction outside the website"
+msgstr ""
+
+#: ../../../library/sections.py:36 ../../../templates/staticReport.html:41
 msgid "Content"
 msgstr "Contenido"
 
-#: ../../../library/sections.py:37 ../../../templates/staticReport.html:51
+#: ../../../library/sections.py:37
+msgid "Value and style"
+msgstr ""
+
+#: ../../../library/sections.py:41 ../../../templates/staticReport.html:51
 msgid "Usability"
 msgstr "Usabilidad"
 
+#: ../../../library/sections.py:42
+msgid "Ease of use and compatibility"
+msgstr ""
+
+#: ../../../library/sections.py:46
+msgid "Domain Authority"
+msgstr "Autoridad del Dominio"
+
 #: ../../../library/sections.py:47
+msgid "The influence the site respect others"
+msgstr ""
+
+#: ../../../library/sections.py:51
 msgid "Links"
 msgstr "Enlaces"
 
 #: ../../../library/sections.py:52
+msgid "Juice flow between pages"
+msgstr ""
+
+#: ../../../library/sections.py:56
 msgid "Security"
 msgstr "Seguridad"
 
 #: ../../../library/sections.py:57
+msgid "Threats and the use of safe practices"
+msgstr ""
+
+#: ../../../library/sections.py:61
 msgid "Technology"
 msgstr "Tecnología"
 
@@ -80,7 +136,7 @@ msgstr "La página que estas buscando no existe"
 msgid "Best Internet sites"
 msgstr "Mejores sitios de Internet"
 
-#: ../../../templates/footer.html:10
+#: ../../../templates/footer.html:10 ../../../templates/pricing.html:3
 msgid "Pricing"
 msgstr "Precio"
 
@@ -100,9 +156,21 @@ msgstr "¡Obtén tu reporte gratuito!"
 msgid "Domain <small>statistics</small>"
 msgstr "<small>Estadísticas</small> del dominio"
 
+#: ../../../templates/staticReport.html:24
+#, python-format
+msgid ""
+"Generated on <time datetime=\"%(generatedDate)s\">%(generatedDateTime)s</"
+"time>. Short URL: <a href=\"%(shortUrl)s\">%(shortUrl)s</a>"
+msgstr ""
+
 #: ../../../templates/staticReport.html:37
 msgid "Your Rating"
 msgstr "Tu Valoración"
+
+#: ../../../templates/staticReport.html:40
+#, python-format
+msgid "Your feedback about %(domain)s"
+msgstr "Tu feedback sobre %(domain)s"
 
 #: ../../../templates/staticReport.html:46
 msgid "Presentation"
@@ -116,9 +184,34 @@ msgstr "Enviar"
 msgid "User Reviews"
 msgstr "Opiniones de Usuarios"
 
+#: ../../../templates/staticReport.html:59
+msgid "Add"
+msgstr "Agregar"
+
 #: ../../../templates/staticReport.html:66
 msgid "Anonymous"
 msgstr "Anónimo"
+
+#: ../../../templates/staticReport.html:79
+#, python-brace-format
+msgid "Your <strong>%{domain}s review"
+msgstr ""
+
+#: ../../../templates/staticReport.html:87
+msgid "Strengths <small>pros</small>"
+msgstr "Fortalezas <small>pros</small>"
+
+#: ../../../templates/staticReport.html:93
+msgid "Weaknesses <small>cons</small>"
+msgstr "Debilidades <small>cons</small>"
+
+#: ../../../templates/staticReport.html:102
+msgid "Close"
+msgstr "Cerrar"
+
+#: ../../../templates/staticReport.html:103
+msgid "Submit"
+msgstr "Enviar"
 
 #: ../../../templates/contact.html:3
 msgid "Your email"
@@ -157,13 +250,31 @@ msgstr "Sitios con un gran ego"
 msgid "Best Internet sites <small>ranking</small>"
 msgstr "<small>Ranking</small> de los mejores sitios de Internet"
 
-#: ../../../templates/ranking.html:17
+#: ../../../templates/ranking.html:5
+msgid ""
+"Wondering how some sites have such amount of traffic? Get to know them and "
+"follow their good practices to improve your sites."
+msgstr ""
+
+#: ../../../templates/ranking.html:10
+msgid "Sites with best <strong>audit score</strong>"
+msgstr ""
+
+#: ../../../templates/ranking.html:12
+msgid "Score goes from 0 to 100."
+msgstr "La valoración va desde 0 a 100."
+
+#: ../../../templates/ranking.html:17 ../../../templates/ranking.html:42
 msgid "Score"
 msgstr "Puntuación"
 
-#: ../../../templates/ranking.html:18
+#: ../../../templates/ranking.html:18 ../../../templates/ranking.html:43
 msgid "Site"
 msgstr "Sitio"
+
+#: ../../../templates/ranking.html:33
+msgid "Site with best <strong>user reviews</strong>"
+msgstr ""
 
 #: ../../../templates/sections/seo-backlinks.html:9
 msgid "Internal links"

@@ -1,9 +1,11 @@
 
 import sys
-
 sys.path.append( 'vendor' )
 sys.path.append( 'externals/tweepy' )
 sys.path.append( 'externals/awis' )
+
+import config
+config.load_current_instance()
 
 import webapp2, os, logging
 
@@ -18,10 +20,6 @@ from library.controller.staticReport import StaticReportController
 from library.controller.ranking import RankingController 
 from library.controller.errorPage import ErrorPageController
 from library.controller.channel import ChannelController
-
-import config
-
-config.load_current_instance()
 
 domain_ext = '<:com.dev|es.dev|com|es>'
 

@@ -5,6 +5,8 @@ from library.controller.page import StandardPageController
 
 import logging, json, sys, os
 
+import gettext
+
 from bs4 import BeautifulSoup
 
 from library.model.report import SiteReport, SiteRating
@@ -50,7 +52,7 @@ class StaticReportController( StandardPageController ):
 		self.addJavaScript( '/scripts/staticReport.js' )
 
 		baseUrl = 'http://www.' + config.current_instance['url'] 
-		
+			
 		values = {
 			'baseUrl': baseUrl,
 			'domain': domainUrl,

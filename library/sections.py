@@ -1,56 +1,60 @@
 
-from gettext import gettext as _
+import gettext
+import config
+
+gettext_instance = gettext.translation( 'messages', 'locales', [ config.current_instance['language'] ] )
+_ = gettext_instance.ugettext
 
 reportSections = (
 	{
 		'id': 'priority-actions',
-		'label': _('Priority actions'),
-		'keywords': 'Suggestions to improve the site',
+		'label': _('Priority Actions'),
+		'keywords': _('Suggestions to improve the site'),
 	},
 	{
 		'id': 'domain',
-		'label': 'URL',
-		'keywords': 'Facts about the domain and URL structure',
+		'label': _('URL'),
+		'keywords': _('Facts about the domain and URL structure'),
 	},
 	{
 		'id': 'page-metadata',
-		'label': 'Page Metadata',
-		'keywords': 'Data for crawlers, search engines and directories',
+		'label': _('Page Metadata'),
+		'keywords': _('Data for crawlers, search engines and directories'),
 	},
 	{
 		'id': 'visitors',
 		'label': _('Visitors'),
-		'keywords': 'Traits and volume of visits',
+		'keywords': _('Traits and volume of visits'),
 	},
 	{
 		'id': 'social-monitoring',
-		'label': 'Social Metrics',
-		'keywords': 'User interaction outside the website',
+		'label': _('Social Metrics'),
+		'keywords': _('User interaction outside the website'),
 	},
 	{
 		'id': 'content-optimization',
 		'label': _('Content'),
-		'keywords': 'Value and style',
+		'keywords': _('Value and style'),
 	},
 	{
 		'id': 'usability',
 		'label': _('Usability'),
-		'keywords': 'Ease of use and compatibility',
+		'keywords': _('Ease of use and compatibility'),
 	},
 	{
 		'id': 'seo-authority',
-		'label': 'Domain Authority',
-		'keywords': 'The influence the site respect others',
+		'label': _('Domain Authority'),
+		'keywords': _('The influence the site respect others'),
 	},
 	{
 		'id': 'seo-backlinks',
 		'label': _('Links'),
-		'keywords': 'Juice flow between pages',
+		'keywords': _('Juice flow between pages'),
 	},
 	{
 		'id': 'security',
 		'label': _('Security'),
-		'keywords': 'Threats and use of good practices',
+		'keywords': _('Threats and the use of safe practices'),
 	},
 	{
 		'id': 'technologies',

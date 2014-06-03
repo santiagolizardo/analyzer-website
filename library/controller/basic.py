@@ -15,9 +15,11 @@ class BasicController( webapp2.RequestHandler ):
 	def renderTemplate( self, name, values = {} ):
 
 		gettext_instance = gettext.translation( 'messages', 'locales', [ config.current_instance['language'] ] )
+		values['_'] = gettext_instance.ugettext 
+
+		values['current_instance'] = config.current_instance
 
 		values['uriFor'] = uriFor
-		values['_'] = gettext_instance.ugettext 
 		
 		templateDirs = [ os.path.abspath( 'templates' ) ]
 		templateFinder = TemplateLookup( directories = templateDirs, input_encoding = 'utf-8', output_encoding = 'utf-8', encoding_errors = 'ignore', disable_unicode = False )

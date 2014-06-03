@@ -21,7 +21,7 @@ var loadTimeMs = ${loadTimeMs};
 % endfor
 % endif
 </h1>
-<p>Generated on <time datetime="${generatedDate}">${generatedDateTime}</time>. Short URL: <a href="${shortUrl}">${shortUrl}</a></p>
+<p>${_('Generated on <time datetime="%(generatedDate)s">%(generatedDateTime)s</time>. Short URL: <a href="%(shortUrl)s">%(shortUrl)s</a>') % dict( generatedDate = generatedDate, generatedDateTime = generatedDateTime, shortUrl = shortUrl )}</p>
 
 <div class="row">
 
@@ -37,7 +37,7 @@ var loadTimeMs = ${loadTimeMs};
 		<h3>${_('Your Rating')}</h3>
 
 		<div id="ratingBox">
-			<p>Your feedback about ${domain}:</p>
+			<p>${_('Your feedback about %(domain)s') % dict( domain = domain )}:</p>
 			<p>${_('Content')}<br />
 			% for i in range( 0, 5 ):
 			<img src="/images/gray-star.png" data-rating-criteria="content" data-rating-value="${i + 1}" class="Star" />
@@ -56,7 +56,7 @@ var loadTimeMs = ${loadTimeMs};
 			<p><button class="btn" id="sendRating">${_('Send')}</button></p>
 		</div>
 
-		<h3>${_('User Reviews')} <small><a href="#" id="addReview" data-toggle="modal" data-target="#reviewModal">Add</a></small></h3>
+		<h3>${_('User Reviews')} <small><a href="#" id="addReview" data-toggle="modal" data-target="#reviewModal">${_('Add')}</a></small></h3>
 
 		<div id="userReviews">
 		% if user_reviews:
@@ -76,31 +76,31 @@ var loadTimeMs = ${loadTimeMs};
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Your <strong>${domain} review</strong></h4>
+	<h4 class="modal-title" id="myModalLabel">%{_('Your <strong>%{domain}s review') % dict( domain = domain )}</strong></h4>
       </div>
       <div class="modal-body">
 		<form role="form" id="reviewForm">
 			<input type="hidden" name="domain" value="${domain}" />
-			<p><input class="form-control input-lg" name="title" type="text" placeholder="Summarize the site in a sentence" required="required" autofocus="autofocus" /></p>
+			<p><input class="form-control input-lg" name="title" type="text" placeholder="${_('Summarize the site in a sentence')}" required="required" autofocus="autofocus" /></p>
 			<div class="row">
 				<div class="col-md-6">
-					<h4 class="text-success text-center">Strengths <small>pros</small></h4>
-					<input class="form-control" name="strengths[]" type="text" placeholder="Example: Original content" /><br />
-					<input class="form-control" name="strengths[]" type="text" placeholder="Example: Updates frequently" /><br />
-					<input class="form-control" name="strengths[]" type="text" placeholder="Example: Nice design" />
+					<h4 class="text-success text-center">${_('Strengths <small>pros</small>')}</h4>
+					<input class="form-control" name="strengths[]" type="text" placeholder="${_('Example: Original content')}" /><br />
+					<input class="form-control" name="strengths[]" type="text" placeholder="${_('Example: Updates frequently')}" /><br />
+					<input class="form-control" name="strengths[]" type="text" placeholder="${_('Example: Nice design')}" />
 				</div>
 				<div class="col-md-6">
-					<h4 class="text-danger text-center">Weaknesses <small>cons</small></h4>
-					<input class="form-control" name="weaknesses[]" type="text" placeholder="Example: Takes too much to load" /><br />
-					<input class="form-control" name="weaknesses[]" type="text" placeholder="Example: Some links are broken" /><br />
-					<input class="form-control" name="weaknesses[]" type="text" placeholder="Example: Too expensive" />
+					<h4 class="text-danger text-center">${_('Weaknesses <small>cons</small>')}</h4>
+					<input class="form-control" name="weaknesses[]" type="text" placeholder="${_('Example: Takes too much to load')}" /><br />
+					<input class="form-control" name="weaknesses[]" type="text" placeholder="${_('Example: Some links are broken')}" /><br />
+					<input class="form-control" name="weaknesses[]" type="text" placeholder="${_('Example: Too expensive')}" />
 				</div>
 			</div>
 		</form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="submitReview">Submit</button>
+	      <button type="button" class="btn btn-default" data-dismiss="modal">${_('Close')}</button>
+	      <button type="button" class="btn btn-primary" id="submitReview">${_('Submit')}</button>
       </div>
     </div>
   </div>
