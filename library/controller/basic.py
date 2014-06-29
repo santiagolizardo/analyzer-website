@@ -1,9 +1,10 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 
 import webapp2
 import os, logging
 
 from mako.lookup import TemplateLookup
+from mako import exceptions
 
 from library.utilities import uriFor
 
@@ -17,6 +18,7 @@ class BasicController( webapp2.RequestHandler ):
 		gettext_instance = gettext.translation( 'messages', 'locales', [ config.current_instance['language'] ] )
 		values['_'] = gettext_instance.ugettext 
 
+		values['instances'] = [ instance for instance in config.instances if instance['gaTrackingId'] is not None ]
 		values['current_instance'] = config.current_instance
 
 		values['uriFor'] = uriFor
@@ -28,7 +30,6 @@ class BasicController( webapp2.RequestHandler ):
 		try:
 			htmlOutput = templ.render( **values )
 		except:
-			from mako import exceptions
 			htmlOutput = exceptions.html_error_template().render()
 			self.writeResponse( htmlOutput )
 
