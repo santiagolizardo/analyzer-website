@@ -1,0 +1,20 @@
+<%include file="header.html"/>
+
+<h2>${query.capitalize()} <small>related sites</small></h2>
+
+% if not results:
+<p>No websites have been found for the <strong>${query}</strong> query.</p>
+% else:
+<ol>
+% for result in results:
+	<li>
+	<h3><a href="${uriFor( 'staticReport', domainUrl = result['url'][0].value )}">${result['url'][0].value}</a> report</h3>
+	<p>${result['description'][0].value}</p>
+	<p><a href="http://${result['url'][0].value}" rel="nofollow" target="_blank">http://${result['url'][0].value}</a></p>
+	</li>
+% endfor
+</ol>
+% endif
+
+<%include file="footer.html"/>
+

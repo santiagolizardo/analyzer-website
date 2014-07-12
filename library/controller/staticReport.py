@@ -1,10 +1,12 @@
 
 from google.appengine.api import memcache
+from google.appengine.api import search
 
 from library.controller.page import StandardPageController
 
 import logging, json, sys, os
 
+from datetime import datetime
 import gettext
 
 from bs4 import BeautifulSoup
@@ -69,7 +71,7 @@ class StaticReportController( StandardPageController ):
 
 		tasks = library.task.manager.findAll()
 
-		data = {}
+		all_data = {}
 		actions = []
 
 		for task in tasks:
@@ -120,7 +122,27 @@ class StaticReportController( StandardPageController ):
 			if 'content' in subreport:
 				data.update( subreport['content'] )
 
+			all_data.update( data )
 			task.updateView( beauty, data )
+
+		try:
+			report_id = str( siteReport.key().id() )
+			index = search.Index( name = 'domains' )
+			doc = index.get( report_id )
+			if doc is None:
+				fields = [
+					search.TextField( name = 'url', value = domainUrl ), 
+					search.TextField( name = 'title', value = all_data['pageTitle'] ), 
+					search.TextField( name = 'description', value = all_data['pageDescription'] ),
+					search.DateField( name = 'generation_date', value = siteReport.creationDate.date() ),
+				]
+				if 'pageKeywords' in all_data:
+					fields.append( search.TextField( name = 'keywords', value = ','.join( all_data['pageKeywords'] ) ) )
+
+				doc = search.Document( doc_id = report_id, fields = fields )
+				index.put( doc )
+		except search.Error:
+			logging.exception('Put failed')
 
 		return beauty.encode( formatter = None )
 

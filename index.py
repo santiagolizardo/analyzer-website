@@ -12,10 +12,10 @@ import webapp2, os, logging
 from webapp2_extras import routes
 
 from library.controller.index import IndexController
-from library.controller.contact import ContactController
 from library.controller.analizeDomain import AnalyzeDomainController
 
 from library.controller.liveReport import LiveReportController 
+from library.controller.search import SearchController 
 from library.controller.staticReport import StaticReportController 
 from library.controller.ranking import RankingController 
 from library.controller.errorPage import ErrorPageController
@@ -28,7 +28,6 @@ routes = [
 	webapp2.Route( '/_ah/channel/disconnected/', handler = ChannelController ),
 	webapp2.Route( '/addReview', handler = 'library.controller.site.AddReviewController' ),
 	webapp2.Route( '/analyze', handler = AnalyzeDomainController ),
-	webapp2.Route( '/contact', handler = ContactController ),
 	webapp2.Route( '/launchSubreports', handler = 'library.controller.processing.InitProcessingController' ),
 	webapp2.Route( '/calculateScore', handler = 'library.controller.scores.CalculateScoreController' ),
 	webapp2.Route( '/sitemap.xml', handler = 'library.controller.static.SitemapController' ),
@@ -36,6 +35,11 @@ routes = [
 		[
 			webapp2.Route( '/', handler = IndexController ),
 			webapp2.Route( '/rate', handler = 'library.controller.site.RateController' ),
+		]
+	),
+	routes.DomainRoute( 'search.egosize.' + domain_ext,
+		[
+			webapp2.Route( '/<query:.+>', handler = SearchController, name = 'search' ),
 		]
 	),
 	routes.DomainRoute( 'ranking.egosize.' + domain_ext,

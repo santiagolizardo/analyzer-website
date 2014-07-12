@@ -1,4 +1,6 @@
 
+from library.utilities import uriFor
+
 import logging
 import urllib2
 import json
@@ -23,7 +25,7 @@ class HtmlAnalyzerTask( BaseTask ):
 			# Page Metadata
 			'pageTitle': 'N/A',
 			'pageDescription': 'N/A',
-			'pageKeywords': 'N/A',
+			'pageKeywords': [],
 
 			'googleAnalytics': 'N/A',
 			'docType': 'N/A',
@@ -51,7 +53,10 @@ class HtmlAnalyzerTask( BaseTask ):
 		# Page Metadata
 		beauty.find( id = 'pageTitle' ).string.replace_with( data['pageTitle'] )
 		beauty.find( id = 'pageDescription' ).string.replace_with( data['pageDescription'] if data['pageDescription'] else 'Unknown' )
-		beauty.find( id = 'pageKeywords' ).string.replace_with( data['pageKeywords'] if data['pageKeywords'] else 'Unknown' )
+
+		if data['pageKeywords']:
+			keywordLinks = ''.join( [ '<li><a href="%s">%s</a></li>' % ( uriFor( 'search', query = keyword ), keyword ) for keyword in data['pageKeywords'] ] )
+			beauty.find( id = 'pageKeywords' ).string.replace_with( '<ul class="nav nav-pills">' + keywordLinks + '</ul>' )
 
 		beauty.find( id = 'docType' ).string.replace_with( data['docType'] )
 		beauty.find( id = 'images' ).string.replace_with( data['images'] )
@@ -142,9 +147,8 @@ class HtmlAnalyzerTask( BaseTask ):
 			metaDescription = bSoup.find( 'meta', attrs = { 'name': re.compile( '^description$', re.I ) } )
 			if metaDescription is not None:
 				content['pageDescription'] = metaDescription['content']
-			metaKeywords = bSoup.find( 'meta', attrs = { 'name': re.compile( '^keywords$', re.I ) } )
-			if metaKeywords is not None:
-				content['pageKeywords'] = metaKeywords['content']
+
+			content['pageKeywords'] = self.extract_meta_keywords( bSoup )
 
 			if pageTitle is None:
 				actions.append({ 'status': 'bad', 'description': 'Your page title is missing. This is critical for SEO and should be fixed ASAP.' })
@@ -168,6 +172,15 @@ class HtmlAnalyzerTask( BaseTask ):
 			logging.error( str( e ) )
 
 		self.sendAndSaveReport( baseUrl, content, actions )
+
+	def extract_meta_keywords( self, html_soup ):
+		meta_keywords = []
+
+		meta_keywords_data = html_soup.find( 'meta', attrs = { 'name': re.compile( '^keywords$', re.I ) } )
+		if meta_keywords_data:
+			meta_keywords = [ keyword.strip().lower() for keyword in meta_keywords_data['content'].split( ',' ) ]
+
+		return meta_keywords
 
 def containsFlash( body, actions ):
 	if '.swf"' in body:
