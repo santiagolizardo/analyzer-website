@@ -47,11 +47,6 @@ routes = [
 			webapp2.Route( '/<:.*>', handler = RankingController, name = 'ranking' ),
 		]
 	),
-	routes.DomainRoute( 'pricing.egosize.' + domain_ext,
-		[
-			webapp2.Route( '/<:.*>', handler = 'library.controller.static.PricingController' ),
-		]
-	),
 	routes.DomainRoute( 'stats.egosize.' + domain_ext,
 		[
 			webapp2.Route( '/<:.*>', handler = 'library.controller.stats.Index' ),

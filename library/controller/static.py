@@ -19,17 +19,3 @@ class SitemapController( StandardPageController ):
 
         self.writeResponse( html, 'text/xml; charset=utf-8' )
 
-class PricingController( StandardPageController ):
-
-    def get( self, country = None ):
-        self.addStyleSheet( '/styles/pricing.css' )
-
-        values = {
-            'pageTitle': 'Pricing - Egosize',
-	    'pageDescription': 'The Egosize pricing schema is simple. Freemium services are available.',
-        }
-        
-        html = self.renderTemplate( 'pricing.html', values)
-
-        self.writeResponse( html )
-
