@@ -9,7 +9,8 @@ from library.countries import country_name_by_code
 
 class AlexaAnalyzerTask( BaseTask ):
 
-	def getName( self ): return 'traffic'
+	def getName( self ):
+		return 'traffic'
 
 	def getDefaultData( self ):
 

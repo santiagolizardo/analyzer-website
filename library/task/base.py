@@ -29,7 +29,7 @@ class BaseTask( object ):
 		raise Exception( 'Method not implemented' )
 
 	def getDefaultData( self ):
-		raise Exception( 'Method not implemented' )
+		return None
 
 	def updateView( self, beauty, data ):
 		pass
@@ -41,7 +41,7 @@ class BaseTask( object ):
 
 		message = {
 			'name': self.getName(),
-			'content': content,
+			'content': self.generate_html_node( content ),
 			'actions': actions
 		}
 		messageEncoded = json.dumps( message )
@@ -52,8 +52,15 @@ class BaseTask( object ):
 		# Save
 		niceUrl = url.replace( 'http://', '' )
 
-		taskReport = TaskReport( name = self.getName(), url = niceUrl, messageEncoded = messageEncoded )
+		taskReport = TaskReport( name = self.getName(), url = niceUrl, messageEncoded = json.dumps( content ) )
 		taskReport.put()
+
+	def suggest_actions( self, actions, data, domain = None ):
+		pass
+
+	def generate_html_node( self, data ):
+		return {}
+		return None
 
 	def getSavedReport( self, domainUrl ):
 		data = self.getDefaultData()

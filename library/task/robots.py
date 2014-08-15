@@ -9,18 +9,16 @@ import sys
 
 class RobotsTxtCheckerTask( BaseTask ):
 
-	def getName( self ): return 'robotsTxt'
+	def getName( self ):
+		return 'robotsTxt'
 
 	def getDefaultData( self ):
-
 		return { self.getName(): 'N/A' }
 
 	def updateView( self, beauty, data ):
-			
 		beauty.find( id = 'robotsTxt' ).string.replace_with( data['robotsTxt'] )
 
 	def start( self, baseUrl ):
-
 		domain = 'http://' + baseUrl
 
 		content = self.getDefaultData()

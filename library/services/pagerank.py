@@ -1,25 +1,39 @@
 
 import httplib
 
-prhost = 'toolbarqueries.google.com'
-prpath = '/tbr?client=navclient-auto&ch=%s&features=Rank&q=info:%s'
+PAGERANK_HOST = 'toolbarqueries.google.com'
+PAGERANK_PATH = '/tbr?client=navclient-auto&ch=%s&features=Rank&q=info:%s'
  
-def getHash( query ):
-	SEED = "Mining PageRank is AGAINST GOOGLE'S TERMS OF SERVICE. Yes, I'm talking to you, scammer."
-	Result = 0x01020345
-	for i in range(len(query)) :
-		Result ^= ord(SEED[i%len(SEED)]) ^ ord(query[i])
-		Result = Result >> 23 | Result << 9
-		Result &= 0xffffffff
-	return '8%x' % Result
+def calculateHash( domain ):
+	seed = "Mining PageRank is AGAINST GOOGLE'S TERMS OF SERVICE. Yes, I'm talking to you, scammer."
+	result = 0x01020345
+	for i in range( len( domain ) ):
+		result ^= ord( seed[ i % len( seed ) ] ) ^ ord( domain[ i ] )
+		result = result >> 23 | result << 9
+		result &= 0xffffffff
+	return '8%x' % result
  
-def getPageRank( query ):
-	conn = httplib.HTTPConnection(prhost)
-	hash = getHash(query)
-	path = prpath % (hash,query)
-	conn.request("GET", path)
+def getPageRank( domain ):
+	return 2
+	hash = calculateHash( domain )
+	conn = httplib.HTTPConnection( PAGERANK_HOST )
+	path = PAGERANK_PATH % ( hash, domain )
+	conn.request( 'GET', path )
 	response = conn.getresponse()
 	data = response.read()
 	conn.close()
-	return data.split(":")[-1]
+
+	pageRank = data.split(':')[-1]
+	if pageRank is None or '' == pageRank:
+		raise Exception( 'Unable to retrieve pagerank' )
+
+	try:
+		return int( pageRank )
+	except ValueError:
+		raise Exception( 'Unable to parse pagerank: ' + pageRank )
+
+if __name__ == '__main__':
+	import sys
+	domain = sys.argv[1] if len( sys.argv ) > 1 else 'www.santiagolizardo.com'
+	print 'Domain %s: Pagerank %d' % ( domain, getPageRank( domain ) )
 

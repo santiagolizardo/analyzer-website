@@ -10,39 +10,30 @@ from bs4 import BeautifulSoup, NavigableString
 class SearchTask( BaseTask ):
 
 	def getName( self ):
-
 		return 'indexedPages'
 
-	def getDefaultData( self ):
+	def updateView( self, beauty, indexed_pages ):
+		beauty.find( id = 'indexedPages' ).string.replace_with( self.generate_html_node( indexed_pages ) )
 
-		return {
-			'indexedPages': '0',
-		}
-
-	def updateView( self, beauty, data ):
-
-		beauty.find( id = 'indexedPages' ).string.replace_with( data['indexedPages'] )
-
-	def start( self, domainUrl ):
-
-		content = self.getDefaultData()
-		actions = []
-
+	def start( self, domain ):
 		try:
-			url = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=site:%s&filter=0' % domainUrl
+			url = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=site:%s&filter=0' % domain
 			result = urlfetch.fetch( url, deadline = 5 )
 			if result.status_code == 200:
 				data = json.loads( result.content )
-				indexedPages = int( data['responseData']['cursor']['estimatedResultCount'] )
-				content['indexedPages'] = str( indexedPages )
-				if indexedPages < 500:
-					actions.append({ 'status': 'bad', 'description': 'Your site has few pages indexed. Add more unique content progressively.' })
-				elif indexedPages < 2500:
-					actions.append({ 'status': 'regular', 'description': 'The number of indexed pages is fine, but you could have lot more and attract additional visitors.' })
-				else:
-					actions.append({ 'status': 'good' })
-		except:
-			logging.warning( sys.exc_info()[1] )
-	    
-		self.sendAndSaveReport( domainUrl, content, actions )
+				indexed_pages = int( data['responseData']['cursor']['estimatedResultCount'] )
+				self.sendAndSaveReport( domain, indexed_pages, [] )
+		except Exception, ex:
+			logging.error( ex )
+
+	def suggest_actions( self, actions, indexed_pages, domain ):
+		if indexed_pages < 500:
+			actions.append({ 'status': 'bad', 'description': 'Your site has few pages indexed. Add more unique content progressively.' })
+		elif indexed_pages < 2500:
+			actions.append({ 'status': 'regular', 'description': 'The number of indexed pages is fine, but you could have lot more and attract additional visitors.' })
+		else:
+			actions.append({ 'status': 'good' })
+
+	def generate_html_node( self, indexed_pages ):
+		return '%d indexed pages' % indexed_pages
 

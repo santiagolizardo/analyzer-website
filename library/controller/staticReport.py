@@ -76,8 +76,7 @@ class StaticReportController( StandardPageController ):
 
 		for task in tasks:
 			subreport = task.getSavedReport( domainUrl )
-			if 'actions' in subreport:
-				actions.extend( subreport['actions'] )
+			task.suggest_actions( actions, subreport, domainUrl )
 			
 		site_reviews = SiteReview.all().filter( 'domain = ', domainUrl ).fetch( limit = 5 )
 		values['user_reviews'] = site_reviews
@@ -118,12 +117,12 @@ class StaticReportController( StandardPageController ):
 
 		for task in tasks:
 			subreport = task.getSavedReport( domainUrl )
-			data = task.getDefaultData()
-			if 'content' in subreport:
+			if dict == type( subreport ) and 'content' in subreport:
 				data.update( subreport['content'] )
 
-			all_data.update( data )
-			task.updateView( beauty, data )
+			all_data[ task.getName() ] = subreport
+
+			task.updateView( beauty, subreport )
 
 		try:
 			report_id = str( siteReport.key().id() )
@@ -132,8 +131,8 @@ class StaticReportController( StandardPageController ):
 			if doc is None:
 				fields = [
 					search.TextField( name = 'url', value = domainUrl ), 
-					search.TextField( name = 'title', value = all_data['pageTitle'] ), 
-					search.TextField( name = 'description', value = all_data['pageDescription'] ),
+					#search.TextField( name = 'title', value = all_data['pageTitle'] ), 
+					#search.TextField( name = 'description', value = all_data['pageDescription'] ),
 					search.DateField( name = 'generation_date', value = siteReport.creationDate.date() ),
 				]
 				if 'pageKeywords' in all_data:
@@ -147,7 +146,7 @@ class StaticReportController( StandardPageController ):
 		return beauty.encode( formatter = None )
 
 	def set_twitter_card( self, domainUrl ):
-
+		return 
 		screenshotReport = TaskReport.all().filter( 'url =', domainUrl ).filter( 'name = ', 'screenshot' ).get()
 		screenshot = json.loads( screenshotReport.messageEncoded )
 	

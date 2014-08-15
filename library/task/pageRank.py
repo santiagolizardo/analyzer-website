@@ -1,48 +1,32 @@
 
-from library.task.base import BaseTask		
+from library.task.base import BaseTask
 from library.services.pagerank import getPageRank
 
 import logging
-import random
-import sys
 
 class PageRankTask( BaseTask ):
 
-	def getName( self ): return 'googlePageRank'
+	def getName( self ):
+		return 'googlePageRank'
 
-	def getDefaultData( self ):
+	def updateView( self, beauty, page_rank ):
+		beauty.find( id = 'googlePageRank' ).string.replace_with( self.generate_html_node( page_rank ) )
 
-		return { self.getName(): 'N/A' }
+	def start( self, domain ):
+		try:
+			page_rank  = getPageRank( domain )
+			self.sendAndSaveReport( domain, page_rank, [] )
+		except Exception, ex:
+			logging.error( ex )
 
-	def updateView( self, beauty, data ):
-
-		beauty.find( id = 'googlePageRank' ).string.replace_with( data['googlePageRank'] )
-
-	def start( self, baseUrl ):
-
-		content = self.getDefaultData() 
-		actions = []
-
-		pageRank = 0
-
-		if self.is_dev_env:
-			pageRank = random.randint( 0, 10 )
-		else:
-			pageRank  = getPageRank( baseUrl )
-			if pageRank is None or '' == pageRank:
-				pageRank = 0
-			try:
-				pageRank = int( pageRank )
-			except:
-				logging.error( sys.exc_info()[0] )
-
-		content[ self.getName() ] = 'The domain has a PR%d' % pageRank
-		if pageRank < 3:
-			actions.append({ 'status': 'bad', 'description': 'Your Page Rank is too low. Try to publish original content more often.' })
-		elif pageRank < 6:
+	def suggest_actions( self, actions, page_rank, domain ):
+		if page_rank < 3:
+			actions.append({ 'status': 'bad', 'description': 'Your PageRank is too low. Follow Google webmaster guidelines to improve it.' })
+		elif page_rank < 6:
 			actions.append({ 'status': 'regular' })
 		else:
 			actions.append({ 'status': 'good' })
 
-		self.sendAndSaveReport( baseUrl, content, actions )
+	def generate_html_node( self, page_rank ):
+		return 'The domain has a PageRank %d' % page_rank 
 

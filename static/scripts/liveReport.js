@@ -97,15 +97,15 @@ var messageHandlers = {
 	},
 	sitemapXml: function( content )
 	{
-		document.getElementById( 'sitemapXml' ).innerHTML = content.sitemapXml;
+		document.getElementById( 'sitemapXml' ).innerHTML = content;
 	},
 	pageFavicon: function( content )
 	{
-		document.getElementById( 'pageFavicon' ).innerHTML = content.pageFavicon;
+		document.getElementById( 'pageFavicon' ).innerHTML = content;
 	},
 	googlePageRank: function( content )
 	{
-		document.getElementById( 'googlePageRank' ).innerHTML = content.googlePageRank;
+		document.getElementById( 'googlePageRank' ).innerHTML = content;
 	},
 	custom404: function( content )
 	{
@@ -130,7 +130,7 @@ var messageHandlers = {
 	},
 	indexedPages: function( content )
 	{
-		document.getElementById( 'indexedPages' ).innerHTML = content.indexedPages;
+		document.getElementById( 'indexedPages' ).innerHTML = content;
 	},
 	score: function( content )
 	{

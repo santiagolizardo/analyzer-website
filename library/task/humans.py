@@ -9,7 +9,8 @@ import sys
 
 class HumansTxtCheckerTask( BaseTask ):
 
-	def getName( self ): return 'humansTxt'
+	def getName( self ):
+		return 'humansTxt'
 
 	def getDefaultData( self ):
 

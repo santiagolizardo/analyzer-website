@@ -27,21 +27,23 @@ class CalculateScoreController( webapp2.RequestHandler ):
 		
 		tasks = library.task.manager.findAll()
 	
-		data = {}
+		data = {
+			'pageTitle': None,
+			'pageDescription': None,
+		}
 		actions = []
 
 		for task in tasks:
 			report = task.getSavedReport( domainUrl )
-			if 'actions' in report:
-				actions.extend( report['actions'] )
+			task.suggest_actions( actions, report, domainUrl )
 
-			defaultData = task.getDefaultData()
-			if 'content' in report:
-				if type( report['content'] ) == dict:
-					defaultData.update( report['content'] )
-				else:
-					defaultData[ task.getName() ] = report['content']
-			data.update( defaultData )
+			html_node = task.generate_html_node( report )
+			if html_node is not None:
+				data[ task.getName() ] = html_node 
+
+		import pprint
+		pprint.pprint( actions )
+		pprint.pprint( data )
 
 		score = 100
 		totalVariables = len( actions ) # eg 12
