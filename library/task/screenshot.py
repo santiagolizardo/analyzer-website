@@ -37,33 +37,31 @@ def storeFileInBlobstore( data, url ):
 
 class ScreenshotGrabberTask( BaseTask ):
 
-	def getName( self ): return 'screenshot'
-
-	def getDefaultData( self ):
-
-		return { self.getName(): '/images/1x1.png' }
+	def getName( self ):
+		return 'screenshot'
 
 	def updateView( self, beauty, data ):
-
-		beauty.find( id = 'screenshot' )['src'] = data['screenshot']
+		beauty.find( id = 'screenshot' )['src'] = data
 
 	def start( self, baseUrl ):
-
 		url = 'http://' + baseUrl
-
-		content = self.getDefaultData() 
-		actions = []
+		content = None
 		
-		if not config.debug_active:
-			# imageData = captureScreenshotSnapito( url )
-			imageData = captureScreenshotWordpress( url )
-			if imageData is not None:
-				# storeFileInCloud( imageData, url )
-				imageUrl = storeFileInBlobstore( imageData, url )
+		# imageData = captureScreenshotSnapito( url )
+		imageData = captureScreenshotWordpress( url )
+		if imageData is not None:
+			# storeFileInCloud( imageData, url )
+			imageUrl = storeFileInBlobstore( imageData, url )
 
-				content[ self.getName() ] = imageUrl
+			content = imageUrl
 		
-		self.sendAndSaveReport( url, content, actions )
+		self.sendAndSaveReport( url, content )
+
+	def suggest_actions( self, actions, data, domain ):
+		pass
+
+	def generate_html_node( self, data ):
+		return data
 
 def captureScreenshotSnapito( url ):
 	serviceApi = '18e1518747b2702d9bd216465603dbb3d74b8fea'

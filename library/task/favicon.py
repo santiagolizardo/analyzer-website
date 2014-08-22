@@ -14,13 +14,15 @@ class FaviconCheckerTask( BaseTask ):
 		beauty.find( id = 'pageFavicon' ).string.replace_with( self.generate_html_node( favicon ) )
 
 	def start( self, domain ):
+		favicon = None
 		try:
 			url = self.create_url( domain ) 
 			result = urlfetch.fetch( url, deadline = 3 )
 			favicon = url if result.status_code == 200 else None
-			self.sendAndSaveReport( domain, favicon, [] )
 		except Exception, ex:
 			logging.error( ex )
+		
+		self.sendAndSaveReport( domain, favicon )
 
 	def create_url( self, domain ):
 		return 'http://' + domain + '/favicon.ico'

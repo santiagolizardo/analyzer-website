@@ -16,15 +16,17 @@ class SearchTask( BaseTask ):
 		beauty.find( id = 'indexedPages' ).string.replace_with( self.generate_html_node( indexed_pages ) )
 
 	def start( self, domain ):
+		indexed_pages = None
 		try:
 			url = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=site:%s&filter=0' % domain
 			result = urlfetch.fetch( url, deadline = 5 )
 			if result.status_code == 200:
 				data = json.loads( result.content )
 				indexed_pages = int( data['responseData']['cursor']['estimatedResultCount'] )
-				self.sendAndSaveReport( domain, indexed_pages, [] )
 		except Exception, ex:
 			logging.error( ex )
+				
+		self.sendAndSaveReport( domain, indexed_pages )
 
 	def suggest_actions( self, actions, indexed_pages, domain ):
 		if indexed_pages < 500:

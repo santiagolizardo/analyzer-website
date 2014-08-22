@@ -3,6 +3,9 @@ import sys
 sys.path.append( 'vendor' )
 sys.path.append( 'externals/tweepy' )
 sys.path.append( 'externals/awis' )
+sys.path.append( 'externals/oauthlib' )
+sys.path.append( 'externals/requests' )
+sys.path.append( 'externals/requests-oauthlib' )
 
 import config
 config.load_current_instance()

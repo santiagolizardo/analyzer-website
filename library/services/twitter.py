@@ -1,4 +1,6 @@
 
+import sys
+
 import tweepy, logging
 
 class TwitterService:
@@ -14,19 +16,19 @@ class TwitterService:
 		return auth
 
 	def update_status( self, text ):
-		try:
-			auth = self.authenticate()
-			api = tweepy.API( auth )
-			api.update_status( text )
-		except tweepy.TweepError, e:
-			logging.error( e.response.status )
-
+		auth = self.authenticate()
+		api = tweepy.API( auth )
+		api.update_status( text )
+		
 	def get_user( self, username ):
-		try:
-			auth = self.authenticate()
-			api = tweepy.API( auth, parser=tweepy.parsers.JSONParser() )
-			return api.get_user( username )
-		except tweepy.TweepError, e:
-			logging.error( e.response.status )
-			return None
+		auth = self.authenticate()
+		api = tweepy.API( auth, parser=tweepy.parsers.JSONParser() )
+		return api.get_user( username )
+		
+if __name__ == '__main__':
+	import sys
+	sys.path.append( '../../externals/tweepy' )
+	domain = sys.argv[1] if len( sys.argv ) > 1 else 'google'
+	import pprint
+	pprint.pprint(TwitterService().get_user(domain))
 

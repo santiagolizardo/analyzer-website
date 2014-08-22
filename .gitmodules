@@ -1,9 +1,6 @@
 [submodule "externals/awis"]
 	path = externals/awis
 	url = https://github.com/muhuk/python-awis.git
-[submodule "externals/twitter"]
-	path = externals/twitter
-	url = https://github.com/bear/python-twitter.git
 [submodule "externals/requests"]
 	path = externals/requests
 	url = https://github.com/kennethreitz/requests.git
@@ -13,9 +10,10 @@
 [submodule "externals/oauthlib"]
 	path = externals/oauthlib
 	url = https://github.com/idan/oauthlib.git
-[submodule "externals/tweepy"]
-	path = externals/tweepy
-	url = https://github.com/tweepy/tweepy.git
 [submodule "externals/flotr2"]
 	path = externals/flotr2
 	url = https://github.com/HumbleSoftware/Flotr2.git
+[submodule "externals/tweepy"]
+	path = externals/tweepy
+	url = https://github.com/tweepy/tweepy.git
+	branch = production

@@ -145,15 +145,15 @@ class StaticReportController( StandardPageController ):
 
 		return beauty.encode( formatter = None )
 
-	def set_twitter_card( self, domainUrl ):
-		return 
-		screenshotReport = TaskReport.all().filter( 'url =', domainUrl ).filter( 'name = ', 'screenshot' ).get()
-		screenshot = json.loads( screenshotReport.messageEncoded )
-	
+	def set_twitter_card( self, domainUrl ):	
 		self.pageMetas.append({ 'name': 'twitter:card', 'content': 'summary' })
 		self.pageMetas.append({ 'name': 'twitter:site', 'content': '@egosizereports' })
 		self.pageMetas.append({ 'name': 'twitter:title', 'content': '%s SEO and SEM performace metrics' % domainUrl })
 		self.pageMetas.append({ 'name': 'twitter:description', 'content': 'Detailed report for %s Website with all major metrics and improvement points' % domainUrl })
 		self.pageMetas.append({ 'name': 'twitter:creator', 'content': '@egosizereports' })
-		self.pageMetas.append({ 'name': 'twitter:image:src', 'content': screenshot['content']['screenshot'] })
+
+		screenshotReport = TaskReport.all().filter( 'url =', domainUrl ).filter( 'name = ', 'screenshot' ).get()
+		screenshot = json.loads( screenshotReport.messageEncoded )
+		if screenshot is not None:
+			self.pageMetas.append({ 'name': 'twitter:image:src', 'content': screenshot })
 

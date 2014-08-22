@@ -17,10 +17,10 @@ from library.task.base import BaseTask
 
 class HtmlAnalyzerTask( BaseTask ):
 
-	def getName( self ): return 'htmlBody'
+	def getName( self ):
+		return 'htmlBody'
 
 	def getDefaultData( self ):
-
 		return {
 			# Page Metadata
 			'pageTitle': 'N/A',
@@ -49,7 +49,6 @@ class HtmlAnalyzerTask( BaseTask ):
 		}
 
 	def updateView( self, beauty, data ):
-
 		# Page Metadata
 		beauty.find( id = 'pageTitle' ).string.replace_with( data['pageTitle'] )
 		beauty.find( id = 'pageDescription' ).string.replace_with( data['pageDescription'] if data['pageDescription'] else 'Unknown' )
@@ -82,7 +81,7 @@ class HtmlAnalyzerTask( BaseTask ):
 			beauty.find( id = 'encoding' ).string.replace_with( 'N/A' )
 
 		if 'emailAddresses' in data and data['emailAddresses'] is not None:
-			beauty.find( id = 'emailAddresses' ).string.replace_with( data['emailAddresses'] )
+			beauty.find( id = 'emailAddresses' ).string.replace_with( ', '.join( data['emailAddresses'] ) )
 
 		if 'internalLinks' in data and data['internalLinks'] is not None:
 			beauty.find( id = 'internalLinks' ).string.replace_with( data['internalLinks'] )
@@ -91,11 +90,9 @@ class HtmlAnalyzerTask( BaseTask ):
 			beauty.find( id = 'containsFlash' ).string.replace_with( data['containsFlash'] )
 
 	def start( self, baseUrl ):
-
 		url = 'http://' + baseUrl
 		
 		content = self.getDefaultData()
-		actions = []
 
 		try:
 			httpReq = urllib2.Request( url )
@@ -118,8 +115,6 @@ class HtmlAnalyzerTask( BaseTask ):
 				textHtmlRatio = 'N/A'
 
 			email_addresses_list = extractEmailAddresses( body )
-			if len( email_addresses_list ) > 0:
-				actions.append({ 'status': 'bad', 'description': 'Remove or encode the found email addresses to prevent be victim of spammers.' })
 
 			content.update({
 				'googleAnalytics': ( '/ga.js' in body ),
@@ -135,12 +130,12 @@ class HtmlAnalyzerTask( BaseTask ):
 				
 				'encoding': extractEncoding( httpResp ),
 
-				'emailAddresses': ', '.join( email_addresses_list ),
+				'emailAddresses': email_addresses_list,
 				
 				'internalLinks': extractInternalLinks( bSoup, baseUrl ),
 
-				'containsFlash': containsFlash( body, actions ),
-				'pageCompression': pageCompression( httpResp, actions ),
+				'containsFlash': containsFlash( body ),
+				'pageCompression': pageCompression( httpResp ),
 			})
 
 			# Page Metadata
@@ -149,29 +144,42 @@ class HtmlAnalyzerTask( BaseTask ):
 				content['pageDescription'] = metaDescription['content']
 
 			content['pageKeywords'] = self.extract_meta_keywords( bSoup )
+		except Exception, ex:
+			logging.error( ex )
 
-			if pageTitle is None:
-				actions.append({ 'status': 'bad', 'description': 'Your page title is missing. This is critical for SEO and should be fixed ASAP.' })
-			elif len( pageTitle ) > 70:
-				actions.append({ 'status': 'regular', 'description': 'Your page title is too long. Most of it will be left out from search results.' })
-				content['pageTitle'] = pageTitle
-			else:
-				actions.append({ 'status': 'good' })
-				content['pageTitle'] = pageTitle
+		self.sendAndSaveReport( baseUrl, content )
 
-			if not content['googleAnalytics']:
-				actions.append({ 'status': 'regular', 'description': 'Add the Google Analytics script to your page to get valuable insights about your visitors' })
+	def suggest_actions( self, actions, data, domain ):
+		if data['containsFlash']:
+			actions.append({ 'status': 'bad', 'description': 'Replace your Flash content with JavaScript for UI enhancements and interaction' })
 
-			if content['pageSize'] < 20000:
-				actions.append({ 'status': 'good' })
-			else:
-				actions.append({ 'status': 'bad', 'description': 'The page size is too big and should be reduced' })
+		if data['pageTitle'] is None:
+			actions.append({ 'status': 'bad', 'description': 'Your page title is missing. This is critical for SEO and should be fixed ASAP.' })
+		elif len( data['pageTitle'] ) > 70:
+			actions.append({ 'status': 'regular', 'description': 'Your page title is too long. Most of it will be left out from search results.' })
+		else:
+			actions.append({ 'status': 'good' })
 
-		except:
-			e = sys.exc_info()[1]
-			logging.error( str( e ) )
+		if not data['googleAnalytics']:
+			actions.append({ 'status': 'regular', 'description': 'Add the Google Analytics script to your page to get valuable insights about your visitors' })
 
-		self.sendAndSaveReport( baseUrl, content, actions )
+		if data['pageSize'] < 20000:
+			actions.append({ 'status': 'good' })
+		else:
+			actions.append({ 'status': 'bad', 'description': 'The page size is too big and should be reduced' })
+
+		if len( data['emailAddresses'] ) > 0:
+			actions.append({ 'status': 'bad', 'description': 'Remove or encode the found email addresses to prevent be victim of spammers.' })
+
+		if not data['pageCompression']:
+			actions.append({ 'status': 'regular', 'description': 'Your server does not have Gzip compression enabled. Activate it to deliver faster pages.' })
+
+	def generate_html_node( self, data ):
+		if data['containsFlash']:
+			data['containsFlash'] = 'The page contains Flash content'
+		else:
+			data['containsFlash'] = 'No Flash has been found in the page'
+		return data
 
 	def extract_meta_keywords( self, html_soup ):
 		meta_keywords = []
@@ -182,11 +190,8 @@ class HtmlAnalyzerTask( BaseTask ):
 
 		return meta_keywords
 
-def containsFlash( body, actions ):
-	if '.swf"' in body:
-		actions.append({ 'status': 'bad', 'description': 'Replace your Flash content with JavaScript for UI enhancements and interaction' })
-		return 'The page contains Flash content'
-	return 'No Flash has been found in the page'
+def containsFlash( body ):
+	return '.swf"' in body
 
 def extractDocType( bSoup ):
 	detected_doc_type = None
@@ -315,14 +320,10 @@ def extractHeadings( bSoup ):
 	
 	return html
 
-def pageCompression( httpResp, actions ):
+def pageCompression( httpResp ):
 	if 'Content-Encoding' in httpResp.headers:
-		if 'gzip' in httpResp.headers['Content-Encoding']:
-			return 'Gzip is enabled. Great!'
-		else:
-			actions.append({ 'status': 'regular', 'description': 'Your server does not have Gzip compression enabled. Activate it to deliver faster pages.' })
-
-	return 'N/A'
+		return 'gzip' in httpResp.headers['Content-Encoding']
+	return None 
 
 def extractSoftwareStack( httpResp ):
 	softwareStack = []
@@ -368,7 +369,7 @@ def extractLanguage( bSoup ):
 
 def extractEmailAddresses( body ):
 	email_re = re.compile( r'[\w\-][\w\-\.]+@[\w\-][\w\-\.]+[a-zA-Z]{1,4}' )
-	return set( email_re.findall( body ) )
+	return email_re.findall( body )
 
 def extractInternalLinks( bSoup, domain ):
 	links = bSoup.find_all( 'a', href = re.compile( domain ) )

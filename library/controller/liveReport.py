@@ -3,6 +3,8 @@ from library.controller.page import StandardPageController
 from library.utilities import uriFor
 from library.model.report import SiteReport
 
+import library.task.manager
+
 import uuid, logging
 
 from google.appengine.api.channel import create_channel
@@ -30,6 +32,7 @@ class LiveReportController( StandardPageController ):
 		from datetime import date
 
 		values = {
+			'numberOfTasks': len( library.task.manager.findAll() ),
 			'domain': domainUrl,
 			'domainLength': len( domainUrl.replace( '.com', '' ) ),
 			'clientId': clientId,

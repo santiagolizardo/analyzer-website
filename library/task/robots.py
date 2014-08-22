@@ -16,32 +16,43 @@ class RobotsTxtCheckerTask( BaseTask ):
 		return { self.getName(): 'N/A' }
 
 	def updateView( self, beauty, data ):
-		beauty.find( id = 'robotsTxt' ).string.replace_with( data['robotsTxt'] )
+		beauty.find( id = 'robotsTxt' ).string.replace_with( self.generate_html_node( data ) )
 
-	def start( self, baseUrl ):
-		domain = 'http://' + baseUrl
-
-		content = self.getDefaultData()
-		actions = []
-		
+	def start( self, domain ):
+		robots_txt = None
 		try:
-			url = domain + '/robots.txt'
-			htmlLink = '<a href="%(robotsUrl)s" class="external" rel="nofollow" target="_blank">%(robotsUrl)s</a>' % { 'robotsUrl': url }
+			url = 'http://' + domain + '/robots.txt'
 			result = urlfetch.fetch( url, deadline = 4 )
+			robots_txt = {
+				'status_code': result.status_code,
+				'content_type': result.headers['Content-type'],
+				'url': url,
+			}
+		except Exception, ex:
+			logging.error( ex )
+		
+		self.sendAndSaveReport( domain, robots_txt )
 
-			if result.status_code == 200:
-				contentType = result.headers['Content-type']
-				if 'text/plain' in contentType:
-					content[ self.getName() ] = htmlLink 
-					actions.append({ 'status': 'good' })
-				else:
-					content[ self.getName() ] = '%(htmlLink)s has been found but with a wrong content type (%(contentType)s)' % { 'htmlLink': htmlLink, 'contentType': contentType } 
-					actions.append({ 'status': 'regular', 'description': 'Fix the content type for the %s URL' % url })
-			elif result.status_code == 404:
-				content[ self.getName() ] = 'Missing' 
-				actions.append({ 'status': 'bad', 'description': 'The %s file is missing' % htmlLink })
-		except:
-			logging.warning( sys.exc_info()[1] )
+	def suggest_actions( self, actions, robots_txt, domain ):
+		if 200 == robots_txt['status_code']:
+			html_link = self.generate_html_link( robots_txt['url'] )
+			actions.append({ 'status': 'regular', 'description': 'The %s file is missing'  % html_link })
+		else:
+			if 'text/plain' in robots_txt['content_type']:
+				actions.append({ 'status': 'good' })
+			else:
+				actions.append({ 'status': 'regular', 'description': 'Fix the content type for the %s URL' % url })
 
-		self.sendAndSaveReport( baseUrl, content, actions )
+	def generate_html_node( self, robots_txt ):
+		if 404 == robots_txt['status_code']:
+			return 'Missing'
+
+		html_link = self.generate_html_link( robots_txt['url'] )
+		if 'text/plain' in robots_txt['content_type']:
+			return html_link
+
+		return '%(html_link)s has been found but with a wrong content type (%(contentType)s)' % { 'html_link': html_link, 'contentType': robots_txt['content_type'] } 
+
+	def generate_html_link( self, url ):
+		return '<a href="%(url)s" class="external" rel="nofollow" target="_blank">%(url)s</a>' % { 'url': url }
 

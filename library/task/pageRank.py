@@ -13,11 +13,13 @@ class PageRankTask( BaseTask ):
 		beauty.find( id = 'googlePageRank' ).string.replace_with( self.generate_html_node( page_rank ) )
 
 	def start( self, domain ):
+		page_rank = None
 		try:
 			page_rank  = getPageRank( domain )
-			self.sendAndSaveReport( domain, page_rank, [] )
 		except Exception, ex:
 			logging.error( ex )
+
+		self.sendAndSaveReport( domain, page_rank )
 
 	def suggest_actions( self, actions, page_rank, domain ):
 		if page_rank < 3:

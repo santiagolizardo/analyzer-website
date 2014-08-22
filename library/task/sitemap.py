@@ -14,6 +14,7 @@ class SitemapXmlCheckerTask( BaseTask ):
 		beauty.find( id = 'sitemapXml' ).string.replace_with( self.generate_html_node( sitemap_xml ) )
 
 	def start( self, domain ):
+		sitemap_xml = None
 		try:
 			url = 'http://' + domain + '/sitemap.xml'
 			result = urlfetch.fetch( url, deadline = 4 )
@@ -22,10 +23,10 @@ class SitemapXmlCheckerTask( BaseTask ):
 				'content_type': result.headers['Content-type'],
 				'url': url,
 			}
-			self.sendAndSaveReport( domain, sitemap_xml, [] )
 		except Exception, ex:
 			logging.error( ex )
-
+			
+		self.sendAndSaveReport( domain, sitemap_xml )
 
 	def suggest_actions( self, actions, sitemap_xml, domain ):
 		if 200 == sitemap_xml['status_code']:
@@ -36,7 +37,6 @@ class SitemapXmlCheckerTask( BaseTask ):
 				actions.append({ 'status': 'good' })
 			else:
 				actions.append({ 'status': 'regular', 'description': 'Fix the content type for the %s URL' % url })
-
 
 	def generate_html_node( self, sitemap_xml ):
 		if 404 == sitemap_xml['status_code']:

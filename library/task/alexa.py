@@ -12,20 +12,10 @@ class AlexaAnalyzerTask( BaseTask ):
 	def getName( self ):
 		return 'traffic'
 
-	def getDefaultData( self ):
-
-		return {
-			'worldRank': 'N/A',
-			'loadTimeMs': 0,
-			'loadTime': 'N/A',
-			'visitorsLocation': 'N/A',
-		}
-
 	def updateView( self, beauty, data ):
-
 		beauty.find( id = 'worldRank' ).string.replace_with( data['worldRank'] )
-		beauty.find( id = 'loadTime' ).string.replace_with( data['loadTime'] )
-		beauty.find( id = 'loadTime' ).string.replace_with( data['loadTime'] )
+		if 'loadTime' in data:
+			beauty.find( id = 'loadTime' ).string.replace_with( data['loadTime'] )
 		beauty.find( id = 'visitorsLocation' ).string.replace_with( data['visitorsLocation'] )
 
 		if 'relatedLinks' in data and data['relatedLinks'] is not None:
@@ -34,11 +24,9 @@ class AlexaAnalyzerTask( BaseTask ):
 			beauty.find( id = 'relatedLinks' ).string.replace_with( 'N/A' )
 
 	def start( self, baseUrl ):
-
 		queryUrl = 'http://' + baseUrl
 
-		content = self.getDefaultData()
-		actions = []
+		content = {}
 
 		api = AwisApi( 'AKIAJDGJO3ACZ7KIGHCA', 'dIc3teMI2OoSw0W7z9EXgP9cQnvUlja8uSQN2MBT' )
 		respXml = api.url_info( queryUrl, 'RelatedLinks', 'Categories', 'Rank', 'RankByCountry', 'UsageStats', 'ContactInfo', 'Speed', 'Language', 'Keywords', 'OwnedDomains', 'LinksInCount', 'SiteData' )
@@ -46,7 +34,6 @@ class AlexaAnalyzerTask( BaseTask ):
 		
 		respStatus = respXml.find( '//{%s}StatusCode' % api.NS_PREFIXES['alexa'] ).text
 		if 'Success' == respStatus:
-
 			dom_doc = parseString( xml )
 			rank_list_items = []
 			for country in dom_doc.getElementsByTagName( 'aws:Country' ):
@@ -75,13 +62,24 @@ class AlexaAnalyzerTask( BaseTask ):
 			temp = respXml.find( '//{%s}MedianLoadTime' % api.NS_PREFIXES['awis'] ).text
 			if temp is not None:
 				content['loadTimeMs'] = long( temp )
-				content['loadTime'] = temp + ' milliseconds'
 				if int( respXml.find( '//{%s}Percentile' % api.NS_PREFIXES['awis'] ).text ) < 50:
-					content['loadTime'] += ' (SLOW)'
-					actions.append({ 'status': 'regular', 'description': 'You have to speed up your site (e.g. serving smaller images, reducing the number of HTTP requests, compressing CSS and JavaScript files, etc...)' })
-				else:
-					actions.append({ 'status': 'good' })
-					content['loadTime'] += ' (FAST)'
+					pass
 
-		self.sendAndSaveReport( baseUrl, content, actions )
+		self.sendAndSaveReport( baseUrl, content )
+
+	def suggest_actions( self, actions, data, domain ):
+		if False:
+			actions.append({ 'status': 'regular', 'description': 'You have to speed up your site (e.g. serving smaller images, reducing the number of HTTP requests, compressing CSS and JavaScript files, etc...)' })
+		else:
+			actions.append({ 'status': 'good' })
+
+	def generate_html_node( self, data ):
+		content = {}
+		content['loadTime'] = str( data['loadTimeMs'] ) + ' milliseconds'
+
+		if False:
+			content['loadTime'] += ' (SLOW)'
+		else:
+			content['loadTime'] += ' (FAST)'
+		return content
 

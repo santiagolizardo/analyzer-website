@@ -34,15 +34,18 @@ class BaseTask( object ):
 	def updateView( self, beauty, data ):
 		pass
 
-	def sendAndSaveReport( self, url, content, actions = [] ):
+	def sendAndSaveReport( self, url, content ):
 		if self.channelId is None:
 			logging.error( 'channelId is None for task: ' + self.getName() )
 			return
 
+		actions = []
+		self.suggest_actions( actions, content, url )
+
 		message = {
 			'name': self.getName(),
 			'content': self.generate_html_node( content ),
-			'actions': actions
+			'actions': actions,
 		}
 		messageEncoded = json.dumps( message )
 

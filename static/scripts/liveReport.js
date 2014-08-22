@@ -85,15 +85,15 @@ var messageHandlers = {
 	},
 	twitterAccount: function( content )
 	{
-		document.getElementById( 'twitterAccount' ).innerHTML = content.twitterAccount;
+		document.getElementById( 'twitterAccount' ).innerHTML = content;
 	},
 	robotsTxt: function( content )
 	{
-		document.getElementById( 'robotsTxt' ).innerHTML = content.robotsTxt;
+		document.getElementById( 'robotsTxt' ).innerHTML = content;
 	},
 	humansTxt: function( content )
 	{
-		document.getElementById( 'humansTxt' ).innerHTML = content.humansTxt;
+		document.getElementById( 'humansTxt' ).innerHTML = content;
 	},
 	sitemapXml: function( content )
 	{
@@ -109,13 +109,13 @@ var messageHandlers = {
 	},
 	custom404: function( content )
 	{
-		document.getElementById( 'custom404' ).innerHTML = content.custom404;
+		document.getElementById( 'custom404' ).innerHTML = content;
 	},
 	screenshot: function( content )
 	{
 		if( null !== content )
 		{
-			document.getElementById( 'screenshot' ).src = content.screenshot;
+			document.getElementById( 'screenshot' ).src = content;
 		}
 	},
 	w3cValidation: function( content )
@@ -141,17 +141,11 @@ var messageHandlers = {
 };
 
 var reportCompletionPercentage = 0;
-var numSubreports = 0;
-for( var key in messageHandlers )
-{
-	numSubreports += ( messageHandlers.hasOwnProperty( key ) ? 1 : 0 );
-}
-numSubreports--; // score does not count.
 var score = null;
 
 function increaseProgressBar()
 {
-	reportCompletionPercentage += Math.ceil( 100 / numSubreports );
+	reportCompletionPercentage += Math.ceil( 100 / numberOfTasks );
 
 	var progressBar = document.getElementById( 'mainProgressBar' );
 	if( progressBar )
