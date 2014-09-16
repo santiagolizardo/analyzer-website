@@ -74,17 +74,10 @@ class DomainAnalyzerTask( BaseTask ):
 		content['regDate'] = calendar.timegm( regDate.timetuple() )
 		content['expDate'] = calendar.timegm( expDate.timetuple() )
 
-		import pprint
-		pprint.pprint("start")
-		pprint.pprint(content)
-
 		self.sendAndSaveReport( baseUrl, content )
 
 	def suggest_actions( self, actions, data2, domain ):
 		data = self.format_data( data2 )
-		print "suggest actions"
-		import pprint
-		pprint.pprint(data)
 		todayDate = datetime.today()
 		oneYear = timedelta( days = 365 )
 
@@ -99,13 +92,7 @@ class DomainAnalyzerTask( BaseTask ):
 
 
 	def generate_html_node( self, data2 ):
-		import pprint
-		print "generate html"
-		pprint.pprint(data2)
-
 		data = self.format_data( data2 )
-		print "generate html2"
-		pprint.pprint(data)
 		content = {}
 		if data['regDate'] is not None:
 			content['registrationDate'] = data['regDate'].strftime( '%Y-%m-%d' )

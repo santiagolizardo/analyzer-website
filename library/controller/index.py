@@ -12,7 +12,7 @@ class IndexController( StandardPageController ):
 
 	def get( self ):
 		html = memcache.get( 'page-index' )
-		if html is None or self.is_dev_env:
+		if html is None:
 			html = self.generate_html()
 			memcache.set( 'page-index', html, time = 3600 )
 
@@ -40,4 +40,3 @@ class IndexController( StandardPageController ):
 
 		return self.renderTemplate( 'index.html', values )
 
-	

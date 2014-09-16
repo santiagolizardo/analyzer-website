@@ -1,10 +1,11 @@
 
-from google.appengine.api import urlfetch
-import json, logging
+import logging
 
 from library.task.base import BaseTask
 		
 from library.services.twitter import TwitterService
+from library.services.domain import tokenize_url
+from library.services.stats import increase_domain_tld_count
 
 class TwitterAccountCheckerTask( BaseTask ):
 
@@ -17,11 +18,15 @@ class TwitterAccountCheckerTask( BaseTask ):
 	def start( self, baseUrl ):
 		content = {}
 		content['baseUrl'] = baseUrl
+		content['twitterUser'] = None
 		try:
-			url = 'http://tldextract.appspot.com/api/extract?url=' + 'http://' + baseUrl
-			result = urlfetch.fetch( url, deadline = 3 )
-			apiData = json.loads( result.content )
+			apiData = tokenize_url( baseUrl )
 			baseDomain = apiData['domain']
+			try:
+				increase_domain_tld_count( apiData['tld'] )
+			except:
+				logging.error( 'Error saving tld stats' )
+
 			content['baseDomain'] = baseDomain
 
 			try:
@@ -34,16 +39,13 @@ class TwitterAccountCheckerTask( BaseTask ):
 						twitterUrl = twitterUser['entities']['url']['urls'][0]['expanded_url']
 						content['twitterUrl'] = twitterUrl
 					except Exception, ex:
-						logging.error( ex )
+						logging.warning( 'twitter user @%s doesnt have a profile url' % baseDomain )
 						content['twitterUrl'] = None
 			except Exception, ex:
 				logging.error( ex )
 				content['twitterUser'] = None
 		except Exception, ex:
 			logging.error( ex )
-
-		import pprint
-		pprint.pprint(content)
 
 		self.sendAndSaveReport( baseUrl, content )
 

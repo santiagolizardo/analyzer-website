@@ -41,10 +41,6 @@ class CalculateScoreController( webapp2.RequestHandler ):
 			if html_node is not None:
 				data[ task.getName() ] = html_node 
 
-		import pprint
-		pprint.pprint( actions )
-		pprint.pprint( data )
-
 		score = 100
 		totalVariables = len( actions ) # eg 12
 		scorePerVariable = 100 / totalVariables # eg: 8.33

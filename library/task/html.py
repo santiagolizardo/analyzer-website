@@ -15,6 +15,8 @@ from bs4 import BeautifulSoup, element
 
 from library.task.base import BaseTask
 
+from library.services.stats import increase_html_document_type_count
+
 class HtmlAnalyzerTask( BaseTask ):
 
 	def getName( self ):
@@ -116,9 +118,13 @@ class HtmlAnalyzerTask( BaseTask ):
 
 			email_addresses_list = extractEmailAddresses( body )
 
+			doc_type = extractDocType( bSoup )
+			if doc_type:
+				increase_html_document_type_count( doc_type )
+
 			content.update({
 				'googleAnalytics': ( '/ga.js' in body ),
-				'docType': extractDocType( bSoup ),
+				'docType': doc_type,
 				'headings': extractHeadings( bSoup ),
 				'images': extractImages( bSoup ),
 				'softwareStack': extractSoftwareStack( httpResp ),
@@ -168,7 +174,7 @@ class HtmlAnalyzerTask( BaseTask ):
 		else:
 			actions.append({ 'status': 'bad', 'description': 'The page size is too big and should be reduced' })
 
-		if len( data['emailAddresses'] ) > 0:
+		if 'emailAddresses' in data and data['emailAddresses'] and len( data['emailAddresses'] ) > 0:
 			actions.append({ 'status': 'bad', 'description': 'Remove or encode the found email addresses to prevent be victim of spammers.' })
 
 		if not data['pageCompression']:
@@ -201,7 +207,7 @@ def extractDocType( bSoup ):
 			break
 
 	if detected_doc_type is None:
-		return 'N/A'
+		return None 
 
 	doc_types = (
 		{
@@ -257,7 +263,7 @@ def extractDocType( bSoup ):
 			return doc_type['name']
 
 	# Else unknown
-	return 'Unknown (%s)' % detected_doc_type	
+	return None 
 
 def extractImages( bSoup ):
 	images = bSoup.find_all( 'img' )

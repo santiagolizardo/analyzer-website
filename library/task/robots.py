@@ -41,7 +41,7 @@ class RobotsTxtCheckerTask( BaseTask ):
 			if 'text/plain' in robots_txt['content_type']:
 				actions.append({ 'status': 'good' })
 			else:
-				actions.append({ 'status': 'regular', 'description': 'Fix the content type for the %s URL' % url })
+				actions.append({ 'status': 'regular', 'description': 'Fix the content type for the %s URL' % robots_txt['url'] })
 
 	def generate_html_node( self, robots_txt ):
 		if 404 == robots_txt['status_code']:

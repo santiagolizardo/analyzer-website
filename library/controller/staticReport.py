@@ -26,12 +26,9 @@ from library.sections import reportSections
 class StaticReportController( StandardPageController ):
 
 	def get( self, domainUrl ):
-
-		self.is_dev_env = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' )
-
 		cache_key = 'page_' + domainUrl
 		pageHtml = memcache.get( cache_key )
-		if self.is_dev_env or pageHtml is None:
+		if pageHtml is None:
 			pageHtml = self.generate_static_report( domainUrl )
 			memcache.set( key = cache_key, value = pageHtml, time = 86400 )
 

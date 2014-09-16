@@ -36,7 +36,7 @@ class SitemapXmlCheckerTask( BaseTask ):
 			if 'text/xml' in sitemap_xml['content_type']:
 				actions.append({ 'status': 'good' })
 			else:
-				actions.append({ 'status': 'regular', 'description': 'Fix the content type for the %s URL' % url })
+				actions.append({ 'status': 'regular', 'description': 'Fix the content type for the %s URL' % sitemap_xml['url'] })
 
 	def generate_html_node( self, sitemap_xml ):
 		if 404 == sitemap_xml['status_code']:

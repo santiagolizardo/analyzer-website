@@ -38,5 +38,5 @@ class Custom404Task( BaseTask ):
 		if custom404['status_code'] == 404:
 			return 'The web server has sent a not found page correctly.'
 		
-		return  'The web server has sent a not found page with the wrong status code: ' + custom404['status_code'] 
+		return  'The web server has sent a not found page with the wrong status code: ' + str( custom404['status_code'] )
 

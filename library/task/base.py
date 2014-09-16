@@ -15,8 +15,6 @@ class BaseTask( object ):
 	def __init__( self, channelId  = None ):
 		self.channelId = channelId
 
-		self.is_dev_env = os.environ['SERVER_SOFTWARE'].startswith( 'Dev' )
-
 	def fix_sys_path( self ):
 		sys.path.append( 'vendor' )
 		sys.path.append( 'externals/tweepy' )

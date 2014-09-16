@@ -17,15 +17,14 @@ class PageController( BasicController ):
 		self.javaScripts = []
 		self.pageMetas = []
 
-		self.is_dev_env = config.debug_active 
-		if self.is_dev_env:
+		if config.debug_active:
 			self.addJavaScript( '/scripts/jquery.min.js' )
 			self.addJavaScript( '/bootstrap/js/bootstrap.min.js' )
 			self.addStyleSheet( '/bootstrap/css/bootstrap.min.css' )
 		else:
 			self.addJavaScript( '//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js' )
-			self.addJavaScript( '//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js' )
-			self.addStyleSheet( '//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css' )
+			self.addJavaScript( '//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js' )
+			self.addStyleSheet( '//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css' )
 
 		self.addStyleSheet( '/styles/allmedia.css' )
 
