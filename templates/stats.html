@@ -1,7 +1,85 @@
 <%include file="header.html" />
 
+<script>
+var colors = [
+{
+	 color:"#F7464A",
+	highlight: "#FF5A5E",
+},
+{
+	        color: "#46BFBD",
+		        highlight: "#5AD3D1",
+		},
+		{
+		        color: "#FDB45C",
+			highlight: "#FFC870",
+		}
+];
+var htmlDocumentTypes = [
+% for i, docType in enumerate( htmlDocumentTypes ):
+{
+	value: ${docType.count},
+	label: '${docType.code}',
+	color: colors[${i}]['color'],
+	highlight: colors[${i}]['higlight']
+},
+% endfor
+];
+var domainTlds = [
+% for i, domainTld in enumerate( domainTlds ):
+{
+	value: ${domainTld.count},
+	label: '${domainTld.code}',
+	color: colors[${i}]['color'],
+	highlight: colors[${i}]['higlight']
+
+},
+% endfor
+];
+
+</script>
+
 <h2>${_('Domain <small>statistics</small>')}</h2>
 
-<div id="domainExtensionChart" style="width: 400px; height: 300px;"></div>
+<div class="col-md-6">
+	<canvas id="domainTlds" style="width: 400px; height: 300px;"></canvas>
+	<table class="table table-bordered">
+	<caption>Top Level Domains</caption>
+	<thead>
+		<tr>
+			<th>TLD</th>
+			<th>Count</th>
+		</tr>
+	</thead>
+	<tbody>
+	% for domainTld in domainTlds:
+	<tr>
+		<td>${domainTld.code}</td>
+		<td>${domainTld.count}</td>
+	</tr>
+	% endfor
+	</tbody>
+	</table>
+</div>
+<div class="col-md-6">
+	<canvas id="htmlDocumentTypesChart" style="width: 400px; height: 300px;"></canvas>
+	<table class="table table-bordered">
+	<caption>HTML Document Types</caption>
+	<thead>
+		<tr>
+			<th>Doctype</th>
+			<th>Count</th>
+		</tr>
+	</thead>
+	<tbody>
+	% for docType in htmlDocumentTypes:
+	<tr>
+		<td>${docType.code}</td>
+		<td>${docType.count}</td>
+	</tr>
+	% endfor
+	</tbody>
+	</table>
+</div>
 
 <%include file="footer.html" />

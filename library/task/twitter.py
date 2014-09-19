@@ -24,8 +24,9 @@ class TwitterAccountCheckerTask( BaseTask ):
 			baseDomain = apiData['domain']
 			try:
 				increase_domain_tld_count( apiData['tld'] )
-			except:
+			except Exception, ex:
 				logging.error( 'Error saving tld stats' )
+				logging.error( ex )
 
 			content['baseDomain'] = baseDomain
 

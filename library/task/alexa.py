@@ -68,18 +68,20 @@ class AlexaAnalyzerTask( BaseTask ):
 		self.sendAndSaveReport( baseUrl, content )
 
 	def suggest_actions( self, actions, data, domain ):
-		if False:
+		if data['loadTimeMs'] > 2000:
 			actions.append({ 'status': 'regular', 'description': 'You have to speed up your site (e.g. serving smaller images, reducing the number of HTTP requests, compressing CSS and JavaScript files, etc...)' })
 		else:
 			actions.append({ 'status': 'good' })
 
 	def generate_html_node( self, data ):
-		content = {}
-		content['loadTime'] = str( data['loadTimeMs'] ) + ' milliseconds'
+		content = data
+		if 'loadTimeMs' in data:
+			html = str( data['loadTimeMs'] ) + ' milliseconds'
+			if data['loadTimeMs'] < 1000:
+				html += ' (FAST)'
+			else:
+				html += ' (SLOW)'
+			content['loadTime'] = html
 
-		if False:
-			content['loadTime'] += ' (SLOW)'
-		else:
-			content['loadTime'] += ' (FAST)'
 		return content
 

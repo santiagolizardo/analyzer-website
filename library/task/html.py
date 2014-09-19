@@ -36,7 +36,7 @@ class HtmlAnalyzerTask( BaseTask ):
 			'softwareStack': 'N/A',
 			'pageSize': 'N/A',
 
-			'textHtmlRatio': 'N/A',
+			'textHtmlRatio': None,
 
 			'declaredLanguage': None,
 			
@@ -67,10 +67,10 @@ class HtmlAnalyzerTask( BaseTask ):
 		beauty.find( id = 'pageSize' ).string.replace_with( str( data['pageSize'] ) )
 		
 		try:
-			beauty.find( id = 'textHtmlRatio' ).string.replace_with( '%.2f%%' % float( data['textHtmlRatio'] * 100 ) )
+			if 'textHtmlRatio' in data and data['textHtmlRatio']:
+				beauty.find( id = 'textHtmlRatio' ).string.replace_with( '%.2f%%' % float( data['textHtmlRatio'] * 100 ) )
 		except:
 			logging.error(sys.exc_info()[0])
-			beauty.find( id = 'textHtmlRatio' ).string.replace_with( 'N/A' )
 	
 		if 'declaredLanguage' in data and data['declaredLanguage'] is not None:
 			beauty.find( id = 'declaredLanguage' ).string.replace_with( data['declaredLanguage'] )
@@ -114,7 +114,7 @@ class HtmlAnalyzerTask( BaseTask ):
 				textHtmlRatio = len( bSoup.get_text() ) / float( page_size )
 			except:
 				logging.error(sys.exc_info()[0])
-				textHtmlRatio = 'N/A'
+				textHtmlRatio = None 
 
 			email_addresses_list = extractEmailAddresses( body )
 
