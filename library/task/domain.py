@@ -35,27 +35,29 @@ class DomainAnalyzerTask( BaseTask ):
 	def start( self, baseUrl ):
 		self.fix_sys_path()
 
-		owner = 'N/A'
+		owner = None
 		regDate = expDate = None
+		nameservers = []
 
-		if True:
-			owner = 'Test Owner'
-			regDate = expDate = datetime.now()
-		else:
-			rw = RoboWhois()
-			rwdata = rw.whois( baseUrl )
+		rw = RoboWhois()
+		rwdata = rw.whois( baseUrl )
 
-			if rwdata is not None:
-				try:
-					owner = rwdata['registrant_contacts'][0]['name']
-				except:
-					logging.warning( '%s has no registrant contacts' % baseUrl )
-					owner = 'N/A'
-				regDate = datetime.strptime( rwdata['created_on'][0:18], '%Y-%m-%dT%H:%M:%S' )
-				expDate = datetime.strptime( rwdata['expires_on'][0:18], '%Y-%m-%dT%H:%M:%S' )
+		if rwdata is not None:
+			try:
+				owner = rwdata['contacts'][0]['name']
+			except:
+				logging.warning( '%s has no registrant contacts' % baseUrl )
+			try:
+				nameservers = rwdata['nameservers']
+			except Exception, ex:
+				logging.warning( ex )
+			regDate = datetime.strptime( rwdata['date_created'], '%Y-%m-%d %H:%M:%S' )
+			expDate = datetime.strptime( rwdata['date_expires'], '%Y-%m-%d %H:%M:%S' )
 
-		content = {} 
-		content['owner'] = owner 
+		content = {
+			'owner': owner,
+			'nameservers': nameservers,
+		} 
 
 		try:
 			serverIp = make_api_call( 'ip', { 'domain': baseUrl } )
@@ -103,8 +105,10 @@ class DomainAnalyzerTask( BaseTask ):
 		return content
 
 	def format_data( self, data ):
+		if data is None:
+			return data
 		import copy
-		data2 = copy.copy(data)
+		data2 = copy.copy( data )
 		if 'regDate' in data and data['regDate'] is not None and type( data['regDate'] ) == int:
 			data2['regDate'] = datetime.utcfromtimestamp( data['regDate'] ) 
 		if 'expDate' in data and data['expDate'] is not None and type( data['expDate'] ) == int:

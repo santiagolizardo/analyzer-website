@@ -1,7 +1,7 @@
 
 from library.task.base import BaseTask
 from library.services.pagerank import getPageRank
-
+from library.services.stats import increase_page_rank_count
 import logging
 
 class PageRankTask( BaseTask ):
@@ -15,7 +15,10 @@ class PageRankTask( BaseTask ):
 	def start( self, domain ):
 		page_rank = None
 		try:
-			page_rank  = getPageRank( domain )
+			page_rank = getPageRank( domain )
+
+			if page_rank is not None:
+				increase_page_rank_count( page_rank )
 		except Exception, ex:
 			logging.error( ex )
 

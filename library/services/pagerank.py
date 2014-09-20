@@ -14,7 +14,6 @@ def calculateHash( domain ):
 	return '8%x' % result
  
 def getPageRank( domain ):
-	return 2
 	hash = calculateHash( domain )
 	conn = httplib.HTTPConnection( PAGERANK_HOST )
 	path = PAGERANK_PATH % ( hash, domain )

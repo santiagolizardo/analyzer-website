@@ -26,8 +26,9 @@ class Index( StandardPageController ):
             site = db.to_dict( entity, { 'position': i, 'lastReportUrl': uriFor( 'staticReport', domainUrl = entity.url ) } ) 
             sites.append( site )
 
-	domainTlds = DomainTld.all().filter( 'report_date =', None )
-	htmlDocumentTypes = HtmlDocumentType.all().filter( 'report_date =', None )
+	domainTlds = StatCounter.all().filter( 'category = ', 'domain_tld' ).filter('report_date =', None ).order( '-count' )
+	htmlDocumentTypes = StatCounter.all().filter( 'category = ', 'html_document_type').filter('report_date =', None ).order( '-count' )
+	pageRanks = StatCounter.all().filter( 'category =', 'page_rank' ).order( 'code' )
 
         values = {
 		'pageTitle': 'Domain, social and other popular site statistics ',
@@ -35,6 +36,7 @@ class Index( StandardPageController ):
 		'sites': sites,
 		'domainTlds': domainTlds,
 		'htmlDocumentTypes': htmlDocumentTypes,
+		'pageRanks': pageRanks,
         }
         
         html = self.renderTemplate( 'stats.html', values)

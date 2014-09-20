@@ -5,23 +5,29 @@ import urllib2, json
 class RoboWhois:
 
 	def __init__( self ):
-		self.username = '7735f18d13df1a015cf347113518362f'
-		self.password = "X"
+		self.apikey = 'bc6ee2c8c82f225d95aa7ccebd60ce44'
 
 	def whois( self, domain ):
 		try:
-			template  = "http://api.robowhois.com/whois/%s/properties"
+			url = "http://api.whoapi.com/?domain=%s&apikey=%s&r=whois" % ( domain, self.apikey )
 
-			passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
-			passman.add_password( None, "http://api.robowhois.com/", self.username, self.password )
-			handler = urllib2.HTTPBasicAuthHandler( passman )
-			opener = urllib2.build_opener( handler )
-			request = urllib2.Request( template % domain )
+			opener = urllib2.build_opener()
+			request = urllib2.Request( url )
 			response = opener.open( request )
 
 			body = response.read()
-			return json.loads( body )['response']['properties']
-		except:
-			logging.error( sys.exc_info()[0] )
+			jsonresponse = json.loads( body )
+			if jsonresponse['status'] != '0':
+				logging.warning( jsonresponse['status_desc'] if 'status_desc' in jsonresponse else jsonresponse['status'] )
+				return None
+			return jsonresponse
+		except Exception, ex:
+			logging.error( ex )
 			return None
+
+if __name__ == '__main__':
+	import pprint
+
+	whois = RoboWhois()
+	pprint.pprint( whois.whois( 'www.santiagolizardo.com' ) )
 
