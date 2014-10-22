@@ -32,36 +32,34 @@ class BaseTask( object ):
 	def updateView( self, beauty, data ):
 		pass
 
-	def sendAndSaveReport( self, url, content ):
+	def sendAndSaveReport( self, url, data ):
 		if self.channelId is None:
 			logging.error( 'channelId is None for task: ' + self.getName() )
 			return
 
+		content = None
 		actions = []
-		self.suggest_actions( actions, content, url )
+
+		if data is not None:
+			self.suggest_actions( actions, data, url )
+			content = self.generate_html_node( data )
+
+			taskReport = TaskReport( name = self.getName(), url = url, messageEncoded = json.dumps( data ) )
+			taskReport.put()
 
 		message = {
 			'name': self.getName(),
-			'content': self.generate_html_node( content ),
+			'content': content,
 			'actions': actions,
 		}
-		messageEncoded = json.dumps( message )
 
-		# Send
-		send_message( self.channelId, messageEncoded )
-
-		# Save
-		niceUrl = url.replace( 'http://', '' )
-
-		taskReport = TaskReport( name = self.getName(), url = niceUrl, messageEncoded = json.dumps( content ) )
-		taskReport.put()
+		send_message( self.channelId, json.dumps( message ) )
 
 	def suggest_actions( self, actions, data, domain = None ):
 		pass
 
 	def generate_html_node( self, data ):
 		return {}
-		return None
 
 	def getSavedReport( self, domainUrl ):
 		data = self.getDefaultData()

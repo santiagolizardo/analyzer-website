@@ -43,14 +43,11 @@ class ScreenshotGrabberTask( BaseTask ):
 	def updateView( self, beauty, data ):
 		beauty.find( id = 'screenshot' )['src'] = data
 
-	def start( self, baseUrl ):
-		url = 'http://' + baseUrl
+	def start( self, url ):
 		content = None
 		
-		# imageData = captureScreenshotSnapito( url )
-		imageData = captureScreenshotWordpress( url )
+		imageData = captureScreenshotWordpress( 'http://' + url )
 		if imageData is not None:
-			# storeFileInCloud( imageData, url )
 			imageUrl = storeFileInBlobstore( imageData, url )
 
 			content = imageUrl

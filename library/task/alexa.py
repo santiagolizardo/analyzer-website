@@ -56,8 +56,6 @@ class AlexaAnalyzerTask( BaseTask ):
 			content['relatedLinks'] = '<ul>' + ''.join( related_list_items[:5] ) + '</ul>'
 
 			content['worldRank'] = respXml.find( '//{%s}Rank' % api.NS_PREFIXES['awis'] ).text
-			if content['worldRank'] is None:
-				content['worldRank'] = 'Unknown'
 
 			temp = respXml.find( '//{%s}MedianLoadTime' % api.NS_PREFIXES['awis'] ).text
 			if temp is not None:
@@ -82,6 +80,8 @@ class AlexaAnalyzerTask( BaseTask ):
 			else:
 				html += ' (SLOW)'
 			content['loadTime'] = html
+		if content['worldRank'] is None:
+			content['worldRank'] = 'Unknown'
 
 		return content
 

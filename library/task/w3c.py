@@ -13,19 +13,19 @@ class W3cValidatorTask( BaseTask ):
 	def updateView( self, beauty, data ):
 		beauty.find( id = 'w3cValidity' ).string.replace_with( self.generate_html_node( data ) )
 
-	def start( self, baseUrl ):
+	def start( self, url ):
 		data = None
-		fullUrl = 'http://' + baseUrl
+		fullUrl = 'http://' + url
 		
 		try:
-			url = 'http://validator.w3.org/check?uri=%s&charset=%%28detect+automatically%%29&doctype=Inline&group=1&output=json' % fullUrl
-			result = urlfetch.fetch( url, deadline = 10 )
+			ws_url = 'http://validator.w3.org/check?uri=%s&charset=%%28detect+automatically%%29&doctype=Inline&group=1&output=json' % fullUrl
+			result = urlfetch.fetch( ws_url, deadline = 10 )
 			if result.status_code == 200:
 				data = json.loads( result.content )
 		except:
 			logging.warning( sys.exc_info()[1] )
 				
-		self.sendAndSaveReport( fullUrl, data )
+		self.sendAndSaveReport( url, data )
 
 	def suggest_actions( self, actions, data, domain ):
 		if len( data['messages'] ) == 0:

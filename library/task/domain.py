@@ -35,29 +35,25 @@ class DomainAnalyzerTask( BaseTask ):
 	def start( self, baseUrl ):
 		self.fix_sys_path()
 
-		owner = None
-		regDate = expDate = None
-		nameservers = []
-
 		rw = RoboWhois()
 		rwdata = rw.whois( baseUrl )
 
+		content = None
+
 		if rwdata is not None:
+			content = {}
 			try:
-				owner = rwdata['contacts'][0]['name']
+				content['owner'] = rwdata['contacts'][0]['name']
 			except:
 				logging.warning( '%s has no registrant contacts' % baseUrl )
 			try:
-				nameservers = rwdata['nameservers']
+				content['nameservers'] = rwdata['nameservers']
 			except Exception, ex:
 				logging.warning( ex )
 			regDate = datetime.strptime( rwdata['date_created'], '%Y-%m-%d %H:%M:%S' )
 			expDate = datetime.strptime( rwdata['date_expires'], '%Y-%m-%d %H:%M:%S' )
-
-		content = {
-			'owner': owner,
-			'nameservers': nameservers,
-		} 
+			content['regDate'] = calendar.timegm( regDate.timetuple() )
+			content['expDate'] = calendar.timegm( expDate.timetuple() )
 
 		try:
 			serverIp = make_api_call( 'ip', { 'domain': baseUrl } )
@@ -73,12 +69,12 @@ class DomainAnalyzerTask( BaseTask ):
 		except Exception, ex:
 			logging.error( ex )
 
-		content['regDate'] = calendar.timegm( regDate.timetuple() )
-		content['expDate'] = calendar.timegm( expDate.timetuple() )
-
 		self.sendAndSaveReport( baseUrl, content )
 
 	def suggest_actions( self, actions, data2, domain ):
+		if data2 is None:
+			return
+
 		data = self.format_data( data2 )
 		todayDate = datetime.today()
 		oneYear = timedelta( days = 365 )
@@ -94,8 +90,11 @@ class DomainAnalyzerTask( BaseTask ):
 
 
 	def generate_html_node( self, data2 ):
-		data = self.format_data( data2 )
 		content = {}
+		if data2 is None:
+			return None
+
+		data = self.format_data( data2 )
 		if data['regDate'] is not None:
 			content['registrationDate'] = data['regDate'].strftime( '%Y-%m-%d' )
 

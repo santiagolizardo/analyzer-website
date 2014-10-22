@@ -11,20 +11,13 @@ class FacebookCounterTask( BaseTask ):
 	def getName(self):
 		return 'facebook'
 
-	def getDefaultData(self):
-		return {
-			'facebookLikes': 0,
-			'facebookComments': 0,
-			'facebookShares': 0
-		}
-
 	def updateView( self, beauty, data ):
 		beauty.find( id = 'facebookComments' ).string.replace_with( ( str( data['facebookComments'] ) ) )
 		beauty.find( id = 'facebookLikes' ).string.replace_with( ( str( data['facebookLikes'] ) ) )
 		beauty.find( id = 'facebookShares' ).string.replace_with( ( str( data['facebookShares'] ) ) )
         
 	def start( self, domainUrl ):
-		content = self.getDefaultData()
+		content = None 
 		
 		params = {
 			'query': 'select total_count,like_count,comment_count,share_count,click_count from link_stat where url=\'%s\'' % domainUrl,

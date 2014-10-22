@@ -12,9 +12,6 @@ class RobotsTxtCheckerTask( BaseTask ):
 	def getName( self ):
 		return 'robotsTxt'
 
-	def getDefaultData( self ):
-		return { self.getName(): 'N/A' }
-
 	def updateView( self, beauty, data ):
 		beauty.find( id = 'robotsTxt' ).string.replace_with( self.generate_html_node( data ) )
 
