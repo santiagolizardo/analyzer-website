@@ -1,3 +1,4 @@
 *.pyc
 .project
 .pydevproject
+local_config.py

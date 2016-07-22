@@ -24,7 +24,7 @@ from library.controller.ranking import RankingController
 from library.controller.errorPage import ErrorPageController
 from library.controller.channel import ChannelController
 
-domain_ext = '<:com.dev|es.dev|com|es>'
+domain_ext = config.current_instance['domain_ext']
 
 routes = [
 	webapp2.Route( '/_ah/channel/connected/', handler = ChannelController ),
