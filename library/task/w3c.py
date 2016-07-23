@@ -28,6 +28,9 @@ class W3cValidatorTask( BaseTask ):
 		self.sendAndSaveReport( url, data )
 
 	def suggest_actions( self, actions, data, domain ):
+	        if not data:
+	                logging.warning('data is None')
+	                return
 		if len( data['messages'] ) == 0:
 			actions.append({ 'status': 'good' })
 		else:
@@ -39,7 +42,7 @@ class W3cValidatorTask( BaseTask ):
 			actions.append({ 'status': 'regular', 'description': 'Clean your HTML and fix the errors and warnings detected by the W3C validator' })
 
 	def generate_html_node( self, data ):
-		if len( data['messages'] ) == 0:
+		if not data or len( data['messages'] ) == 0:
 			return 'No errors detected. Great!'
 		else:
 			counting = { 'info': 0, 'error': 0, 'warning': 0 }

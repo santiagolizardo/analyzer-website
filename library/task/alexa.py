@@ -5,6 +5,8 @@ from awis import AwisApi
 from lxml import etree
 from xml.dom.minidom import parseString
 
+from local_config import aws as aws_config
+
 from library.countries import country_name_by_code
 
 class AlexaAnalyzerTask( BaseTask ):
@@ -28,8 +30,8 @@ class AlexaAnalyzerTask( BaseTask ):
 
 		content = {}
 
-		api = AwisApi( 'AKIAJDGJO3ACZ7KIGHCA', 'dIc3teMI2OoSw0W7z9EXgP9cQnvUlja8uSQN2MBT' )
-		respXml = api.url_info( queryUrl, 'RelatedLinks', 'Categories', 'Rank', 'RankByCountry', 'UsageStats', 'ContactInfo', 'Speed', 'Language', 'Keywords', 'OwnedDomains', 'LinksInCount', 'SiteData' )
+		api = AwisApi(aws_config['accessKeyId'], aws_config['secretAccessKey'])
+		respXml = api.url_info(queryUrl, 'RelatedLinks', 'Categories', 'Rank', 'RankByCountry', 'UsageStats', 'ContactInfo', 'Speed', 'Language', 'Keywords', 'OwnedDomains', 'LinksInCount', 'SiteData' )
 		xml = etree.tostring( respXml, encoding = 'UTF-8' )
 		
 		respStatus = respXml.find( '//{%s}StatusCode' % api.NS_PREFIXES['alexa'] ).text

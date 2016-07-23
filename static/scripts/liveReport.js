@@ -122,7 +122,9 @@ var messageHandlers = {
 	},
 	w3cValidation: function( content )
 	{
-		document.getElementById( 'w3cValidity' ).innerHTML = content.w3cValidation;
+        if(content) {
+    		document.getElementById( 'w3cValidity' ).innerHTML = content.w3cValidation;
+        }
 	},
 	facebook: function( content )
 	{

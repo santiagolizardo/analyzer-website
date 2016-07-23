@@ -32,7 +32,7 @@ def findAll():
 		robotsChecker,
 		sitemapChecker,
 		twitterChecker,
-		# alexaAnalyzer,
+		alexaAnalyzer,
 		PageRankTask(),
 		FacebookCounterTask(),
 		SearchTask(),
