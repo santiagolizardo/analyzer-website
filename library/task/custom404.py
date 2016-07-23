@@ -19,7 +19,7 @@ class Custom404Task( BaseTask ):
 		custom404 = None
 
 		try:
-			missingPage = '/egosize/notfound/page/404/%d.html' % random.randint( 0, 100 )
+			missingPage = '/analyzerwebsite/notfound/page/404/%d.html' % random.randint( 0, 100 )
 			url = 'http://' + domain + missingPage
 			result = urlfetch.fetch( url, deadline = 4 )
 			custom404 = { 'status_code': result.status_code }

@@ -29,5 +29,5 @@ if __name__ == '__main__':
 	import pprint
 
 	whois = RoboWhois()
-	pprint.pprint( whois.whois( 'www.santiagolizardo.com' ) )
+	pprint.pprint( whois.whois( 'example.com' ) )
 

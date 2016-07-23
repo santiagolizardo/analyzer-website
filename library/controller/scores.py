@@ -13,11 +13,13 @@ from library.services.twitter import TwitterService
 
 import library.task.manager
 
-def send_twitter_update( domainUrl ):
-	message = '%(domainUrl)s website SEO/SEM/WPO metrics report available at http://report.egosize.com/%(domainUrl)s, get yours for free!' % { 'domainUrl': domainUrl }
+from config import current_instance
 
-	twitterService = TwitterService()
-	twitterService.update_status( message )
+def send_twitter_update( domainUrl ):
+    message = '%(domainUrl)s website SEO/SEM/WPO metrics report available at http://report.%(domain)s/%(domainUrl)s, get yours for free!' % { 'domain': current_instance['domain'], 'domainUrl': domainUrl }
+
+    twitterService = TwitterService()
+    twitterService.update_status( message )
 
 class CalculateScoreController( webapp2.RequestHandler ):
 
@@ -70,4 +72,6 @@ class CalculateScoreController( webapp2.RequestHandler ):
 		memcache.delete( 'page-index' )
 
 		send_message( channelId, messageEncoded )
+
+		send_twitter_update(domainUrl)
 

@@ -5,6 +5,8 @@ from library.model.report import SiteReport
 
 import library.task.manager
 
+from config import current_instance as site
+
 import uuid, logging
 
 from google.appengine.api.channel import create_channel
@@ -37,8 +39,8 @@ class LiveReportController( StandardPageController ):
 			'domainLength': len( domainUrl.replace( '.com', '' ) ),
 			'clientId': clientId,
 			'sbOptions': reportSections,
-			'pageTitle': '%(domainUrl)s | Domain insights for %(domainUrl)s by Egosize' % { 'domainUrl': domainUrl },
-			'pageDescription': 'Check %(domainUrl)s metrics on SEO, social and other relevant aspects thanks to Egosize'
+			'pageTitle': '%(domainUrl)s | Domain insights for %(domainUrl)s by %(siteName)s' % { 'domainUrl': domainUrl, 'siteName': site['name'] },
+			'pageDescription': 'Check %(domainUrl)s metrics on SEO, social and other relevant aspects thanks to %(siteName)s' % { 'domainUrl': domainUrl, 'siteName': site['name'] }
 		}
 
 		html = self.renderTemplate( 'liveReport.html', values )

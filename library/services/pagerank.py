@@ -33,6 +33,6 @@ def getPageRank( domain ):
 
 if __name__ == '__main__':
 	import sys
-	domain = sys.argv[1] if len( sys.argv ) > 1 else 'www.santiagolizardo.com'
+	domain = sys.argv[1] if len( sys.argv ) > 1 else 'example.com'
 	print 'Domain %s: Pagerank %d' % ( domain, getPageRank( domain ) )
 

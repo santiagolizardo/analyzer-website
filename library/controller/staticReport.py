@@ -21,6 +21,10 @@ import library.task.manager
 
 import config
 
+from config import current_instance as site
+
+from local_config import twitter as twitter_config
+
 from library.sections import reportSections
 
 class StaticReportController( StandardPageController ):
@@ -50,7 +54,7 @@ class StaticReportController( StandardPageController ):
 		self.addJavaScript( 'https://www.google.com/jsapi' )
 		self.addJavaScript( '/scripts/staticReport.js' )
 
-		baseUrl = 'http://www.' + config.current_instance['url'] 
+		baseUrl = 'http://' + site['url'] 
 			
 		values = {
 			'baseUrl': baseUrl,
@@ -60,7 +64,7 @@ class StaticReportController( StandardPageController ):
 			'sbOptions': reportSections,
 			'generatedDate': siteReport.creationDate.date().isoformat(),
 			'generatedDateTime': siteReport.creationDate.date().isoformat(),
-			'pageTitle': '%(domainUrl)s SEO and SEM performance metrics - Egosize' % { 'domainUrl': domainUrl.capitalize() },
+			'pageTitle': '%(domainUrl)s SEO and SEM performance metrics - %(siteName)s' % { 'domainUrl': domainUrl.capitalize(), 'siteName': site['name'] },
 			'pageDescription': 'Review %(domainUrl)s website report including SEO and SEM KPI and improvements. Learn how to do better at SERP to increase conversions.' % { 'domainUrl': domainUrl },
 		}
 
@@ -144,13 +148,14 @@ class StaticReportController( StandardPageController ):
 
 	def set_twitter_card( self, domainUrl ):	
 		self.pageMetas.append({ 'name': 'twitter:card', 'content': 'summary' })
-		self.pageMetas.append({ 'name': 'twitter:site', 'content': '@egosizereports' })
+		self.pageMetas.append({ 'name': 'twitter:site', 'content': '@' + twitter_config['username'] })
 		self.pageMetas.append({ 'name': 'twitter:title', 'content': '%s SEO and SEM performace metrics' % domainUrl })
 		self.pageMetas.append({ 'name': 'twitter:description', 'content': 'Detailed report for %s Website with all major metrics and improvement points' % domainUrl })
-		self.pageMetas.append({ 'name': 'twitter:creator', 'content': '@egosizereports' })
+		self.pageMetas.append({ 'name': 'twitter:creator', 'content': '@' + twitter_config['username'] })
 
 		screenshotReport = TaskReport.all().filter( 'url =', domainUrl ).filter( 'name = ', 'screenshot' ).get()
-		screenshot = json.loads( screenshotReport.messageEncoded )
-		if screenshot is not None:
-			self.pageMetas.append({ 'name': 'twitter:image:src', 'content': screenshot })
+		if screenshotReport:
+		    screenshot = json.loads( screenshotReport.messageEncoded )
+		    if screenshot is not None:
+			    self.pageMetas.append({ 'name': 'twitter:image:src', 'content': screenshot })
 

@@ -13,6 +13,7 @@ class SearchTask( BaseTask ):
 		return 'indexedPages'
 
 	def updateView( self, beauty, indexed_pages ):
+	    if indexed_pages:
 		beauty.find( id = 'indexedPages' ).string.replace_with( self.generate_html_node( indexed_pages ) )
 
 	def start( self, domain ):
@@ -37,5 +38,9 @@ class SearchTask( BaseTask ):
 			actions.append({ 'status': 'good' })
 
 	def generate_html_node( self, indexed_pages ):
+	        if indexed_pages is None:
+	            logging.warning('indexed_pages is None')
+	            return None
+
 		return '%d indexed pages' % indexed_pages
 

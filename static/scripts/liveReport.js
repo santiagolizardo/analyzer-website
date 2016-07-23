@@ -15,15 +15,15 @@ function addAction( action )
 	totalStatuses++;
 
 	$( 'div#statuses > div.progress-bar-success' )
-		.css( 'width', ( ( statuses['good'] * 100 ) / totalStatuses ) + '%' );
+		.css( 'width', ( ( statuses.good * 100 ) / totalStatuses ) + '%' );
 	$( 'div#statuses > div.progress-bar-warning' )
-		.css( 'width', ( ( statuses['regular'] * 100 ) / totalStatuses ) + '%' );
+		.css( 'width', ( ( statuses.regular * 100 ) / totalStatuses ) + '%' );
 	$( 'div#statuses > div.progress-bar-danger' )
-		.css( 'width', ( ( statuses['bad'] * 100 ) / totalStatuses ) + '%' );
+		.css( 'width', ( ( statuses.bad * 100 ) / totalStatuses ) + '%' );
 
-	$( '#goodStatuses' ).html( statuses['good'] );
-	$( '#regularStatuses' ).html( statuses['regular'] );
-	$( '#badStatuses' ).html( statuses['bad'] );
+	$( '#goodStatuses' ).html( statuses.good );
+	$( '#regularStatuses' ).html( statuses.regular );
+	$( '#badStatuses' ).html( statuses.bad );
 
 	if( 'description' in action )
 	{
@@ -71,10 +71,12 @@ var messageHandlers = {
 	},
 	domain: function( content )
 	{
-		document.getElementById( 'domainOwner' ).innerHTML = content.owner;
-		document.getElementById( 'domainRegistrationDate' ).innerHTML = content.registrationDate;
-		document.getElementById( 'domainExpirationDate' ).innerHTML = content.expirationDate;
-		document.getElementById( 'serverIp' ).innerHTML = content.serverIp;
+        if(content) {
+		    document.getElementById( 'domainOwner' ).innerHTML = content.owner;
+		    document.getElementById( 'domainRegistrationDate' ).innerHTML = content.registrationDate;
+		    document.getElementById( 'domainExpirationDate' ).innerHTML = content.expirationDate;
+		    document.getElementById( 'serverIp' ).innerHTML = content.serverIp;
+        }
 	},
 	traffic: function( content )
 	{
@@ -124,9 +126,11 @@ var messageHandlers = {
 	},
 	facebook: function( content )
 	{
-		document.getElementById( 'facebookLikes' ).innerHTML = content.facebookLikes;
-		document.getElementById( 'facebookComments' ).innerHTML = content.facebookComments;
-		document.getElementById( 'facebookShares' ).innerHTML = content.facebookShares;
+        if(content) {
+		    document.getElementById( 'facebookLikes' ).innerHTML = content.facebookLikes;
+		    document.getElementById( 'facebookComments' ).innerHTML = content.facebookComments;
+		    document.getElementById( 'facebookShares' ).innerHTML = content.facebookShares;
+        }
 	},
 	indexedPages: function( content )
 	{
@@ -157,7 +161,7 @@ function increaseProgressBar()
 	if( reportCompletionPercentage >= 100 )
 	{
 		$( progressBar ).fadeOut( 'normal', function() { $( this ).remove(); } );
-		if( score == null ) $.get( '/calculateScore?domainUrl=' + domainUrl );
+		if( score === null ) $.get( '/calculateScore?domainUrl=' + domainUrl );
 	}
 }
 

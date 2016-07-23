@@ -1,4 +1,4 @@
-application: egosize
+application: project-analyzer-website 
 version: 1
 runtime: python27
 api_version: 1
@@ -35,9 +35,6 @@ handlers:
   script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
   login: admin
 
-- url: /robots\.txt
-  static_files: static/robots.txt
-  upload: static/robots\.txt
 - url: /humans\.txt
   static_files: static/humans.txt
   upload: static/humans\.txt

@@ -16,7 +16,7 @@ from bs4 import BeautifulSoup, NavigableString
 
 def storeFileInCloud( data, url ):
 
-	filename = '/gs/egosize-screenshots/' + url.replace( 'http://', '' ).replace( '.', '-' ) + '.png'
+	filename = '/gs/analyzerwebsite-screenshots/' + url.replace( 'http://', '' ).replace( '.', '-' ) + '.png'
 	writable_file_name = files.gs.create( filename, mime_type = 'image/png', acl = 'public-read', user_metadata= { 'x-goog-project-id': '1004040993338' } )
 	with files.open(writable_file_name, 'a' ) as f:
 		f.write( imageData )

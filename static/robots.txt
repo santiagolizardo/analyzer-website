@@ -1,3 +1,0 @@
-Sitemap: http://www.egosize.com/sitemap.xml
-User-agent: *
-Allow: /

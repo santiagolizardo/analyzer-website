@@ -10,12 +10,11 @@
 		<button class="btn btn-default dropdown-toggle" type="button" id="languagesMenu" data-toggle="dropdown"><span class="glyphicon glyphicon glyphicon-globe"></span> ${_('Languages')} <span class="caret"></span></button>
 		<ul class="dropdown-menu" role="menu" aria-labelledby="languagesMenu">
 		% for instance in instances:
-		<li role="presentation"><a role="menuitem" href="http://www.${instance['domain']}" rel="alternate" hreflang="${instance['language']}">${instance['name']}</a></li>
+		<li role="presentation"><a role="menuitem" href="http://${instance['domain']}" rel="alternate" hreflang="${instance['language']}">${instance['name']}</a></li>
 		% endfor
 		</ul>
 		</div>
 	</li>
-	<li><a href="http://blog.egosize.com" rel="nofollow">Blog</a></li>
 	<li><a href="http://ranking.${appDomain}" title="Ranking of the best Internet websites">${_('Best Internet sites')}</a></li>
 	<li><a href="http://stats.${appDomain}">${_('Statistics')}</a></li>
 	<li><%include file="twitterButton.html"/></li>

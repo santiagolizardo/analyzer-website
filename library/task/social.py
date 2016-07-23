@@ -12,6 +12,7 @@ class FacebookCounterTask( BaseTask ):
 		return 'facebook'
 
 	def updateView( self, beauty, data ):
+	    if data:
 		beauty.find( id = 'facebookComments' ).string.replace_with( ( str( data['facebookComments'] ) ) )
 		beauty.find( id = 'facebookLikes' ).string.replace_with( ( str( data['facebookLikes'] ) ) )
 		beauty.find( id = 'facebookShares' ).string.replace_with( ( str( data['facebookShares'] ) ) )
@@ -38,6 +39,10 @@ class FacebookCounterTask( BaseTask ):
 		self.sendAndSaveReport( domainUrl, content )
 
 	def suggest_actions( self, actions, data, domain ):
+	        if data is None:
+	            logging.warning('data is None')
+                    return
+
 		totalCount = sum( data.values() )
 
 		if totalCount < 10:

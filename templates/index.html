@@ -4,11 +4,11 @@
 
 	<div class="container">
 
-	<p><a class="brand" href="http://www.${appDomain}/"></a></p>
+	<p><a class="brand" href="http://${appDomain}/"></a></p>
 
 	<div class="jumbotron">
 		<h2>${_('<strong>Website reports</strong> for marketers and developers')}</h2>
-		<p>${_('Improve your site SERP by using Egosize audit tool which includes key SEM/SEO and WPO optimizations.')}</p>
+		<p>${_('Improve your site SERP by using %(siteName)s audit tool which includes key SEM/SEO and WPO optimizations.') % { 'siteName': siteName}}</p>
 
 		<form action="/analyze" method="post">
 		<div class="input-group">

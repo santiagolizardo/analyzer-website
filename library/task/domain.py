@@ -26,11 +26,12 @@ class DomainAnalyzerTask( BaseTask ):
 		return 'domain'
 
 	def updateView( self, beauty, data ):
-		beauty.find( id = 'domainOwner' ).replace_with( str( data['owner'] ) )
-		beauty.find( id = 'domainRegistrationDate' ).replace_with( str( data['regDate'] ) )
-		beauty.find( id = 'domainExpirationDate' ).replace_with( str( data['expDate'] ) )
-		if 'serverIp' in data:
-			beauty.find( id = 'serverIp' ).string.replace_with( data['serverIp'] )
+	        if data:
+		    beauty.find( id = 'domainOwner' ).replace_with( str( data['owner'] ) )
+		    beauty.find( id = 'domainRegistrationDate' ).replace_with( str( data['regDate'] ) )
+		    beauty.find( id = 'domainExpirationDate' ).replace_with( str( data['expDate'] ) )
+		    if 'serverIp' in data:
+			    beauty.find( id = 'serverIp' ).string.replace_with( data['serverIp'] )
 
 	def start( self, baseUrl ):
 		self.fix_sys_path()

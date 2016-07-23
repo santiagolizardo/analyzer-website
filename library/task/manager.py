@@ -25,14 +25,14 @@ def findAll():
 	alexaAnalyzer = AlexaAnalyzerTask()
 
 	tasks = (
-		screenshotGrabber,
+		# screenshotGrabber,
 		htmlAnalyzer,
 		domainAnalyzer,
 		w3cValidator,
 		robotsChecker,
 		sitemapChecker,
 		twitterChecker,
-		alexaAnalyzer,
+		# alexaAnalyzer,
 		PageRankTask(),
 		FacebookCounterTask(),
 		SearchTask(),
