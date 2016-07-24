@@ -6,7 +6,6 @@ import config
 from google.appengine.api import urlfetch
 from google.appengine.api.channel import send_message
 from google.appengine.api import files
-from google.appengine.api.images import get_serving_url
 
 from library.task.base import BaseTask
 
@@ -14,26 +13,30 @@ import urllib2
 
 from bs4 import BeautifulSoup, NavigableString
 
+import cloudstorage as gcs
+from google.appengine.api import app_identity
+
+from config import current_instance as site
+
+from config import debug_active
+
 def storeFileInCloud( data, url ):
+    bucket_name = os.environ.get('BUCKET_NAME', app_identity.get_default_gcs_bucket_name())
+    logging.info('bucket_name === %s' % bucket_name)
+    sanitized_url = url.replace( 'http://', '' ).replace( '.', '-' )
+    filename = '/' + bucket_name + '/screenshots/' + sanitized_url + '.png'
+    logging.info('filename === %s' % filename)
+    gcs_file = gcs.open(
+        filename,
+        'w',
+        content_type = 'image/png',
+        options = { 'x-goog-acl': 'public-read' }
+    )
+    gcs_file.write(data)
+    gcs_file.close()
 
-	filename = '/gs/analyzerwebsite-screenshots/' + url.replace( 'http://', '' ).replace( '.', '-' ) + '.png'
-	writable_file_name = files.gs.create( filename, mime_type = 'image/png', acl = 'public-read', user_metadata= { 'x-goog-project-id': '1004040993338' } )
-	with files.open(writable_file_name, 'a' ) as f:
-		f.write( imageData )
-	files.finalize(writable_file_name)
-
-	return filename
-
-def storeFileInBlobstore( data, url ):
-
-	file_name = files.blobstore.create(mime_type = 'image/png' )
-	with files.open(file_name, 'a') as f:
-		f.write( data )
-	files.finalize(file_name)
-
-	blob_key = files.blobstore.get_blob_key( file_name )
-
-	return get_serving_url( blob_key )
+    base_url = 'http://' + site['url'] + '/_ah/gcs' if debug_active else 'https://storage.googleapis.com'
+    return base_url + filename
 
 class ScreenshotGrabberTask( BaseTask ):
 
@@ -48,7 +51,7 @@ class ScreenshotGrabberTask( BaseTask ):
 		
 		imageData = captureScreenshotWordpress( 'http://' + url )
 		if imageData is not None:
-			imageUrl = storeFileInBlobstore( imageData, url )
+			imageUrl = storeFileInCloud(imageData, url)
 
 			content = imageUrl
 		

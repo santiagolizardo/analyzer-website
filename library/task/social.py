@@ -30,6 +30,7 @@ class FacebookCounterTask( BaseTask ):
 			result = urlfetch.fetch( url )
 			if result.status_code == 200:
 				data = json.loads( result.content )[0]
+				content = {}
 				content['facebookLikes'] = data['like_count']
 				content['facebookComments'] = data['comment_count']
 				content['facebookShares'] = data['share_count']

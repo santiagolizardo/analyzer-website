@@ -1,15 +1,14 @@
 
 import sys, logging
 import urllib2, json
- 
-class RoboWhois:
 
-	def __init__( self ):
-		self.apikey = 'bc6ee2c8c82f225d95aa7ccebd60ce44'
+from local_config import whoapi as whoapi_config
+
+class RoboWhois:
 
 	def whois( self, domain ):
 		try:
-			url = "http://api.whoapi.com/?domain=%s&apikey=%s&r=whois" % ( domain, self.apikey )
+			url = "http://api.whoapi.com/?domain=%s&apikey=%s&r=whois" % ( domain, whoapi_config['apiKey'] )
 
 			opener = urllib2.build_opener()
 			request = urllib2.Request( url )

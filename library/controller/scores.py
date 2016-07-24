@@ -13,7 +13,7 @@ from library.services.twitter import TwitterService
 
 import library.task.manager
 
-from config import current_instance
+from config import current_instance, debug_active
 
 def send_twitter_update( domainUrl ):
     message = '%(domainUrl)s website SEO/SEM/WPO metrics report available at http://report.%(domain)s/%(domainUrl)s, get yours for free!' % { 'domain': current_instance['domain'], 'domainUrl': domainUrl }
@@ -73,5 +73,6 @@ class CalculateScoreController( webapp2.RequestHandler ):
 
 		send_message( channelId, messageEncoded )
 
-		send_twitter_update(domainUrl)
+                if not debug_active:
+ 		    send_twitter_update(domainUrl)
 

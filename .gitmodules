@@ -17,3 +17,6 @@
 	path = externals/tweepy
 	url = https://github.com/tweepy/tweepy.git
 	branch = production
+[submodule "externals/gcs-client"]
+	path = externals/gcs-client
+	url = https://github.com/GoogleCloudPlatform/appengine-gcs-client.git

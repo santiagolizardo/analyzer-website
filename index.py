@@ -6,6 +6,7 @@ sys.path.append( 'externals/awis' )
 sys.path.append( 'externals/oauthlib' )
 sys.path.append( 'externals/requests' )
 sys.path.append( 'externals/requests-oauthlib' )
+sys.path.append( 'externals/gcs-client/python/src' )
 
 import config
 config.load_current_instance()
