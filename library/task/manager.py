@@ -11,7 +11,6 @@ from library.task.social import FacebookCounterTask
 from library.task.search import SearchTask 
 from library.task.humans import HumansTxtCheckerTask
 from library.task.favicon import FaviconCheckerTask
-from library.task.pageRank import PageRankTask 
 from library.task.custom404 import Custom404Task
 
 def findAll():
@@ -33,7 +32,6 @@ def findAll():
 		sitemapChecker,
 		twitterChecker,
 		alexaAnalyzer,
-		PageRankTask(),
 		FacebookCounterTask(),
 		SearchTask(),
 		HumansTxtCheckerTask(),

@@ -25,12 +25,6 @@ var htmlDocumentTypes = [
 },
 % endfor
 ];
-var pageRanksLabels = [];
-var pageRanksData = [];
-% for i, pageRank in enumerate( pageRanks ):
-	pageRanksLabels.push( ${pageRank.code} );
-	pageRanksData.push( ${pageRank.count} );
-% endfor
 
 var domainTlds = [
 % for i, domainTld in enumerate( domainTlds ):
@@ -93,24 +87,7 @@ var domainTlds = [
 
 <div class="row">
 <div class="col-md-6">
-	<canvas id="pageRanks" style="width: 400px; height: 300px;"></canvas>
-	<table class="table table-bordered">
-	<caption>Google&reg; Page Rank&trade;</caption>
-	<thead>
-		<tr>
-			<th>Pagerank</th>
-			<th>Count</th>
-		</tr>
-	</thead>
-	<tbody>
-	% for pageRank in pageRanks:
-	<tr>
-		<td>${pageRank.code}</td>
-		<td>${pageRank.count}</td>
-	</tr>
-	% endfor
-	</tbody>
-	</table>
+    <!-- Content to be added -->
 </div>
 </div>
 

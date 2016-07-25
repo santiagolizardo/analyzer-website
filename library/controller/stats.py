@@ -28,15 +28,13 @@ class Index( StandardPageController ):
 
 	domainTlds = StatCounter.all().filter( 'category = ', 'domain_tld' ).filter('report_date =', None ).order( '-count' )
 	htmlDocumentTypes = StatCounter.all().filter( 'category = ', 'html_document_type').filter('report_date =', None ).order( '-count' )
-	pageRanks = StatCounter.all().filter( 'category =', 'page_rank' ).order( 'code' )
 
         values = {
 		'pageTitle': 'Domain, social and other popular site statistics ',
 		'pageDescription': 'Discover what are the most successful websites in terms of their UX, SEO/SEM and WPO practices. Learn from their reports for free.',
 		'sites': sites,
 		'domainTlds': domainTlds,
-		'htmlDocumentTypes': htmlDocumentTypes,
-		'pageRanks': pageRanks,
+		'htmlDocumentTypes': htmlDocumentTypes
         }
         
         html = self.renderTemplate( 'stats.html', values)

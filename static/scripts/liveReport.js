@@ -105,10 +105,6 @@ var messageHandlers = {
 	{
 		document.getElementById( 'pageFavicon' ).innerHTML = content;
 	},
-	googlePageRank: function( content )
-	{
-		document.getElementById( 'googlePageRank' ).innerHTML = content;
-	},
 	custom404: function( content )
 	{
 		document.getElementById( 'custom404' ).innerHTML = content;
