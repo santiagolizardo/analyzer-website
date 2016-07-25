@@ -1,10 +1,9 @@
 
 </div><!--/container-->
 
-<%include file="/googleAnalytics.html"/>
-
 <footer class="centered-pills">
 <ul class="nav nav-pills">
+    % if len(instances) > 1:
 	<li>
 		<div class="dropdown">
 		<button class="btn btn-default dropdown-toggle" type="button" id="languagesMenu" data-toggle="dropdown"><span class="glyphicon glyphicon glyphicon-globe"></span> ${_('Languages')} <span class="caret"></span></button>
@@ -15,6 +14,7 @@
 		</ul>
 		</div>
 	</li>
+    % endif
 	<li><a href="http://ranking.${appDomain}" title="Ranking of the best Internet websites">${_('Best Internet sites')}</a></li>
 	<li><a href="http://stats.${appDomain}">${_('Statistics')}</a></li>
 	<li><%include file="twitterButton.html"/></li>

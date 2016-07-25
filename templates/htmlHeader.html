@@ -15,11 +15,12 @@
 	% for pageMeta in pageMetas:
 	<meta name="${pageMeta['name']}" content="${pageMeta['content']}" />
 	% endfor
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
 	% for styleSheet in styleSheets:
 	<link href="${styleSheet}" rel="stylesheet" />
 	% endfor
 	% for javaScript in javaScripts:
 	<script src="${javaScript}"></script>
 	% endfor
-	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <%include file="/googleAnalytics.html"/>
 </head>
