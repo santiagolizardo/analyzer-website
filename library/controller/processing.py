@@ -18,5 +18,5 @@ class InitProcessingController( webapp2.RequestHandler ):
 		
 		for task in tasks:
 			task.setChannelId( channelId )
-			deferred.defer( task.start, domainUrl, _name = task.getName() )
+			deferred.defer(task.start, domainUrl)
 
