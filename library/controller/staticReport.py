@@ -23,7 +23,7 @@ import config
 
 from config import current_instance as site
 
-from local_config import twitter as twitter_config
+from local_config import twitter as twitter_config, addthisPubId
 
 from library.sections import reportSections
 
@@ -66,6 +66,7 @@ class StaticReportController( StandardPageController ):
 			'generatedDateTime': siteReport.creationDate.date().isoformat(),
 			'pageTitle': '%(domainUrl)s SEO and SEM performance metrics - %(siteName)s' % { 'domainUrl': domainUrl.capitalize(), 'siteName': site['name'] },
 			'pageDescription': 'Review %(domainUrl)s website report including SEO and SEM KPI and improvements. Learn how to do better at SERP to increase conversions.' % { 'domainUrl': domainUrl },
+			'addthisPubId': addthisPubId
 		}
 
 		self.set_twitter_card( domainUrl )

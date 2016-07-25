@@ -6,6 +6,7 @@ from library.model.report import SiteReport
 import library.task.manager
 
 from config import current_instance as site
+from local_config import addthisPubId
 
 import uuid, logging
 
@@ -40,7 +41,8 @@ class LiveReportController( StandardPageController ):
 			'clientId': clientId,
 			'sbOptions': reportSections,
 			'pageTitle': '%(domainUrl)s | Domain insights for %(domainUrl)s by %(siteName)s' % { 'domainUrl': domainUrl, 'siteName': site['name'] },
-			'pageDescription': 'Check %(domainUrl)s metrics on SEO, social and other relevant aspects thanks to %(siteName)s' % { 'domainUrl': domainUrl, 'siteName': site['name'] }
+			'pageDescription': 'Check %(domainUrl)s metrics on SEO, social and other relevant aspects thanks to %(siteName)s' % { 'domainUrl': domainUrl, 'siteName': site['name'] },
+			'addthisPubId': addthisPubId
 		}
 
 		html = self.renderTemplate( 'liveReport.html', values )
