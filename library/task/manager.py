@@ -12,31 +12,24 @@ from library.task.search import SearchTask
 from library.task.humans import HumansTxtCheckerTask
 from library.task.favicon import FaviconCheckerTask
 from library.task.custom404 import Custom404Task
+from library.task.https_protocol import HttpsProtocolTask 
 
 def findAll():
-	htmlAnalyzer = HtmlAnalyzerTask()
-	domainAnalyzer = DomainAnalyzerTask()
-	screenshotGrabber = ScreenshotGrabberTask()
-	w3cValidator = W3cValidatorTask()
-	robotsChecker = RobotsTxtCheckerTask()
-	sitemapChecker = SitemapXmlCheckerTask()
-	twitterChecker = TwitterAccountCheckerTask()
-	alexaAnalyzer = AlexaAnalyzerTask()
-
 	tasks = (
-		screenshotGrabber,
-		htmlAnalyzer,
-		domainAnalyzer,
-		w3cValidator,
-		robotsChecker,
-		sitemapChecker,
-		twitterChecker,
-		alexaAnalyzer,
+		ScreenshotGrabberTask(),
+		HtmlAnalyzerTask(),
+		DomainAnalyzerTask(),
+		W3cValidatorTask(),
+		RobotsTxtCheckerTask(),
+		SitemapXmlCheckerTask(),
+		TwitterAccountCheckerTask(),
+		AlexaAnalyzerTask(),
 		FacebookCounterTask(),
 		SearchTask(),
 		HumansTxtCheckerTask(),
 		FaviconCheckerTask(),
 		Custom404Task(),
+		HttpsProtocolTask()
 	)
 
 	return tasks

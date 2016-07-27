@@ -6,7 +6,7 @@ DomainGrasp is a web application that can be deployed to Google App Engine and w
 === Requirements ===
 
 * Google App Engine Python SDK
-* Python
+* Python (mako templates)
 * lxml
 * Google URL Shortener API enabled
 * Alexa AWIS credentials

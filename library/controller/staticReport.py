@@ -21,8 +21,6 @@ import library.task.manager
 
 import config
 
-from config import current_instance as site
-
 from local_config import twitter as twitter_config, addthisPubId
 
 from library.sections import reportSections
@@ -54,7 +52,7 @@ class StaticReportController( StandardPageController ):
 		self.addJavaScript( 'https://www.google.com/jsapi' )
 		self.addJavaScript( '/scripts/staticReport.js' )
 
-		baseUrl = 'http://' + site['url'] 
+		baseUrl = 'http://' + self.current_instance['url'] 
 			
 		values = {
 			'baseUrl': baseUrl,
@@ -64,7 +62,7 @@ class StaticReportController( StandardPageController ):
 			'sbOptions': reportSections,
 			'generatedDate': siteReport.creationDate.date().isoformat(),
 			'generatedDateTime': siteReport.creationDate.date().isoformat(),
-			'pageTitle': '%(domainUrl)s SEO and SEM performance metrics - %(siteName)s' % { 'domainUrl': domainUrl.capitalize(), 'siteName': site['name'] },
+			'pageTitle': '%(domainUrl)s SEO and SEM performance metrics - %(siteName)s' % { 'domainUrl': domainUrl.capitalize(), 'siteName': self.current_instance['name'] },
 			'pageDescription': 'Review %(domainUrl)s website report including SEO and SEM KPI and improvements. Learn how to do better at SERP to increase conversions.' % { 'domainUrl': domainUrl },
 			'addthisPubId': addthisPubId
 		}

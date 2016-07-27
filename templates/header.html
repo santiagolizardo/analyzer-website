@@ -8,8 +8,7 @@
 				<a class="navbar-brand navbar-left" href="http://${appDomain}/"><img src="/images/logo.png" alt="SEO/SEM and WPO audit tool" title="Homepage" style="height: 40px; margin-top: -10px;" /></a>
 				<form action="/analyze" method="post" class="navbar-form navbar-right" style="width: 80%">
 					<div class="input-group">
-						<span class="input-group-addon">http://</span>
-						<input type="text" name="domain" class="form-control" pattern="^[a-zA-Z0-9_\-\.]+$" required="required" autofocus="autofocus" placeholder="${_('www.example.com')}" />
+						<input type="text" name="domain" class="form-control" pattern="^(https?://)?[a-zA-Z0-9_\-\.]+$" required="required" autofocus="autofocus" placeholder="${_('http://www.example.com')}" />
 						<span class="input-group-btn">
 							<button type="submit" class="btn btn-primary">${_('Get your free report!')}</button>
 						</span>

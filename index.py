@@ -1,11 +1,14 @@
 
+from google.appengine.ext import vendor
+vendor.add('vendor')
+
 import sys
-sys.path.append( 'vendor' )
 sys.path.append( 'externals/tweepy' )
 sys.path.append( 'externals/awis' )
 sys.path.append( 'externals/oauthlib' )
 sys.path.append( 'externals/requests' )
 sys.path.append( 'externals/requests-oauthlib' )
+sys.path.append( 'externals/requests-toolbelt' )
 sys.path.append( 'externals/gcs-client/python/src' )
 
 import config

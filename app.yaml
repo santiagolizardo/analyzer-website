@@ -14,12 +14,12 @@ inbound_services:
 - warmup
 
 libraries:
+- name: ssl
+  version: latest
 - name: lxml
   version: latest
 - name: markupsafe
   version: latest
-- name: ssl 
-  version: 2.7
 
 handlers:
 - url: /bootstrap

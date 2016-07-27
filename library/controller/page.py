@@ -1,8 +1,5 @@
 
-import os
-
 import config
-from config import current_instance as site
 
 from library.controller.basic import BasicController
 
@@ -40,10 +37,10 @@ class StandardPageController( PageController ):
 	def renderTemplate( self, name, values = {} ):
 
 		defaultValues = {
-			'appDomain': site['url'],
-			'domain': site['domain'],
-			'siteName': site['name'],
-			'pageTitle': '%s reviews any site and returns insights and improvements' % site['name'],
+			'appDomain': self.current_instance['url'],
+			'domain': self.current_instance['domain'],
+			'siteName': self.current_instance['name'],
+			'pageTitle': '%s reviews any site and returns insights and improvements' % self.current_instance['name'],
 			'pageDescription': 'Free tool to generate reports out of websites with SEO and SEM metrics and get improvement ideas. Meant to marketers and developers.',
 			'pageMetas': self.pageMetas,
 			'javaScripts': self.javaScripts,

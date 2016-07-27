@@ -27,7 +27,8 @@ class DomainAnalyzerTask( BaseTask ):
 
 	def updateView( self, beauty, data ):
 	        if data:
-		    beauty.find( id = 'domainOwner' ).replace_with( str( data['owner'] ) )
+		    if 'owner' in data:
+		        beauty.find( id = 'domainOwner' ).replace_with( str( data['owner'] ) )
 		    beauty.find( id = 'domainRegistrationDate' ).replace_with( str( data['regDate'] ) )
 		    beauty.find( id = 'domainExpirationDate' ).replace_with( str( data['expDate'] ) )
 		    if 'serverIp' in data:

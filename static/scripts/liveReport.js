@@ -69,6 +69,9 @@ var messageHandlers = {
 		
 		document.getElementById( 'emailAddresses' ).innerHTML = content.emailAddresses;
 	},
+    httpsProtocol: function(content) {
+        if(null !== content) { document.getElementById('httpsProtocol').innerHTML = content; }
+    },
 	domain: function( content )
 	{
         if(content) {

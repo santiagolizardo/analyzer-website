@@ -30,7 +30,7 @@ class Index( StandardPageController ):
 	htmlDocumentTypes = StatCounter.all().filter( 'category = ', 'html_document_type').filter('report_date =', None ).order( '-count' )
 
         values = {
-		'pageTitle': 'Domain, social and other popular site statistics ',
+		'pageTitle': 'SEO, WPO, security, social and domain website statistics - %(siteName)s' % { 'siteName': self.current_instance['name'] },
 		'pageDescription': 'Discover what are the most successful websites in terms of their UX, SEO/SEM and WPO practices. Learn from their reports for free.',
 		'sites': sites,
 		'domainTlds': domainTlds,

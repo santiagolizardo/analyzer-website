@@ -12,7 +12,7 @@ class AnalyzeDomainController( webapp2.RequestHandler ):
 		domain = domain.lower()				# 'http://foobar.com/      '
 		domain = domain.strip() 			# 'http://foobar.com/'
 		domain = domain.rstrip( '/' ) 			# 'http://foobar.com'
-		domain = re.sub( '^http://', '', domain ) 	# 'foobar.com'
+		domain = re.sub( '^https?://', '', domain ) 	# 'foobar.com'
 
 		if len( domain ) == 0:
 			url = self.request.referer

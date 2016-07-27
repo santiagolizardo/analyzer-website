@@ -8,9 +8,7 @@ from library.model.report import SiteReport, SiteRating
 from library.utilities import uriFor
 from google.appengine.ext import db
 
-from config import current_instance as site
-
-class SearchController( StandardPageController ):
+class SearchController(StandardPageController):
 
 	def get( self, query = None ):
 
@@ -23,7 +21,7 @@ class SearchController( StandardPageController ):
 		results = result_response.results
 	
 		values = {
-			'pageTitle': '%s websites - %s' % (query.capitalize(), site['name']),
+			'pageTitle': '%s website metrics and reports - %s' % (query.capitalize(), self.current_instance['name']),
 			'pageDescription': '%s related websites. Find useful information about %s pages and use it for your own websites.' % ( query.capitalize(), query ),
 			'results': results,
 			'query': query,

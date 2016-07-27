@@ -6,8 +6,6 @@ from library.model.report import SiteReport, SiteRating
 from library.utilities import uriFor
 from google.appengine.ext import db
 
-from config import current_instance as site
-
 class RankingController( StandardPageController ):
 
 	def get( self, country = None ):
@@ -16,7 +14,7 @@ class RankingController( StandardPageController ):
 		sites_by_user_reviews = self.get_sites_by_user_reviews()
 
 		values = {
-			'pageTitle': 'Ranking of the most optimized websites for SEO/SEM/WPO - %s' % site['name'],
+			'pageTitle': 'Ranking of the most optimized websites for SEO/SEM/WPO - %s' % self.current_instance['name'],
 			'pageDescription': 'Discover what are the most successful websites in terms of their UX, SEO/SEM and WPO practices. Learn from their reports for free.',
 			'sites_by_audit_score': sites_by_audit_score,
 			'sites_by_user_reviews': sites_by_user_reviews,

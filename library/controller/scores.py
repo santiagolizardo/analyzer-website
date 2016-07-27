@@ -1,11 +1,8 @@
 
-import webapp2, logging, json, os
+import logging, json, os
 
 from google.appengine.api import memcache
-from google.appengine.api import urlfetch
 from google.appengine.api.channel import send_message
-
-from google.appengine.ext import deferred
 
 from library.model.report import SiteReport
 
@@ -13,15 +10,17 @@ from library.services.twitter import TwitterService
 
 import library.task.manager
 
-from config import current_instance, debug_active
+from config import debug_active
 
-def send_twitter_update( domainUrl ):
-    message = '%(domainUrl)s website SEO/SEM/WPO metrics report available at http://report.%(domain)s/%(domainUrl)s, get yours for free!' % { 'domain': current_instance['domain'], 'domainUrl': domainUrl }
+from library.controller.page import StandardPageController
+
+def send_twitter_update(appDomain, domainUrl):
+    message = '%(domainUrl)s website SEO/SEM/WPO metrics report available at http://report.%(domain)s/%(domainUrl)s, get yours for free!' % { 'domain': appDomain, 'domainUrl': domainUrl }
 
     twitterService = TwitterService()
     twitterService.update_status( message )
 
-class CalculateScoreController( webapp2.RequestHandler ):
+class CalculateScoreController(StandardPageController):
 
 	def get( self ):
 		domainUrl = self.request.get( 'domainUrl' )
@@ -74,5 +73,5 @@ class CalculateScoreController( webapp2.RequestHandler ):
 		send_message( channelId, messageEncoded )
 
                 if not debug_active:
- 		    send_twitter_update(domainUrl)
+ 		    send_twitter_update(self.current_instance['domain'], domainUrl)
 
