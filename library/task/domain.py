@@ -29,8 +29,8 @@ class DomainAnalyzerTask( BaseTask ):
 	        if data:
 		    if 'owner' in data:
 		        beauty.find( id = 'domainOwner' ).replace_with( str( data['owner'] ) )
-		    beauty.find( id = 'domainRegistrationDate' ).replace_with( str( data['regDate'] ) )
-		    beauty.find( id = 'domainExpirationDate' ).replace_with( str( data['expDate'] ) )
+		    beauty.find( id = 'domainRegistrationDate' ).replace_with( self.format_date( data['regDate'] ) )
+		    beauty.find( id = 'domainExpirationDate' ).replace_with( self.format_date( data['expDate'] ) )
 		    if 'serverIp' in data:
 			    beauty.find( id = 'serverIp' ).string.replace_with( data['serverIp'] )
 
@@ -52,8 +52,8 @@ class DomainAnalyzerTask( BaseTask ):
 				content['nameservers'] = rwdata['nameservers']
 			except Exception, ex:
 				logging.warning( ex )
-			regDate = datetime.strptime( rwdata['date_created'], '%Y-%m-%d %H:%M:%S' )
-			expDate = datetime.strptime( rwdata['date_expires'], '%Y-%m-%d %H:%M:%S' )
+			regDate = self.parse_date(rwdata['date_created'])
+			expDate = self.parse_date(rwdata['date_expires'])
 			content['regDate'] = calendar.timegm( regDate.timetuple() )
 			content['expDate'] = calendar.timegm( expDate.timetuple() )
 
@@ -115,4 +115,10 @@ class DomainAnalyzerTask( BaseTask ):
 		if 'expDate' in data and data['expDate'] is not None and type( data['expDate'] ) == int:
 			data2['expDate'] = datetime.utcfromtimestamp( data['expDate'] ) 
 		return data2
+	
+	def parse_date(self, date):
+            return datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
+
+        def format_date(self, date):
+            return datetime.fromtimestamp(date).strftime('%Y-%m-%d')
 

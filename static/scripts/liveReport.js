@@ -31,6 +31,15 @@ function addAction( action )
 	}
 }
 
+function formatLibraries(libraries) {
+    var html = ['<ul>'];
+    libraries.forEach(function(library) {
+        html.push('<li>' + library.name + '</li>');
+    });
+    html.push('</ul>');
+    return html.join('');
+}
+
 var messageHandlers = {
 	htmlBody: function( content )
 	{
@@ -48,6 +57,8 @@ var messageHandlers = {
 		document.getElementById( 'textHtmlRatio' ).innerHTML = ( parseFloat( content.textHtmlRatio ) * 100 ).toFixed( 2 ) + '%';
 		
 		document.getElementById( 'declaredLanguage' ).innerHTML = content.declaredLanguage;
+
+        document.getElementById( 'libraries' ).innerHTML = formatLibraries(content.libraries);
 		
 		if( content.encoding )
 		{

@@ -29,6 +29,8 @@ class HumansTxtCheckerTask( BaseTask ):
 		self.sendAndSaveReport( domain, humans_txt )
 
 	def suggest_actions( self, actions, humans_txt, domain ):
+	        if humans_txt is None:
+	            return
 		if 200 == humans_txt['status_code']:
 			html_link = self.generate_html_link( humans_txt['url'] )
 			actions.append({ 'status': 'regular', 'description': 'The %s file is missing'  % html_link })
@@ -39,6 +41,9 @@ class HumansTxtCheckerTask( BaseTask ):
 				actions.append({ 'status': 'regular', 'description': 'Fix the content type for the %s URL' % humans_txt['url'] })
 
 	def generate_html_node( self, humans_txt ):
+	        if humans_txt is None:
+	            return 'N/A'
+
 		if 404 == humans_txt['status_code']:
 			return 'Missing'
 

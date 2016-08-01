@@ -17,6 +17,8 @@ from library.task.base import BaseTask
 
 from library.services.stats import increase_html_document_type_count
 
+from library.html.libraries import findLibrariesInCode
+
 class HtmlAnalyzerTask( BaseTask ):
 
 	def getName( self ):
@@ -48,6 +50,8 @@ class HtmlAnalyzerTask( BaseTask ):
 
 			'containsFlash': None,
 			'pageCompression': None,
+
+			'libraries': []
 		}
 
 	def updateView( self, beauty, data ):
@@ -90,6 +94,9 @@ class HtmlAnalyzerTask( BaseTask ):
 
 		if 'containsFlash' in data and data['containsFlash'] is not None:
 			beauty.find( id = 'containsFlash' ).string.replace_with( data['containsFlash'] )
+
+		if 'libraries' in data:
+		    beauty.find(id = 'libraries').string.replace_with(self.generateLibrariesList(data['libraries']))
 
 	def start( self, baseUrl ):
 		url = 'http://' + baseUrl
@@ -142,6 +149,8 @@ class HtmlAnalyzerTask( BaseTask ):
 
 				'containsFlash': containsFlash( body ),
 				'pageCompression': pageCompression( httpResp ),
+
+				'libraries': findLibrariesInCode(body)
 			})
 
 			# Page Metadata
@@ -195,6 +204,18 @@ class HtmlAnalyzerTask( BaseTask ):
 			meta_keywords = [ keyword.strip().lower() for keyword in meta_keywords_data['content'].split( ',' ) ]
 
 		return meta_keywords
+
+        def generateLibrariesList(self, libraries):
+            if len(libraries) == 0:
+                return 'No libraries were found on this page.'
+
+            html = [ '<ul>' ]
+            for library in libraries:
+                html.append('<li><a href="%s" rel="nofollow">%s</a></li>' % ( library['website'], library['name'] ))
+            html.append('</ul>')
+
+            return ''.join(html)
+
 
 def containsFlash( body ):
 	return '.swf"' in body
@@ -334,7 +355,7 @@ def pageCompression( httpResp ):
 def extractSoftwareStack( httpResp ):
 	softwareStack = []
 	if 'Server' in httpResp.headers:
-		if re.match( 'apache', httpResp.headers['Server'], re.I ):
+		if re.search( 'apache', httpResp.headers['Server'], re.I ):
 			softwareStack.append( 'Apache Web (HTTP) server' )
 	return '<br />'.join( softwareStack )
 
