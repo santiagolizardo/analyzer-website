@@ -1,17 +1,11 @@
 
-import json, logging, os, sys
-
-import config
+import logging, os
 
 from google.appengine.api import urlfetch
-from google.appengine.api.channel import send_message
-from google.appengine.api import files
 
 from library.task.base import BaseTask
 
 import urllib2
-
-from bs4 import BeautifulSoup, NavigableString
 
 import cloudstorage as gcs
 from google.appengine.api import app_identity
@@ -20,12 +14,13 @@ from config import current_instance as site
 
 from config import debug_active
 
+from urllib import quote_plus
+import time
+
 def storeFileInCloud( data, url ):
     bucket_name = os.environ.get('BUCKET_NAME', app_identity.get_default_gcs_bucket_name())
-    logging.info('bucket_name === %s' % bucket_name)
     sanitized_url = url.replace( 'http://', '' ).replace( '.', '-' )
     filename = '/' + bucket_name + '/screenshots/' + sanitized_url + '.png'
-    logging.info('filename === %s' % filename)
     gcs_file = gcs.open(
         filename,
         'w',
@@ -62,24 +57,6 @@ class ScreenshotGrabberTask( BaseTask ):
 
 	def generate_html_node( self, data ):
 		return data
-
-def captureScreenshotSnapito( url ):
-	serviceApi = '18e1518747b2702d9bd216465603dbb3d74b8fea'
-	screenshotSize = 'mc'
-
-	try:
-		apiUrl = 'http://api.snapito.com/web/%s/%s/%s' % ( serviceApi, screenshotSize, url )
-		result = urlfetch.fetch( apiUrl, deadline = 30 )
-		if result.status_code == 200:
-			imageData = urllib2.urlopen( result.final_url ).read()
-			return imageData
-	except:
-		logging.warning( sys.exc_info()[1] )
-
-	return None
-
-from urllib import quote_plus
-import time
 
 def captureScreenshotWordpress( url ):
 	apiUrl = 'http://s.wordpress.com/mshots/v1/%s?w=250' % quote_plus( url )
