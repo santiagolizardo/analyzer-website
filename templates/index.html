@@ -23,11 +23,11 @@
 	<div class="row">
 		<div class="col-md-6">
 			<div class="panel panel-info">
-				<div class="panel-heading">${_('Website with fresh reports')}</div>
+				<div class="panel-heading">${_('Most recent website reports')}</div>
 				<div class="panel-body">
 				<ul>
-					% for recentDomain in recentDomains:
-					<li><a href="${uriFor( 'staticReport', domainUrl = recentDomain.url  )}">${recentDomain.url}</a></li>
+					% for url in recentDomains:
+					<li><a title="Link to ${url} website report" href="${uriFor('staticReport', domainUrl = url)}">${url}</a></li>
 					% endfor
 				</ul>
 				</div>
@@ -36,11 +36,11 @@
 
 		<div class="col-md-6">
 			<div class="panel panel-info">
-				<div class="panel-heading">${_('Sites with a huge ego')}</div>
+				<div class="panel-heading">${_('Websites with the best performance scores')}</div>
 				<div class="panel-body">
 					<ol>
-					% for recentDomain in sitesRanking:
-					<li><a href="${uriFor( 'staticReport', domainUrl = recentDomain['url']  )}">${recentDomain['url']}</a> <span class="badge">${recentDomain['score']}/100</span></li>
+					% for url, score in sitesRanking.iteritems():
+					<li><a title="Link to ${url} website report" href="${uriFor('staticReport', domainUrl = url)}">${url}</a> <span class="badge">${score}/100</span></li>
 					% endfor
 					</ol>
 				</div>

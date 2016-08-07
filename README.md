@@ -1,9 +1,11 @@
 
-== Analyzer.WS ==
+# Analyzer.WS
 
 Analyzer.WS is a web application that can be deployed to Google App Engine and which allows you to generate marketing/SEO reports for websites in an automatic manner.
 
-=== Requirements ===
+Live demo: http://analyzer.website/
+
+## Requirements
 
 * Google App Engine Python SDK
 * Python (mako templates)
@@ -21,7 +23,7 @@ Analyzer.WS is a web application that can be deployed to Google App Engine and w
 ** live-report
 ** report
 
-=== Instructions ===
+## How to run it
 
 ```
 git clone https://github.com/santiagolizardo/analyzer-website.git
@@ -29,15 +31,16 @@ cd analyzer-website
 git submodule update --init
 ```
 
-=== How to start it ===
+### Dev environment
 
 ```
 dev_appserver.py --clear_datastore --host localhost --port 9090 .
 ```
 
-=== How to deploy it ===
+### Deployment
 
 ```
 appcfg.py --application=analyzer-website update .
 ```
+
 

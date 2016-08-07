@@ -10,6 +10,24 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
+- kind: SiteReport
+  properties:
+  - name: creationDate
+    direction: desc
+  - name: url
+
+- kind: SiteReport
+  properties:
+  - name: score
+    direction: desc
+  - name: url
+
+- kind: SiteReport
+  properties:
+  - name: url
+  - name: creationDate
+    direction: desc
+
 - kind: StatCounter
   properties:
   - name: category

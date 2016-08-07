@@ -19,21 +19,12 @@ class IndexController( StandardPageController ):
 		self.writeResponse( html )
 
 	def generate_html( self ):
-		recentDomains = db.GqlQuery( 'SELECT * FROM SiteReport ORDER BY creationDate DESC' ).fetch( 10 )
-
-		sitesQuery = SiteReport.all()
-		sitesQuery.order( '-score' )
-		
-		sites = []
-		i = 0
-		for entity in sitesQuery.run( limit = 10 ):
-		    i += 1
-		    site = db.to_dict( entity, { 'position': i, 'lastReportUrl': uriFor( 'staticReport', domainUrl = entity.url ) } ) 
-		    sites.append( site )
+	        mostRecentSites = SiteReport.get_recent_report_urls()
+	        bestScoredSites = SiteReport.get_best_scored_report_urls()
 
 		values = {
-			'recentDomains': recentDomains,
-			'sitesRanking': sites,
+			'recentDomains': mostRecentSites,
+			'sitesRanking': bestScoredSites,
 		}
 
 		self.addJavaScript( '/scripts/index.js' )
